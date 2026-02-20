@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>VeriflowAPI — Medical License Verification API</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink: #0f1117;
+      --ink-light: #3a3d4a;
+      --ink-muted: #6b7080;
+      --surface: #fafaf8;
+      --surface-2: #f4f3ef;
+      --surface-3: #eceae3;
+      --accent: #1a4fff;
+      --accent-light: #e8eeff;
+      --accent-dark: #1238cc;
+      --success: #0ea561;
+      --warn: #d97706;
+      --code-bg: #0f1117;
+      --code-border: #1e2130;
+      --border: #e2e0d8;
+      --shadow: 0 1px 3px rgba(15,17,23,0.06), 0 4px 16px rgba(15,17,23,0.04);
+      --shadow-lg: 0 8px 40px rgba(15,17,23,0.10);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--surface);
+      color: var(--ink);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(250,250,248,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      height: 60px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+
+    .nav-logo {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.25rem;
+      color: var(--ink);
+      text-decoration: none;
+      letter-spacing: -0.02em;
+    }
+
+    .nav-logo span { color: var(--accent); }
+
+    .nav-links {
+      display: flex; align-items: center; gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--ink-light);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--ink); }
+
+    .nav-cta {
+      background: var(--ink);
+      color: #fff !important;
+      padding: 0.5rem 1.25rem;
+      border-radius: 6px;
+      font-size: 0.875rem !important;
+      transition: background 0.2s !important;
+    }
+
+    .nav-cta:hover { background: var(--accent) !important; color: #fff !important; }
+
+    /* HERO */
+    .hero {
+      padding: 120px 2rem 80px;
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .hero-left { animation: fadeUp 0.7s ease both; }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: var(--accent-light);
+      color: var(--accent);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 0.35rem 0.85rem;
+      border-radius: 100px;
+      margin-bottom: 1.5rem;
+      border: 1px solid rgba(26,79,255,0.15);
+    }
+
+    .badge::before {
+      content: '';
+      width: 6px; height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.4); }
+    }
+
+    h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(2.5rem, 5vw, 3.75rem);
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+      margin-bottom: 1.5rem;
+    }
+
+    h1 em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .hero-sub {
+      font-size: 1.0625rem;
+      color: var(--ink-light);
+      line-height: 1.7;
+      margin-bottom: 2.5rem;
+      max-width: 480px;
+      font-weight: 300;
+    }
+
+    .trust-row {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .trust-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.8125rem;
+      color: var(--ink-muted);
+      font-weight: 500;
+    }
+
+    .trust-item svg { color: var(--success); flex-shrink: 0; }
+
+    /* CODE PANEL */
+    .hero-right { animation: fadeUp 0.7s 0.15s ease both; }
+
+    .code-panel {
+      background: var(--code-bg);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow-lg), 0 0 0 1px var(--code-border);
+    }
+
+    .code-tabs {
+      display: flex;
+      background: #161825;
+      border-bottom: 1px solid var(--code-border);
+      padding: 0 1rem;
+    }
+
+    .code-tab {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      color: #6b7280;
+      padding: 0.75rem 1rem;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .code-tab.active {
+      color: #e2e8f0;
+      border-bottom-color: var(--accent);
+    }
+
+    .code-body { padding: 1.5rem; overflow-x: auto; }
+
+    pre {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.8125rem;
+      line-height: 1.7;
+      color: #e2e8f0;
+      white-space: pre;
+    }
+
+    .t-muted { color: #6b7280; }
+    .t-key { color: #93c5fd; }
+    .t-string { color: #86efac; }
+    .t-bool-true { color: #34d399; }
+    .t-bool-false { color: #f87171; }
+    .t-punct { color: #94a3b8; }
+    .t-comment { color: #4b5563; font-style: italic; }
+    .t-method { color: #fbbf24; }
+    .t-url { color: #c084fc; }
+    .t-header { color: #f9a8d4; }
+    .t-num { color: #fb923c; }
+
+    .response-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6875rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #4b5563;
+      padding: 0.75rem 1.5rem 0.25rem;
+      border-top: 1px solid var(--code-border);
+      margin-top: 0.5rem;
+    }
+
+    /* STATS BAR */
+    .stats-bar {
+      background: var(--ink);
+      color: #fff;
+      padding: 1.25rem 2rem;
+    }
+
+    .stats-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+
+    .stat-item { text-align: center; }
+
+    .stat-num {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.75rem;
+      letter-spacing: -0.02em;
+      color: #fff;
+    }
+
+    .stat-label {
+      font-size: 0.75rem;
+      color: #9ca3af;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-top: 0.15rem;
+    }
+
+    /* SOURCES */
+    .sources-section {
+      padding: 5rem 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+    }
+
+    .section-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(1.75rem, 3vw, 2.5rem);
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      margin-bottom: 1rem;
+    }
+
+    .section-sub {
+      font-size: 1rem;
+      color: var(--ink-light);
+      max-width: 540px;
+      line-height: 1.7;
+      font-weight: 300;
+    }
+
+    .sources-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1rem;
+      margin-top: 3rem;
+    }
+
+    .source-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.5rem;
+      transition: all 0.2s;
+    }
+
+    .source-card:hover {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-light);
+      transform: translateY(-2px);
+    }
+
+    .source-badge {
+      display: inline-block;
+      font-size: 0.6875rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 0.2rem 0.6rem;
+      border-radius: 4px;
+      margin-bottom: 0.75rem;
+    }
+
+    .badge-federal { background: #dbeafe; color: #1d4ed8; }
+    .badge-state { background: #dcfce7; color: #15803d; }
+
+    .source-name {
+      font-weight: 600;
+      font-size: 0.9375rem;
+      color: var(--ink);
+      margin-bottom: 0.25rem;
+    }
+
+    .source-desc {
+      font-size: 0.8125rem;
+      color: var(--ink-muted);
+      line-height: 1.5;
+    }
+
+    .source-status {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-top: 1rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--success);
+    }
+
+    .status-dot {
+      width: 6px; height: 6px;
+      background: var(--success);
+      border-radius: 50%;
+    }
+
+    /* FEATURES */
+    .features-section {
+      background: var(--surface-2);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 5rem 2rem;
+    }
+
+    .features-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 3rem;
+    }
+
+    .feature-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.75rem;
+    }
+
+    .feature-icon {
+      width: 40px; height: 40px;
+      background: var(--accent-light);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 1rem;
+      font-size: 1.125rem;
+    }
+
+    .feature-title {
+      font-weight: 600;
+      font-size: 0.9375rem;
+      color: var(--ink);
+      margin-bottom: 0.5rem;
+    }
+
+    .feature-desc {
+      font-size: 0.8375rem;
+      color: var(--ink-muted);
+      line-height: 1.65;
+    }
+
+    /* PRICING */
+    .pricing-section {
+      padding: 5rem 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.25rem;
+      margin-top: 3rem;
+      align-items: start;
+    }
+
+    .pricing-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      position: relative;
+      transition: box-shadow 0.2s;
+    }
+
+    .pricing-card:hover { box-shadow: var(--shadow-lg); }
+
+    .pricing-card.featured {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px var(--accent), var(--shadow-lg);
+    }
+
+    .featured-label {
+      position: absolute;
+      top: -12px; left: 50%; transform: translateX(-50%);
+      background: var(--accent);
+      color: #fff;
+      font-size: 0.6875rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.25rem 0.85rem;
+      border-radius: 100px;
+      white-space: nowrap;
+    }
+
+    .plan-name {
+      font-size: 0.8125rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      margin-bottom: 0.75rem;
+    }
+
+    .plan-price {
+      font-family: 'DM Serif Display', serif;
+      font-size: 2.5rem;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+      line-height: 1;
+      margin-bottom: 0.25rem;
+    }
+
+    .plan-price sup {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1rem;
+      font-weight: 500;
+      vertical-align: super;
+    }
+
+    .plan-period {
+      font-size: 0.8125rem;
+      color: var(--ink-muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .plan-checks {
+      font-size: 0.8125rem;
+      color: var(--accent);
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .plan-features { list-style: none; margin-bottom: 2rem; }
+
+    .plan-features li {
+      font-size: 0.8375rem;
+      color: var(--ink-light);
+      padding: 0.35rem 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .plan-features li::before {
+      content: '✓';
+      color: var(--success);
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .plan-btn {
+      display: block;
+      width: 100%;
+      padding: 0.75rem;
+      border-radius: 7px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      text-align: center;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+
+    .plan-btn-outline {
+      background: transparent;
+      border: 1.5px solid var(--border);
+      color: var(--ink);
+    }
+
+    .plan-btn-outline:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .plan-btn-solid {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .plan-btn-solid:hover { background: var(--accent-dark); }
+
+    .plan-btn-dark {
+      background: var(--ink);
+      color: #fff;
+    }
+
+    .plan-btn-dark:hover { background: #1e2130; }
+
+    /* WAITLIST FORM */
+    .waitlist-section {
+      background: var(--ink);
+      padding: 5rem 2rem;
+    }
+
+    .waitlist-inner {
+      max-width: 600px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .waitlist-inner .section-label { color: #6b7280; }
+
+    .waitlist-inner .section-title { color: #fff; margin-bottom: 0.75rem; }
+
+    .waitlist-inner .section-sub { color: #9ca3af; margin: 0 auto 2.5rem; }
+
+    .form-group { margin-bottom: 1rem; text-align: left; }
+
+    .form-label {
+      display: block;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: #9ca3af;
+      margin-bottom: 0.4rem;
+    }
+
+    .form-input, .form-select {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      background: #161825;
+      border: 1px solid #1e2130;
+      border-radius: 7px;
+      color: #e2e8f0;
+      font-size: 0.9375rem;
+      font-family: 'DM Sans', sans-serif;
+      outline: none;
+      transition: border-color 0.2s;
+      appearance: none;
+    }
+
+    .form-input:focus, .form-select:focus { border-color: var(--accent); }
+    .form-input::placeholder { color: #4b5563; }
+
+    .form-select option { background: #161825; }
+
+    .submit-btn {
+      width: 100%;
+      padding: 0.875rem;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 7px;
+      font-size: 1rem;
+      font-weight: 600;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-top: 0.5rem;
+    }
+
+    .submit-btn:hover { background: var(--accent-dark); }
+
+    .form-note {
+      font-size: 0.75rem;
+      color: #4b5563;
+      margin-top: 1rem;
+      text-align: center;
+    }
+
+    .success-message {
+      display: none;
+      background: #0f2d1f;
+      border: 1px solid #15803d;
+      border-radius: 10px;
+      padding: 2rem;
+      text-align: center;
+      color: #86efac;
+    }
+
+    .success-message h3 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+      color: #fff;
+    }
+
+    /* FOOTER */
+    footer {
+      background: #0a0c12;
+      padding: 2rem;
+      text-align: center;
+      border-top: 1px solid #1e2130;
+    }
+
+    .footer-logo {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.125rem;
+      color: #fff;
+      margin-bottom: 0.5rem;
+    }
+
+    .footer-logo span { color: var(--accent); }
+
+    .footer-text {
+      font-size: 0.8125rem;
+      color: #4b5563;
+    }
+
+    .footer-text a { color: #6b7280; text-decoration: none; }
+    .footer-text a:hover { color: #9ca3af; }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .hero { grid-template-columns: 1fr; gap: 3rem; min-height: auto; padding-top: 100px; }
+      .hero-right { order: -1; }
+      .nav-links { display: none; }
+      .stats-inner { justify-content: center; gap: 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">Veriflow<span>API</span></a>
+  <ul class="nav-links">
+    <li><a href="#sources">Data Sources</a></li>
+    <li><a href="#features">Features</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#waitlist" class="nav-cta">Get Early Access</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <div class="badge">Early Access · Now Open</div>
+    <h1>Verify Any Medical License <em>in Under 200ms</em></h1>
+    <p class="hero-sub">
+      A single API to verify active status, disciplinary flags, and OIG exclusions across NPI registry and state medical boards. Built for telehealth, credentialing, and healthcare onboarding workflows.
+    </p>
+    <div class="trust-row">
+      <div class="trust-item">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+        99.9% Uptime SLA
+      </div>
+      <div class="trust-item">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+        HIPAA-Ready Infrastructure
+      </div>
+      <div class="trust-item">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+        Signed Verification Certificates
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="code-panel">
+      <div class="code-tabs">
+        <div class="code-tab active">Request</div>
+        <div class="code-tab">Response</div>
+      </div>
+      <div class="code-body">
+        <pre id="request-code"><span class="t-comment"># Verify a medical license</span>
+<span class="t-method">curl</span> -X POST <span class="t-url">https://api.veriflowapi.com/v1/verify</span> \
+  -H <span class="t-string">"Authorization: Bearer YOUR_API_KEY"</span> \
+  -H <span class="t-string">"Content-Type: application/json"</span> \
+  -d <span class="t-string">'{
+    "first_name": "Sarah",
+    "last_name": "Chen",
+    "state": "CA",
+    "npi": "1234567890"
+  }'</span></pre>
+
+        <pre id="response-code" style="display:none"><span class="t-punct">{</span>
+  <span class="t-key">"verified"</span><span class="t-punct">:</span> <span class="t-bool-true">true</span><span class="t-punct">,</span>
+  <span class="t-key">"status"</span><span class="t-punct">:</span> <span class="t-string">"active"</span><span class="t-punct">,</span>
+  <span class="t-key">"name"</span><span class="t-punct">:</span> <span class="t-string">"Dr. Sarah Chen"</span><span class="t-punct">,</span>
+  <span class="t-key">"license_number"</span><span class="t-punct">:</span> <span class="t-string">"CA-A-98234"</span><span class="t-punct">,</span>
+  <span class="t-key">"state"</span><span class="t-punct">:</span> <span class="t-string">"California"</span><span class="t-punct">,</span>
+  <span class="t-key">"expiry_date"</span><span class="t-punct">:</span> <span class="t-string">"2027-06-30"</span><span class="t-punct">,</span>
+  <span class="t-key">"disciplinary_flags"</span><span class="t-punct">:</span> <span class="t-bool-false">false</span><span class="t-punct">,</span>
+  <span class="t-key">"oig_excluded"</span><span class="t-punct">:</span> <span class="t-bool-false">false</span><span class="t-punct">,</span>
+  <span class="t-key">"sources_checked"</span><span class="t-punct">:</span> <span class="t-punct">[</span>
+    <span class="t-string">"NPPES"</span><span class="t-punct">,</span> <span class="t-string">"OIG"</span><span class="t-punct">,</span> <span class="t-string">"CA Medical Board"</span>
+  <span class="t-punct">],</span>
+  <span class="t-key">"checked_at"</span><span class="t-punct">:</span> <span class="t-string">"2026-02-20T10:30:00Z"</span><span class="t-punct">,</span>
+  <span class="t-key">"verification_id"</span><span class="t-punct">:</span> <span class="t-string">"vrf_a1b2c3d4e5"</span><span class="t-punct">,</span>
+  <span class="t-key">"certificate_hash"</span><span class="t-punct">:</span> <span class="t-string">"sha256_9f8e7d..."</span>
+<span class="t-punct">}</span></pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div class="stat-item">
+      <div class="stat-num">50</div>
+      <div class="stat-label">US States Covered</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">&lt;200ms</div>
+      <div class="stat-label">Avg Response Time</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">99.9%</div>
+      <div class="stat-label">Uptime SLA</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">3</div>
+      <div class="stat-label">Data Sources / Check</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">24hr</div>
+      <div class="stat-label">Cache Freshness</div>
+    </div>
+  </div>
+</div>
+
+<!-- DATA SOURCES -->
+<section class="sources-section" id="sources">
+  <div class="section-label">Data Sources</div>
+  <div class="section-title">Every check. Every source.</div>
+  <p class="section-sub">We aggregate and normalize fragmented government databases so you don't have to. One API call checks them all.</p>
+
+  <div class="sources-grid">
+    <div class="source-card">
+      <span class="source-badge badge-federal">Federal</span>
+      <div class="source-name">NPPES NPI Registry</div>
+      <div class="source-desc">National Provider Identifier database covering all licensed healthcare providers in the US.</div>
+      <div class="source-status"><span class="status-dot"></span>Live · Updated Daily</div>
+    </div>
+    <div class="source-card">
+      <span class="source-badge badge-federal">Federal</span>
+      <div class="source-name">OIG Exclusion List</div>
+      <div class="source-desc">HHS Office of Inspector General list of excluded individuals and entities from federal programs.</div>
+      <div class="source-status"><span class="status-dot"></span>Live · Updated Monthly</div>
+    </div>
+    <div class="source-card">
+      <span class="source-badge badge-state">State</span>
+      <div class="source-name">California Medical Board</div>
+      <div class="source-desc">Real-time license status, disciplinary actions, and expiry for CA licensed physicians.</div>
+      <div class="source-status"><span class="status-dot"></span>Live · 24hr Cache</div>
+    </div>
+    <div class="source-card">
+      <span class="source-badge badge-state">State</span>
+      <div class="source-name">Texas Medical Board</div>
+      <div class="source-desc">Active license verification and sanction history for Texas licensed physicians.</div>
+      <div class="source-status"><span class="status-dot"></span>Live · 24hr Cache</div>
+    </div>
+    <div class="source-card">
+      <span class="source-badge badge-state">State</span>
+      <div class="source-name">New York + Florida + Illinois</div>
+      <div class="source-desc">Deep integration with the remaining top-5 US states covering 40% of telehealth volume.</div>
+      <div class="source-status"><span class="status-dot"></span>Live · 24hr Cache</div>
+    </div>
+    <div class="source-card" style="background: var(--surface-2); border-style: dashed;">
+      <span class="source-badge" style="background:#f3f4f6;color:#6b7280;">Coming Soon</span>
+      <div class="source-name">Nursing · Pharmacy · Legal</div>
+      <div class="source-desc">Expanding to additional professions. Join the waitlist to request priority profession support.</div>
+      <div class="source-status" style="color:var(--ink-muted);"><span class="status-dot" style="background:var(--ink-muted);"></span>In Development</div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features-section" id="features">
+  <div class="features-inner">
+    <div class="section-label">Why Veriflow</div>
+    <div class="section-title">Infrastructure-grade reliability.</div>
+    <p class="section-sub">Built for production onboarding flows where a wrong answer costs you more than the API ever will.</p>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🔍</div>
+        <div class="feature-title">Identity Resolution</div>
+        <div class="feature-desc">Fuzzy name matching handles typos, middle initials, and name variations. Submit what you have — we resolve the rest.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📜</div>
+        <div class="feature-title">Signed Certificates</div>
+        <div class="feature-desc">Every verification generates a SHA256-signed certificate with sources, timestamp, and a unique ID. Audit-ready from day one.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <div class="feature-title">Intelligent Caching</div>
+        <div class="feature-desc">Active status cached 24 hours. Static data cached 30 days. 99.9% uptime even when source sites go down.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔔</div>
+        <div class="feature-title">Webhook Monitoring</div>
+        <div class="feature-desc">Register a provider once. Get instant webhooks when their status changes or expiry approaches. Never miss a lapse.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <div class="feature-title">Normalized Schema</div>
+        <div class="feature-desc">All 50 states return inconsistent formats. We normalize everything to ISO 8601 dates and standardized status codes.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🏥</div>
+        <div class="feature-title">HIPAA-Ready</div>
+        <div class="feature-desc">BAA available for enterprise customers. Infrastructure designed with healthcare compliance requirements in mind.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing-section" id="pricing">
+  <div class="section-label">Pricing</div>
+  <div class="section-title">Risk infrastructure. Priced accordingly.</div>
+  <p class="section-sub">No free tier. 100 free checks on signup to test integration. You're paying for reliability, not just data.</p>
+
+  <div class="pricing-grid">
+    <div class="pricing-card">
+      <div class="plan-name">Developer</div>
+      <div class="plan-price"><sup>$</sup>49</div>
+      <div class="plan-period">per month</div>
+      <div class="plan-checks">500 verifications/month</div>
+      <ul class="plan-features">
+        <li>NPPES + OIG nationwide</li>
+        <li>Big 5 state boards</li>
+        <li>Signed certificates</li>
+        <li>Email support</li>
+      </ul>
+      <a href="#waitlist" class="plan-btn plan-btn-outline">Get Early Access</a>
+    </div>
+
+    <div class="pricing-card featured">
+      <div class="featured-label">Most Popular</div>
+      <div class="plan-name">Production</div>
+      <div class="plan-price"><sup>$</sup>299</div>
+      <div class="plan-period">per month</div>
+      <div class="plan-checks">5,000 verifications/month</div>
+      <ul class="plan-features">
+        <li>Everything in Developer</li>
+        <li>Webhook monitoring</li>
+        <li>Bulk CSV verification</li>
+        <li>Priority support</li>
+        <li>Status page access</li>
+      </ul>
+      <a href="#waitlist" class="plan-btn plan-btn-solid">Get Early Access</a>
+    </div>
+
+    <div class="pricing-card">
+      <div class="plan-name">Scale</div>
+      <div class="plan-price"><sup>$</sup>1,499</div>
+      <div class="plan-period">per month</div>
+      <div class="plan-checks">50,000 verifications/month</div>
+      <ul class="plan-features">
+        <li>Everything in Production</li>
+        <li>Historical change log</li>
+        <li>Custom SLA agreement</li>
+        <li>Dedicated Slack channel</li>
+        <li>BAA available</li>
+      </ul>
+      <a href="#waitlist" class="plan-btn plan-btn-outline">Get Early Access</a>
+    </div>
+
+    <div class="pricing-card">
+      <div class="plan-name">Enterprise</div>
+      <div class="plan-price" style="font-size:1.75rem;padding-top:0.5rem;">Custom</div>
+      <div class="plan-period">annual contract</div>
+      <div class="plan-checks">Unlimited verifications</div>
+      <ul class="plan-features">
+        <li>Everything in Scale</li>
+        <li>White-label option</li>
+        <li>Custom data sources</li>
+        <li>Uptime guarantee SLA</li>
+        <li>SOC 2 report on request</li>
+      </ul>
+      <a href="mailto:support@veriflowapi.com" class="plan-btn plan-btn-dark">Contact Us</a>
+    </div>
+  </div>
+</section>
+
+<!-- WAITLIST -->
+<section class="waitlist-section" id="waitlist">
+  <div class="waitlist-inner">
+    <div class="section-label">Early Access</div>
+    <h2 class="section-title">Join the waitlist.<br>Get your API key first.</h2>
+    <p class="section-sub">We're onboarding developers in batches. Early access includes 100 free verifications and direct line to the founding team.</p>
+
+    <form id="waitlist-form">
+      <div class="form-group">
+        <label class="form-label" for="email">Work Email</label>
+        <input class="form-input" type="email" id="email" placeholder="you@company.com" required />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="building">What are you building?</label>
+        <select class="form-select" id="building" required>
+          <option value="" disabled selected>Select your use case</option>
+          <option value="telehealth">Telehealth Platform</option>
+          <option value="credentialing">Credentialing Software</option>
+          <option value="healthcare">Healthcare App</option>
+          <option value="insurance">Insurance / Compliance</option>
+          <option value="staffing">Medical Staffing Platform</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      <button type="submit" class="submit-btn">Get Early Access →</button>
+      <p class="form-note">No credit card required. We'll send your API key within 24 hours of approval.</p>
+    </form>
+
+    <div class="success-message" id="success-msg">
+      <h3>You're on the list. ✓</h3>
+      <p>We'll send your API key to <strong id="confirmed-email"></strong> within 24 hours. Check your inbox.</p>
+      <p style="margin-top:0.75rem;font-size:0.8125rem;color:#6b7280;">Questions? support@veriflowapi.com</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Veriflow<span>API</span></div>
+  <p class="footer-text">
+    © 2026 VeriflowAPI · <a href="mailto:support@veriflowapi.com">support@veriflowapi.com</a> · <a href="#">Terms</a> · <a href="#">Privacy</a>
+  </p>
+</footer>
+
+<script>
+  // Tab switching
+  const tabs = document.querySelectorAll('.code-tab');
+  const reqCode = document.getElementById('request-code');
+  const resCode = document.getElementById('response-code');
+
+  tabs.forEach((tab, i) => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      if (i === 0) { reqCode.style.display = 'block'; resCode.style.display = 'none'; }
+      else { reqCode.style.display = 'none'; resCode.style.display = 'block'; }
+    });
+  });
+
+  // Form submission
+  document.getElementById('waitlist-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const email = document.getElementById('email').value;
+    document.getElementById('confirmed-email').textContent = email;
+    this.style.display = 'none';
+    document.getElementById('success-msg').style.display = 'block';
+  });
+
+  // Smooth scroll for nav links
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+    });
+  });
+</script>
+
+</body>
+</html>
