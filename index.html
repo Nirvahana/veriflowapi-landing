@@ -940,7 +940,7 @@
         <li>Uptime guarantee SLA</li>
         <li>SOC 2 report on request</li>
       </ul>
-      <a href="mailto:support@veriflowapi.com" class="plan-btn plan-btn-dark">Contact Us</a>
+      <a href="/cdn-cgi/l/email-protection#6d1e181d1d021f192d1b081f040b01021a0c1d04430e0200" class="plan-btn plan-btn-dark">Contact Us</a>
     </div>
   </div>
 </section>
@@ -949,17 +949,19 @@
 <section class="waitlist-section" id="waitlist">
   <div class="waitlist-inner">
     <div class="section-label">Early Access</div>
-    <h2 class="section-title">Join the waitlist.<br>Get your API key first.</h2>
+    <h2 class="section-title">Join the waitlist.<br>We'll be in touch personally.</h2>
     <p class="section-sub">We're onboarding developers in batches. Early access includes 100 free verifications and direct line to the founding team.</p>
 
-    <form id="waitlist-form">
+    <form id="waitlist-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+      <input type="hidden" name="_subject" value="New VeriflowAPI Waitlist Signup" />
+      <input type="hidden" name="_next" value="" />
       <div class="form-group">
         <label class="form-label" for="email">Work Email</label>
-        <input class="form-input" type="email" id="email" placeholder="you@company.com" required />
+        <input class="form-input" type="email" id="email" name="email" placeholder="you@company.com" required />
       </div>
       <div class="form-group">
         <label class="form-label" for="building">What are you building?</label>
-        <select class="form-select" id="building" required>
+        <select class="form-select" id="building" name="building" required>
           <option value="" disabled selected>Select your use case</option>
           <option value="telehealth">Telehealth Platform</option>
           <option value="credentialing">Credentialing Software</option>
@@ -969,13 +971,13 @@
           <option value="other">Other</option>
         </select>
       </div>
-      <button type="submit" class="submit-btn">Get Early Access →</button>
-      <p class="form-note">No credit card required. We'll send your API key within 24 hours of approval.</p>
+      <button type="submit" class="submit-btn">Request Early Access →</button>
+      <p class="form-note">No credit card required. We're onboarding developers in batches — you'll hear from us personally when your spot opens.</p>
     </form>
 
     <div class="success-message" id="success-msg">
       <h3>You're on the list. ✓</h3>
-      <p>We'll send your API key to <strong id="confirmed-email"></strong> within 24 hours. Check your inbox.</p>
+      <p>Thanks for your interest. We're reviewing applications and will reach out to <strong id="confirmed-email"></strong> personally when your spot opens.</p>
       <p style="margin-top:0.75rem;font-size:0.8125rem;color:#6b7280;">Questions? support@veriflowapi.com</p>
     </div>
   </div>
@@ -985,11 +987,11 @@
 <footer>
   <div class="footer-logo">Veriflow<span>API</span></div>
   <p class="footer-text">
-    © 2026 VeriflowAPI · <a href="mailto:support@veriflowapi.com">support@veriflowapi.com</a> · <a href="#">Terms</a> · <a href="#">Privacy</a>
+    © 2026 VeriflowAPI · <a href="/cdn-cgi/l/email-protection#94e7e1e4e4fbe6e0d4e2f1e6fdf2f8fbe3f5e4fdbaf7fbf9"><span class="__cf_email__" data-cfemail="c9babcb9b9a6bbbd89bfacbba0afa5a6bea8b9a0e7aaa6a4">[email&#160;protected]</span></a> · <a href="#">Terms</a> · <a href="#">Privacy</a>
   </p>
 </footer>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
   // Tab switching
   const tabs = document.querySelectorAll('.code-tab');
   const reqCode = document.getElementById('request-code');
@@ -1004,13 +1006,35 @@
     });
   });
 
-  // Form submission
-  document.getElementById('waitlist-form').addEventListener('submit', function(e) {
+  // Form submission with Formspree
+  document.getElementById('waitlist-form').addEventListener('submit', async function(e) {
     e.preventDefault();
     const email = document.getElementById('email').value;
-    document.getElementById('confirmed-email').textContent = email;
-    this.style.display = 'none';
-    document.getElementById('success-msg').style.display = 'block';
+    const form = this;
+    const submitBtn = form.querySelector('.submit-btn');
+
+    submitBtn.textContent = 'Submitting...';
+    submitBtn.disabled = true;
+
+    try {
+      const response = await fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { 'Accept': 'application/json' }
+      });
+
+      if (response.ok) {
+        document.getElementById('confirmed-email').textContent = email;
+        form.style.display = 'none';
+        document.getElementById('success-msg').style.display = 'block';
+      } else {
+        submitBtn.textContent = 'Something went wrong. Try again.';
+        submitBtn.disabled = false;
+      }
+    } catch (err) {
+      submitBtn.textContent = 'Something went wrong. Try again.';
+      submitBtn.disabled = false;
+    }
   });
 
   // Smooth scroll for nav links
