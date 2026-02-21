@@ -30,6 +30,7 @@
     }
 
     html { scroll-behavior: smooth; }
+    body { overflow-x: hidden; }
 
     body {
       font-family: 'DM Sans', sans-serif;
@@ -679,10 +680,25 @@
 
     /* RESPONSIVE */
     @media (max-width: 768px) {
-      .hero { grid-template-columns: 1fr; gap: 3rem; min-height: auto; padding-top: 100px; }
-      .hero-right { order: -1; }
+      .hero { grid-template-columns: 1fr; gap: 2rem; min-height: auto; padding-top: 90px; padding-left: 1.25rem; padding-right: 1.25rem; }
+      .hero-right { order: -1; width: 100%; }
+      .code-panel { width: 100%; overflow: hidden; }
+      .code-body { padding: 1rem; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+      pre { font-size: 0.72rem; }
       .nav-links { display: none; }
-      .stats-inner { justify-content: center; gap: 2rem; }
+      .stats-inner { justify-content: center; gap: 1.5rem; flex-wrap: wrap; }
+      .stat-item { min-width: 100px; }
+      .sources-section { padding: 3rem 1.25rem; }
+      .features-section { padding: 3rem 1.25rem; }
+      .features-inner { padding: 0; }
+      .pricing-section { padding: 3rem 1.25rem; }
+      .waitlist-section { padding: 3rem 1.25rem; }
+      .pricing-grid { grid-template-columns: 1fr; }
+      .sources-grid { grid-template-columns: 1fr; }
+      .features-grid { grid-template-columns: 1fr; }
+      .trust-row { gap: 0.75rem; }
+      h1 { font-size: 2.25rem; }
+      .stats-bar { padding: 1.25rem; }
     }
   </style>
 </head>
@@ -978,7 +994,7 @@
     <div class="success-message" id="success-msg">
       <h3>You're on the list. ✓</h3>
       <p>Thanks for your interest. We're reviewing applications and will reach out to <strong id="confirmed-email"></strong> personally when your spot opens.</p>
-      <p style="margin-top:0.75rem;font-size:0.8125rem;color:#6b7280;">Questions? <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="087b7d7878677a7c487e6d7a616e64677f697861266b6765">[email&#160;protected]</a></p>
+      <p style="margin-top:0.75rem;font-size:0.8125rem;color:#6b7280;">Questions? <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="5f2c2a2f2f302d2b1f293a2d36393330283e2f36713c3032">[email&#160;protected]</a></p>
     </div>
   </div>
 </section>
