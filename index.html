@@ -9,6 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { max-width: 100%; overflow-x: hidden; }
 
     :root {
       --ink: #0f1117;
@@ -681,10 +682,10 @@
     /* RESPONSIVE */
     @media (max-width: 768px) {
       .hero { grid-template-columns: 1fr; gap: 2rem; min-height: auto; padding-top: 90px; padding-left: 1.25rem; padding-right: 1.25rem; }
-      .hero-right { order: -1; width: 100%; }
-      .code-panel { width: 100%; overflow: hidden; }
-      .code-body { padding: 1rem; overflow-x: auto; -webkit-overflow-scrolling: touch; }
-      pre { font-size: 0.72rem; }
+      .hero-right { order: -1; width: 100%; max-width: 100%; }
+      .code-panel { width: 100%; max-width: 100%; overflow: hidden; box-sizing: border-box; }
+      .code-body { padding: 1rem; overflow-x: auto; -webkit-overflow-scrolling: touch; max-width: 100%; }
+      pre { font-size: 0.72rem; white-space: pre-wrap; word-break: break-all; overflow-wrap: break-word; }
       .nav-links { display: none; }
       .stats-inner { justify-content: center; gap: 1.5rem; flex-wrap: wrap; }
       .stat-item { min-width: 100px; }
