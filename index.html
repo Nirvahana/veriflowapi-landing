@@ -714,6 +714,7 @@
     <li><a href="#sources">Data Sources</a></li>
     <li><a href="#features">Features</a></li>
     <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#docs" class="nav-cta" style="background:transparent;color:var(--ink-light);border:1.5px solid var(--border);">API Docs</a></li>
     <li><a href="#waitlist" class="nav-cta">Get Early Access</a></li>
   </ul>
 </nav>
@@ -726,6 +727,10 @@
     <p class="hero-sub">
       One API call replaces days of manual credentialing. Verify active status, disciplinary flags, and OIG exclusions across NPI registry and state medical boards — with a signed audit certificate on every check.
     </p>
+    <div style="display:flex;gap:1rem;margin-bottom:2rem;flex-wrap:wrap;">
+      <a href="#waitlist" style="background:var(--accent);color:#fff;padding:0.75rem 1.5rem;border-radius:7px;font-size:0.9375rem;font-weight:600;text-decoration:none;transition:background 0.2s;" onmouseover="this.style.background='#1238cc'" onmouseout="this.style.background='var(--accent)'">Start Free Trial →</a>
+      <a href="#docs" style="background:transparent;color:var(--ink);padding:0.75rem 1.5rem;border-radius:7px;font-size:0.9375rem;font-weight:600;text-decoration:none;border:1.5px solid var(--border);transition:border-color 0.2s;" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--ink)'">View API Docs</a>
+    </div>
     <div class="trust-row">
       <div class="trust-item">
         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
@@ -994,6 +999,82 @@
   </div>
 </section>
 
+<!-- COMPARISON TABLE -->
+<section style="padding: 4rem 2rem; background: var(--surface);">
+  <div style="max-width: 900px; margin: 0 auto;">
+    <div class="section-label" style="text-align:center;">The Difference</div>
+    <div class="section-title" style="text-align:center; margin-bottom: 2.5rem;">Manual process vs. Veriflow API</div>
+    <div style="overflow-x:auto;">
+      <table style="width:100%; border-collapse:collapse; font-size:0.9rem;">
+        <thead>
+          <tr>
+            <th style="padding:1rem 1.5rem; text-align:left; background:var(--surface-2); border:1px solid var(--border); font-weight:600; color:var(--ink-muted); font-size:0.8125rem; letter-spacing:0.04em; text-transform:uppercase;">Workflow</th>
+            <th style="padding:1rem 1.5rem; text-align:left; background:#fff0f0; border:1px solid var(--border); font-weight:600; color:#dc2626; font-size:0.8125rem; letter-spacing:0.04em; text-transform:uppercase;">Manual Process</th>
+            <th style="padding:1rem 1.5rem; text-align:left; background:var(--accent-light); border:1px solid var(--border); font-weight:600; color:var(--accent); font-size:0.8125rem; letter-spacing:0.04em; text-transform:uppercase;">Veriflow API</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="padding:1rem 1.5rem; border:1px solid var(--border); font-weight:500; color:var(--ink);">Verification time</td>
+            <td style="padding:1rem 1.5rem; border:1px solid var(--border); color:#dc2626;">1–3 days per provider</td>
+            <td style="padding:1rem 1.5rem; border:1px solid var(--border); color:var(--success); font-weight:600;">Under 200ms</td>
+          </tr>
+          <tr style="background:var(--surface-2);">
+            <td style="padding:1rem 1.5rem; border:1px solid var(--border); font-weight:500; color:var(--ink);">Data sources checked</td>
+            <td style="padding:1rem 1.5rem; border:1px solid var(--border); color:#dc2626;">One at a time, manually</td>
+            <td style="padding:1rem 1.5rem; border:1px solid var(--border); color:var(--success); font-weight:600;">NPPES + OIG + State Boards simultaneously</td>
+          </tr>
+          <tr>
+            <td style="padding:1rem 1.5rem; border:1px solid var(--border); font-weight:500; color:var(--ink);">Audit trail</td>
+            <td style="padding:1rem 1.5rem; border:1px solid var(--border); color:#dc2626;">Screenshots, spreadsheets</td>
+            <td style="padding:1rem 1.5rem; border:1px solid var(--border); color:var(--success); font-weight:600;">Signed certificate with hash + timestamp</td>
+          </tr>
+          <tr style="background:var(--surface-2);">
+            <td style="padding:1rem 1.5rem; border:1px solid var(--border); font-weight:500; color:var(--ink);">When source site changes</td>
+            <td style="padding:1rem 1.5rem; border:1px solid var(--border); color:#dc2626;">Your process breaks silently</td>
+            <td style="padding:1rem 1.5rem; border:1px solid var(--border); color:var(--success); font-weight:600;">We detect, fix, and serve cached data</td>
+          </tr>
+          <tr>
+            <td style="padding:1rem 1.5rem; border:1px solid var(--border); font-weight:500; color:var(--ink);">Ongoing maintenance</td>
+            <td style="padding:1rem 1.5rem; border:1px solid var(--border); color:#dc2626;">Your engineering team</td>
+            <td style="padding:1rem 1.5rem; border:1px solid var(--border); color:var(--success); font-weight:600;">Ours. Always.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT YOU ARE PAYING FOR -->
+<section style="padding: 3rem 2rem; background: var(--ink);">
+  <div style="max-width: 900px; margin: 0 auto; text-align: center;">
+    <div style="font-size:0.75rem; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:#6b7280; margin-bottom:0.75rem;">What You're Actually Paying For</div>
+    <div style="font-family: DM Serif Display, serif; font-size: clamp(1.5rem, 3vw, 2rem); color:#fff; letter-spacing:-0.02em; margin-bottom:2rem;">You're not buying data.<br>You're buying operational reliability.</div>
+    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:1rem; text-align:left;">
+      <div style="background:#161825; border:1px solid #1e2130; border-radius:8px; padding:1.25rem;">
+        <div style="font-size:1.25rem; margin-bottom:0.5rem;">🔗</div>
+        <div style="font-size:0.875rem; font-weight:600; color:#e2e8f0; margin-bottom:0.25rem;">Reliable access to fragmented government data</div>
+      </div>
+      <div style="background:#161825; border:1px solid #1e2130; border-radius:8px; padding:1.25rem;">
+        <div style="font-size:1.25rem; margin-bottom:0.5rem;">🛡</div>
+        <div style="font-size:0.875rem; font-weight:600; color:#e2e8f0; margin-bottom:0.25rem;">Cross-referenced sanction screening</div>
+      </div>
+      <div style="background:#161825; border:1px solid #1e2130; border-radius:8px; padding:1.25rem;">
+        <div style="font-size:1.25rem; margin-bottom:0.5rem;">📋</div>
+        <div style="font-size:0.875rem; font-weight:600; color:#e2e8f0; margin-bottom:0.25rem;">Audit-ready verification history</div>
+      </div>
+      <div style="background:#161825; border:1px solid #1e2130; border-radius:8px; padding:1.25rem;">
+        <div style="font-size:1.25rem; margin-bottom:0.5rem;">⚙️</div>
+        <div style="font-size:0.875rem; font-weight:600; color:#e2e8f0; margin-bottom:0.25rem;">Engineering infrastructure you don't maintain</div>
+      </div>
+      <div style="background:#161825; border:1px solid #1e2130; border-radius:8px; padding:1.25rem;">
+        <div style="font-size:1.25rem; margin-bottom:0.5rem;">📈</div>
+        <div style="font-size:0.875rem; font-weight:600; color:#e2e8f0; margin-bottom:0.25rem;">99.9% uptime, even when source systems fail</div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- WAITLIST -->
 <section class="waitlist-section" id="waitlist">
   <div class="waitlist-inner">
@@ -1021,7 +1102,7 @@
         </select>
       </div>
       <button type="submit" class="submit-btn">Request Early Access →</button>
-      <p class="form-note">No credit card required. We're onboarding developers in batches — you'll hear from us personally when your spot opens.</p>
+      <p class="form-note">Start your 100-check free trial. Integrate today. No sales call required.</p>
     </form>
 
     <div class="success-message" id="success-msg">
