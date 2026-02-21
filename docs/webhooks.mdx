@@ -1,0 +1,200 @@
+# Webhooks
+
+VeriflowAPI can monitor registered providers continuously and send webhook notifications when their license status changes or approaches expiry. This eliminates the need to run periodic manual checks.
+
+## How webhook monitoring works
+
+1. You register a provider using the `/v1/monitor` endpoint
+2. VeriflowAPI checks that provider's license status every 24 hours
+3. When a status change is detected — or expiry is approaching — VeriflowAPI sends a POST request to your webhook URL
+4. You receive real-time alerts without any polling on your end
+
+## Register a provider for monitoring
+
+```
+POST https://api.veriflowapi.com/v1/monitor
+```
+
+### Request body
+
+```json
+{
+  "first_name": "Sarah",
+  "last_name": "Chen",
+  "state": "CA",
+  "npi": "1234567890",
+  "webhook_url": "https://yourapp.com/webhooks/veriflow",
+  "webhook_secret": "your_webhook_secret",
+  "alert_days_before_expiry": 90
+}
+```
+
+### Parameters
+
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `first_name` | string | Yes | Provider's first name |
+| `last_name` | string | Yes | Provider's last name |
+| `state` | string | Yes | Two-letter state code |
+| `npi` | string | Recommended | Provider's NPI number |
+| `webhook_url` | string | Yes | Your endpoint that will receive webhook events |
+| `webhook_secret` | string | Yes | Secret used to sign webhook payloads for security verification |
+| `alert_days_before_expiry` | integer | No | Days before expiry to send an alert. Default: 90 |
+
+### Response
+
+```json
+{
+  "monitor_id": "mon_x9y8z7w6v5",
+  "status": "active",
+  "provider": {
+    "name": "Dr. Sarah Chen",
+    "npi": "1234567890",
+    "current_status": "active",
+    "expiry_date": "2027-06-30"
+  },
+  "next_check_at": "2026-02-21T10:30:00Z",
+  "created_at": "2026-02-20T10:30:00Z"
+}
+```
+
+## Webhook event payload
+
+When a status change or expiry alert is triggered, VeriflowAPI sends a POST request to your `webhook_url` with this payload:
+
+```json
+{
+  "event": "license.status_changed",
+  "monitor_id": "mon_x9y8z7w6v5",
+  "occurred_at": "2026-02-20T14:22:00Z",
+  "provider": {
+    "name": "Dr. Sarah Chen",
+    "npi": "1234567890",
+    "state": "California"
+  },
+  "change": {
+    "from": "active",
+    "to": "suspended"
+  },
+  "verification_id": "vrf_p9q8r7s6t5",
+  "certificate_hash": "sha256_1a2b3c4d..."
+}
+```
+
+## Webhook event types
+
+| Event | Triggered when |
+|---|---|
+| `license.status_changed` | License status changes from any value to any other value |
+| `license.expiry_approaching` | License expiry is within `alert_days_before_expiry` days |
+| `license.expired` | License expiry date has passed |
+| `license.disciplinary_flag_added` | A new disciplinary action is added to the record |
+| `license.oig_exclusion_added` | Provider appears on OIG exclusion list |
+| `license.reinstated` | Previously suspended or revoked license is reinstated |
+
+## Verifying webhook signatures
+
+Every webhook request includes a `Veriflow-Signature` header. You must verify this signature to ensure the request is genuinely from VeriflowAPI and has not been tampered with.
+
+The signature is computed as an HMAC-SHA256 hash of the raw request body using your `webhook_secret`.
+
+### Verification example — Python
+
+```python
+import hmac
+import hashlib
+from flask import request, abort
+
+WEBHOOK_SECRET = "your_webhook_secret"
+
+def verify_webhook_signature(payload, signature):
+    expected = hmac.new(
+        WEBHOOK_SECRET.encode(),
+        payload,
+        hashlib.sha256
+    ).hexdigest()
+    return hmac.compare_digest(expected, signature)
+
+@app.route('/webhooks/veriflow', methods=['POST'])
+def handle_webhook():
+    signature = request.headers.get('Veriflow-Signature')
+    payload = request.get_data()
+
+    if not verify_webhook_signature(payload, signature):
+        abort(403)
+
+    event = request.json
+    
+    if event['event'] == 'license.status_changed':
+        handle_status_change(event)
+    elif event['event'] == 'license.expiry_approaching':
+        handle_expiry_alert(event)
+
+    return '', 200
+```
+
+### Verification example — Node.js
+
+```javascript
+const crypto = require('crypto');
+const express = require('express');
+
+const WEBHOOK_SECRET = 'your_webhook_secret';
+
+app.post('/webhooks/veriflow', express.raw({ type: 'application/json' }), (req, res) => {
+  const signature = req.headers['veriflow-signature'];
+  const expected = crypto
+    .createHmac('sha256', WEBHOOK_SECRET)
+    .update(req.body)
+    .digest('hex');
+
+  if (!crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expected))) {
+    return res.status(403).send('Invalid signature');
+  }
+
+  const event = JSON.parse(req.body);
+  console.log('Webhook received:', event.event);
+  
+  res.status(200).send('OK');
+});
+```
+
+## Retry policy
+
+If your webhook endpoint returns a non-2xx response or times out, VeriflowAPI will retry with exponential backoff:
+
+| Attempt | Delay |
+|---|---|
+| 1st retry | 5 minutes |
+| 2nd retry | 30 minutes |
+| 3rd retry | 2 hours |
+| 4th retry | 8 hours |
+| 5th retry | 24 hours |
+
+After 5 failed attempts, the event is marked as failed and you will receive an email notification at your account email address.
+
+## Responding to webhooks
+
+Your webhook endpoint must:
+
+- Return a `2xx` status code within **10 seconds**
+- Return `200 OK` for events you have successfully processed
+- Return `200 OK` even for event types you choose to ignore (to prevent unnecessary retries)
+
+Do not perform long-running operations synchronously inside your webhook handler. Acknowledge the webhook immediately and process the event asynchronously.
+
+## List monitored providers
+
+```
+GET https://api.veriflowapi.com/v1/monitors
+```
+
+Returns a paginated list of all providers you have registered for monitoring.
+
+## Remove a monitored provider
+
+```
+DELETE https://api.veriflowapi.com/v1/monitor/{monitor_id}
+```
+
+Stops monitoring for the specified provider. No further webhooks will be sent.

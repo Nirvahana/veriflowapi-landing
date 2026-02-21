@@ -1,0 +1,64 @@
+{
+  "$schema": "https://mintlify.com/schema.json",
+  "name": "VeriflowAPI",
+  "logo": {
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg"
+  },
+  "favicon": "/favicon.svg",
+  "colors": {
+    "primary": "#1a4fff",
+    "light": "#e8eeff",
+    "dark": "#1238cc"
+  },
+  "topbarLinks": [
+    {
+      "name": "Status",
+      "url": "https://status.veriflowapi.com"
+    }
+  ],
+  "topbarCtaButton": {
+    "name": "Get Early Access",
+    "url": "https://veriflowapi.com/#waitlist"
+  },
+  "navigation": [
+    {
+      "group": "Getting Started",
+      "pages": [
+        "introduction",
+        "quickstart",
+        "authentication"
+      ]
+    },
+    {
+      "group": "API Reference",
+      "pages": [
+        "api-reference-verify",
+        "rate-limits"
+      ]
+    },
+    {
+      "group": "Features",
+      "pages": [
+        "webhooks",
+        "certificates",
+        "data-sources"
+      ]
+    },
+    {
+      "group": "Compliance & Security",
+      "pages": [
+        "compliance"
+      ]
+    },
+    {
+      "group": "Support",
+      "pages": [
+        "faq"
+      ]
+    }
+  ],
+  "footerSocials": {
+    "linkedin": "https://linkedin.com/company/veriflowapi"
+  }
+}

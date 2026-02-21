@@ -1,0 +1,176 @@
+# Quickstart
+
+Verify your first medical license in under 5 minutes.
+
+## Step 1: Get your API key
+
+After your early access application is approved, you will receive an email from support@veriflowapi.com with your API key. It will look like this:
+
+```
+vf_live_a1b2c3d4e5f6g7h8i9j0
+```
+
+## Step 2: Make your first request
+
+Replace `YOUR_API_KEY` with your actual key and run this in your terminal:
+
+```bash
+curl -X POST https://api.veriflowapi.com/v1/verify \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "first_name": "Sarah",
+    "last_name": "Chen",
+    "state": "CA",
+    "npi": "1234567890"
+  }'
+```
+
+## Step 3: Read the response
+
+You will receive a response like this:
+
+```json
+{
+  "verified": true,
+  "status": "active",
+  "name": "Dr. Sarah Chen",
+  "license_number": "CA-A-98234",
+  "state": "California",
+  "expiry_date": "2027-06-30",
+  "disciplinary_flags": false,
+  "oig_excluded": false,
+  "sources_checked": ["NPPES", "OIG", "CA Medical Board"],
+  "source_live": true,
+  "cached": false,
+  "cache_expires_at": "2026-02-21T10:30:00Z",
+  "checked_at": "2026-02-20T10:30:00Z",
+  "verification_id": "vrf_a1b2c3d4e5",
+  "certificate_hash": "sha256_9f8e7d6c5b4a..."
+}
+```
+
+The key fields to check in your onboarding flow:
+
+- `verified` — top-level boolean, safe to use as your pass/fail gate
+- `status` — current license status (active, inactive, suspended, expired, revoked)
+- `disciplinary_flags` — true if any disciplinary actions are on record
+- `oig_excluded` — true if provider is on the HHS exclusion list
+
+## Step 4: Handle the response in your code
+
+### Python
+
+```python
+import requests
+
+def verify_provider(first_name, last_name, state, npi=None):
+    response = requests.post(
+        "https://api.veriflowapi.com/v1/verify",
+        headers={
+            "Authorization": "Bearer YOUR_API_KEY",
+            "Content-Type": "application/json"
+        },
+        json={
+            "first_name": first_name,
+            "last_name": last_name,
+            "state": state,
+            "npi": npi
+        }
+    )
+
+    data = response.json()
+
+    if data["verified"] and data["status"] == "active":
+        print(f"✓ {data['name']} is verified and active")
+        return True
+    else:
+        print(f"✗ Verification failed: status={data['status']}")
+        return False
+
+# Example usage
+verify_provider("Sarah", "Chen", "CA", "1234567890")
+```
+
+### Node.js
+
+```javascript
+const axios = require('axios');
+
+async function verifyProvider({ firstName, lastName, state, npi }) {
+  const response = await axios.post(
+    'https://api.veriflowapi.com/v1/verify',
+    { first_name: firstName, last_name: lastName, state, npi },
+    {
+      headers: {
+        'Authorization': 'Bearer YOUR_API_KEY',
+        'Content-Type': 'application/json'
+      }
+    }
+  );
+
+  const data = response.data;
+
+  if (data.verified && data.status === 'active') {
+    console.log(`✓ ${data.name} is verified and active`);
+    return true;
+  } else {
+    console.log(`✗ Verification failed: status=${data.status}`);
+    return false;
+  }
+}
+
+// Example usage
+verifyProvider({
+  firstName: 'Sarah',
+  lastName: 'Chen',
+  state: 'CA',
+  npi: '1234567890'
+});
+```
+
+### PHP
+
+```php
+<?php
+function verifyProvider($firstName, $lastName, $state, $npi = null) {
+    $ch = curl_init('https://api.veriflowapi.com/v1/verify');
+    
+    $payload = json_encode([
+        'first_name' => $firstName,
+        'last_name'  => $lastName,
+        'state'      => $state,
+        'npi'        => $npi
+    ]);
+
+    curl_setopt_array($ch, [
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_POST           => true,
+        CURLOPT_POSTFIELDS     => $payload,
+        CURLOPT_HTTPHEADER     => [
+            'Authorization: Bearer YOUR_API_KEY',
+            'Content-Type: application/json'
+        ]
+    ]);
+
+    $response = json_decode(curl_exec($ch), true);
+    curl_close($ch);
+
+    if ($response['verified'] && $response['status'] === 'active') {
+        echo "✓ {$response['name']} is verified and active\n";
+        return true;
+    } else {
+        echo "✗ Verification failed: status={$response['status']}\n";
+        return false;
+    }
+}
+
+verifyProvider('Sarah', 'Chen', 'CA', '1234567890');
+```
+
+## What's next?
+
+- Read the full [Verify Endpoint](/api-reference/verify) reference
+- Understand [Response Fields](/api-reference/response-fields) in detail
+- Set up [Webhook Monitoring](/webhooks) for ongoing license tracking
+- Download the [Postman Collection](/resources/postman) to test interactively

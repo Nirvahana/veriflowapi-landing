@@ -1,0 +1,108 @@
+# Rate Limits
+
+VeriflowAPI enforces rate limits to ensure fair access and system stability for all customers.
+
+## Monthly verification quotas
+
+Each plan includes a monthly verification quota. This is the total number of `/v1/verify` calls you can make per billing month.
+
+| Plan | Monthly verifications | Overage |
+|---|---|---|
+| Developer | 500 | Contact support |
+| Production | 5,000 | $0.08 per additional check |
+| Scale | 50,000 | $0.06 per additional check |
+| Enterprise | Unlimited | Included |
+
+## Per-minute rate limits
+
+In addition to monthly quotas, per-minute rate limits prevent burst traffic from affecting system stability.
+
+| Plan | Requests per minute |
+|---|---|
+| Developer | 10 |
+| Production | 60 |
+| Scale | 300 |
+| Enterprise | Custom |
+
+## Rate limit headers
+
+Every API response includes headers showing your current usage:
+
+```
+X-RateLimit-Limit: 5000
+X-RateLimit-Remaining: 4873
+X-RateLimit-Reset: 1740873600
+X-RateLimit-Minute-Limit: 60
+X-RateLimit-Minute-Remaining: 47
+```
+
+| Header | Description |
+|---|---|
+| `X-RateLimit-Limit` | Your monthly verification quota |
+| `X-RateLimit-Remaining` | Verifications remaining this month |
+| `X-RateLimit-Reset` | Unix timestamp when your monthly quota resets |
+| `X-RateLimit-Minute-Limit` | Your per-minute limit |
+| `X-RateLimit-Minute-Remaining` | Requests remaining in current minute |
+
+## Handling rate limit errors
+
+When you exceed your per-minute limit, you will receive a `429` response:
+
+```json
+{
+  "error": {
+    "code": "rate_limit_exceeded",
+    "message": "Per-minute rate limit exceeded. Your limit is 60 requests per minute.",
+    "retry_after": 23
+  }
+}
+```
+
+The `retry_after` field tells you how many seconds to wait before retrying.
+
+### Implementing retry logic — Python
+
+```python
+import requests
+import time
+
+def verify_with_retry(api_key, payload, max_retries=3):
+    for attempt in range(max_retries):
+        response = requests.post(
+            "https://api.veriflowapi.com/v1/verify",
+            headers={
+                "Authorization": f"Bearer {api_key}",
+                "Content-Type": "application/json"
+            },
+            json=payload
+        )
+
+        if response.status_code == 429:
+            retry_after = response.json().get('error', {}).get('retry_after', 60)
+            print(f"Rate limited. Waiting {retry_after} seconds...")
+            time.sleep(retry_after)
+            continue
+
+        return response.json()
+
+    raise Exception("Max retries exceeded")
+```
+
+## Bulk verification
+
+If you need to verify large batches of providers, use the bulk endpoint rather than making individual requests in a loop. This is more efficient and counts against your quota the same way.
+
+```
+POST https://api.veriflowapi.com/v1/verify/bulk
+```
+
+Accepts an array of up to 100 providers per request. Available on Production, Scale, and Enterprise plans.
+
+```json
+{
+  "providers": [
+    { "first_name": "Sarah", "last_name": "Chen", "state": "CA", "npi": "1234567890" },
+    { "first_name": "James", "last_name": "Park", "state": "TX", "npi": "0987654321" }
+  ]
+}
+```

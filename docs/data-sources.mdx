@@ -1,0 +1,110 @@
+# Data Sources
+
+VeriflowAPI aggregates and normalizes data from multiple authoritative government sources. This page explains what each source covers, how frequently data is refreshed, and what happens when a source is temporarily unavailable.
+
+## Federal Sources
+
+These sources are checked on every verification request regardless of state.
+
+### NPPES NPI Registry
+
+The National Plan and Provider Enumeration System is the federal database of all healthcare providers who have been assigned a National Provider Identifier.
+
+| Detail | Value |
+|---|---|
+| Coverage | All 50 US states |
+| Data includes | Name, NPI, taxonomy, practice address, credential status |
+| Refresh frequency | Daily bulk download |
+| Cache TTL | 24 hours |
+| Managed by | Centers for Medicare & Medicaid Services (CMS) |
+
+The NPPES database is the foundation of every verification. Even when a state board is temporarily unavailable, NPI data ensures you always receive a meaningful baseline response.
+
+### OIG Exclusion List
+
+The Office of Inspector General maintains a list of individuals and entities excluded from participation in federal healthcare programs (Medicare, Medicaid, etc.). Hiring or contracting with an excluded provider can result in significant civil penalties.
+
+| Detail | Value |
+|---|---|
+| Coverage | All 50 US states |
+| Data includes | Name, NPI, exclusion type, exclusion date, reinstatement date |
+| Refresh frequency | Monthly official update, checked every 12 hours |
+| Cache TTL | 12 hours |
+| Managed by | HHS Office of Inspector General |
+
+If `oig_excluded` is `true`, the provider must not be employed or contracted by any entity receiving federal healthcare funding. This is a hard disqualifier in most onboarding workflows.
+
+## State Sources — Big 5
+
+Full real-time license status is available for the five states that collectively account for approximately 40% of US telehealth volume.
+
+### California Medical Board
+
+| Detail | Value |
+|---|---|
+| License types | MD, DO, and postgraduate trainees |
+| Data includes | License number, status, expiry, disciplinary actions, probation |
+| Cache TTL | 24 hours |
+
+### Texas Medical Board
+
+| Detail | Value |
+|---|---|
+| License types | MD, DO |
+| Data includes | License number, status, expiry, board actions |
+| Cache TTL | 24 hours |
+
+### New York Office of the Professions
+
+| Detail | Value |
+|---|---|
+| License types | MD, DO, and 50+ other professions |
+| Data includes | License number, status, expiry, disciplinary history |
+| Cache TTL | 24 hours |
+
+### Florida Department of Health
+
+| Detail | Value |
+|---|---|
+| License types | MD, DO, ARNP, PA, and others |
+| Data includes | License number, status, expiry, complaint history |
+| Cache TTL | 24 hours |
+
+### Illinois Division of Professional Regulation
+
+| Detail | Value |
+|---|---|
+| License types | MD, DO, and allied health professions |
+| Data includes | License number, status, expiry |
+| Cache TTL | 24 hours |
+
+## What happens when a source is down
+
+Government websites experience downtime — planned maintenance, traffic spikes, infrastructure migrations. VeriflowAPI is architected to handle this gracefully.
+
+When a source is unavailable during a request:
+
+1. VeriflowAPI serves the most recent cached data for that source
+2. The response includes `"source_live": false` and `"cached": true`
+3. The `cache_expires_at` field tells you when fresh data will next be fetched
+4. Our monitoring system detects the outage and begins retry attempts automatically
+
+This approach ensures our 99.9% uptime SLA holds even when individual government sites experience extended downtime.
+
+You can always check current source availability at **status.veriflowapi.com**.
+
+## Remaining states
+
+For the 45 states not in the Big 5, VeriflowAPI returns NPPES and OIG data which covers federal credential status. State-level license status for remaining states is on our roadmap.
+
+If you have an urgent need for a specific state, email support@veriflowapi.com — we prioritize state additions based on customer demand.
+
+## Coming soon
+
+| Profession | Status |
+|---|---|
+| Registered Nurses (NURSYS) | In development |
+| Pharmacists (NABP) | In development |
+| Contractors (state by state) | Planned |
+| Mental health practitioners | Planned |
+| Bar admission / Attorneys | Planned |

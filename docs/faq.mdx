@@ -1,0 +1,120 @@
+# FAQ
+
+## General
+
+### What professions does VeriflowAPI currently support?
+
+VeriflowAPI currently supports medical doctors (MD and DO) in all 50 US states via NPPES and OIG, with deep state-level data for California, Texas, New York, Florida, and Illinois.
+
+Nursing, pharmacy, mental health practitioners, and contractor licenses are in development. Email support@veriflowapi.com to request priority support for a specific profession.
+
+### How accurate is VeriflowAPI?
+
+VeriflowAPI pulls directly from authoritative government databases — NPPES, OIG, and state medical boards. Accuracy is as good as the source data. We normalize and validate data on ingestion to reduce errors from inconsistent source formatting.
+
+For high-stakes decisions, we recommend using both NPI and DOB in your request to maximize match accuracy.
+
+### Can VeriflowAPI verify providers in all 50 states?
+
+Yes, for basic NPI and OIG screening. For full state-level license status — including expiry date and disciplinary history — we currently support the Big 5 states: California, Texas, New York, Florida, and Illinois. Additional states are being added based on customer demand.
+
+### Do you support international license verification?
+
+Not currently. VeriflowAPI is focused on the US market. Canada and UK are on the roadmap for 2027.
+
+---
+
+## Technical
+
+### What happens if a government site is down?
+
+VeriflowAPI serves cached data when a source is temporarily unavailable. The response will include `"cached": true` and `"source_live": false`. The `cache_expires_at` field tells you when fresh data will next be attempted.
+
+Our 99.9% uptime SLA covers our API availability, not the availability of individual government source sites.
+
+### How do I know if my result is from cache or live?
+
+Check the `cached` and `source_live` fields in the response:
+
+```json
+{
+  "source_live": false,
+  "cached": true,
+  "cache_expires_at": "2026-02-21T10:30:00Z"
+}
+```
+
+### What does `verified: false` mean exactly?
+
+`verified: false` means one of the following:
+
+- Provider was not found in any checked sources (`status: "not_found"`)
+- License status is not active (`status: "inactive"`, `"suspended"`, `"expired"`, or `"revoked"`)
+- Provider is on the OIG exclusion list (`oig_excluded: true`)
+
+Always check the `status` and `oig_excluded` fields for the specific reason.
+
+### Can I use VeriflowAPI for non-medical professions?
+
+Not yet. Medical doctors are the current focus. Nursing, pharmacy, legal, and contractor licenses are in active development.
+
+### What is the difference between `disciplinary_flags` and `oig_excluded`?
+
+- `disciplinary_flags: true` means the provider has disciplinary actions on record with their state medical board. This could be a warning, probation, or other board action. It is a signal that requires human review — not necessarily a disqualifier.
+- `oig_excluded: true` means the provider is on the federal HHS exclusion list. This is a hard disqualifier. You cannot employ or contract with this provider if you receive federal healthcare funding (Medicare, Medicaid).
+
+---
+
+## Billing
+
+### Is there a free trial?
+
+Yes. Each new account receives 100 free verifications with no credit card required. After your trial, you will need to select a paid plan to continue.
+
+### Can I upgrade or downgrade my plan?
+
+Yes, at any time. Plan changes take effect at the start of your next billing cycle.
+
+### What happens if I exceed my monthly quota?
+
+On Production and Scale plans, requests above your quota are charged at the overage rate for your plan. We will notify you by email when you reach 80% and 100% of your quota.
+
+Enterprise plans include unlimited verifications with no overage charges.
+
+### Do you offer annual billing?
+
+Yes. Annual plans are available at a 15% discount. Contact support@veriflowapi.com to set up annual billing.
+
+---
+
+## Compliance
+
+### Do you offer a Business Associate Agreement (BAA)?
+
+Yes, on Scale and Enterprise plans. Email support@veriflowapi.com with subject "BAA Request" to get started.
+
+### Is VeriflowAPI HIPAA compliant?
+
+VeriflowAPI handles publicly available government data, not Protected Health Information (PHI). However, we can sign a BAA for Scale and Enterprise customers who require it as part of their compliance framework. See our [Compliance](/compliance) page for full details.
+
+### How long do you retain verification records?
+
+All verification records and certificates are retained for 7 years from the date of issue, in line with standard healthcare compliance record retention requirements.
+
+---
+
+## Support
+
+### How do I get support?
+
+Email **support@veriflowapi.com**. We respond to all inquiries personally — no ticket system, no bots.
+
+Scale and Enterprise customers have access to a dedicated Slack channel for real-time support.
+
+### Do you have a status page?
+
+Yes. Check **status.veriflowapi.com** for real-time API status, source availability, and incident history.
+
+### Can I request a new feature?
+
+Yes. Email support@veriflowapi.com with your feature request. We prioritize based on customer demand and strategic fit.

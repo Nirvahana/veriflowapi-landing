@@ -1,0 +1,53 @@
+# HIPAA & Compliance
+
+## Is VeriflowAPI HIPAA compliant?
+
+VeriflowAPI is designed with healthcare compliance requirements in mind. We can sign a Business Associate Agreement (BAA) with customers on our Scale and Enterprise plans.
+
+**Important:** VeriflowAPI verifies license status from public government databases. We do not store or process Protected Health Information (PHI). The data we handle — names, NPIs, license numbers, and status — is publicly available information, not PHI.
+
+That said, if your platform uses VeriflowAPI as part of a broader healthcare workflow, a BAA may still be required by your compliance team. We accommodate this.
+
+## Business Associate Agreement (BAA)
+
+A BAA is available for Scale and Enterprise plan customers.
+
+To request a BAA, email **support@veriflowapi.com** with the subject line "BAA Request." We will respond within 2 business days.
+
+## Data we store
+
+| Data type | What we store | Retention |
+|---|---|---|
+| Verification requests | Input parameters (name, NPI, state) | 7 years |
+| Verification results | Full response including sources checked | 7 years |
+| Certificates | Signed verification certificates | 7 years |
+| Webhook events | Event payload and delivery status | 1 year |
+| API keys | Hashed key only, never plaintext | Until deleted |
+
+We do not store payment card information. Billing is handled by Stripe.
+
+## Data security
+
+- All data in transit is encrypted using TLS 1.3
+- Data at rest is encrypted using AES-256
+- API keys are stored as one-way hashes — we cannot recover your key if lost
+- Infrastructure is hosted on AWS with SOC 2 Type II certified data centers
+- Access to production systems is restricted to essential personnel only
+
+## SOC 2
+
+VeriflowAPI is working toward SOC 2 Type II certification. Enterprise customers can request our current security documentation and controls summary by emailing support@veriflowapi.com.
+
+## Data residency
+
+All data is currently processed and stored in AWS US-East (Virginia). If your compliance requirements mandate a specific data residency, contact us to discuss options.
+
+## Penetration testing
+
+Enterprise customers may request permission to conduct penetration testing against VeriflowAPI. Contact support@veriflowapi.com at least 14 days in advance with your testing scope and schedule.
+
+## Reporting a security vulnerability
+
+If you discover a security vulnerability in VeriflowAPI, please report it responsibly to **support@veriflowapi.com**. Do not disclose it publicly until we have had an opportunity to investigate and remediate.
+
+We take all security reports seriously and will respond within 24 hours.

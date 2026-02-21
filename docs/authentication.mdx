@@ -1,0 +1,58 @@
+# Authentication
+
+VeriflowAPI uses API keys to authenticate all requests. Your API key must be included in the `Authorization` header of every request.
+
+## Getting your API key
+
+API keys are issued after your early access application is approved. You will receive your key via email from **support@veriflowapi.com**.
+
+## Using your API key
+
+Include your API key as a Bearer token in the `Authorization` header:
+
+```bash
+Authorization: Bearer vf_live_your_api_key_here
+```
+
+### Example request with authentication
+
+```bash
+curl -X POST https://api.veriflowapi.com/v1/verify \
+  -H "Authorization: Bearer vf_live_your_api_key_here" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "first_name": "Sarah",
+    "last_name": "Chen",
+    "state": "CA",
+    "npi": "1234567890"
+  }'
+```
+
+## API key types
+
+| Key prefix | Environment | Use for |
+|---|---|---|
+| `vf_live_` | Production | Real verification requests |
+| `vf_test_` | Sandbox | Testing and development |
+
+Always use your **test key** during development. Test keys return realistic mock responses without consuming your monthly verification quota.
+
+## Keeping your API key secure
+
+- Never expose your API key in client-side code, public repositories, or frontend JavaScript
+- Store keys in environment variables, not hardcoded in source code
+- If you believe your key has been compromised, contact support@veriflowapi.com immediately for a replacement
+
+## Authentication errors
+
+If your API key is missing, invalid, or expired, you will receive a `401` response:
+
+```json
+{
+  "error": {
+    "code": "authentication_failed",
+    "message": "Invalid or missing API key. Include your key as: Authorization: Bearer vf_live_...",
+    "docs": "https://docs.veriflowapi.com/authentication"
+  }
+}
+```

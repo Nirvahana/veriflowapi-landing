@@ -1,0 +1,271 @@
+# POST /verify
+
+Verify the license status of a healthcare provider across multiple government data sources in a single API call.
+
+## Endpoint
+
+```
+POST https://api.veriflowapi.com/v1/verify
+```
+
+## Request headers
+
+| Header | Required | Value |
+|---|---|---|
+| `Authorization` | Yes | `Bearer YOUR_API_KEY` |
+| `Content-Type` | Yes | `application/json` |
+
+## Request body
+
+```json
+{
+  "first_name": "Sarah",
+  "last_name": "Chen",
+  "state": "CA",
+  "npi": "1234567890",
+  "dob": "1975-03-15"
+}
+```
+
+### Request parameters
+
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `first_name` | string | Yes | Provider's first name. Fuzzy matching handles minor typos and variations. |
+| `last_name` | string | Yes | Provider's last name. |
+| `state` | string | Yes | Two-letter US state code (e.g. `CA`, `TX`, `NY`). The state where the license was issued. |
+| `npi` | string | No | 10-digit National Provider Identifier. Strongly recommended — significantly improves match accuracy. |
+| `dob` | string | No | Date of birth in ISO 8601 format (`YYYY-MM-DD`). Used to disambiguate providers with similar names. |
+
+**Note on NPI:** While `npi` is optional, we strongly recommend including it whenever available. Without an NPI, identity resolution relies solely on name and state matching, which can produce false positives for common names.
+
+## Response
+
+### Success response — 200 OK
+
+```json
+{
+  "verified": true,
+  "status": "active",
+  "name": "Dr. Sarah Chen",
+  "license_number": "CA-A-98234",
+  "state": "California",
+  "expiry_date": "2027-06-30",
+  "disciplinary_flags": false,
+  "oig_excluded": false,
+  "sources_checked": [
+    "NPPES",
+    "OIG",
+    "CA Medical Board"
+  ],
+  "source_live": true,
+  "cached": false,
+  "cache_expires_at": "2026-02-21T10:30:00Z",
+  "checked_at": "2026-02-20T10:30:00Z",
+  "verification_id": "vrf_a1b2c3d4e5",
+  "certificate_hash": "sha256_9f8e7d6c5b4a3b2c1d..."
+}
+```
+
+### Response fields
+
+| Field | Type | Description |
+|---|---|---|
+| `verified` | boolean | Top-level pass/fail. `true` if provider was found, license is active, and no OIG exclusion exists. |
+| `status` | string | Current license status. See [Status Values](#status-values) below. |
+| `name` | string | Provider's full name as it appears in source records. |
+| `license_number` | string | State license number. |
+| `state` | string | Full state name. |
+| `expiry_date` | string | License expiry date in ISO 8601 format (`YYYY-MM-DD`). |
+| `disciplinary_flags` | boolean | `true` if any disciplinary actions, sanctions, or malpractice findings are on record. |
+| `oig_excluded` | boolean | `true` if provider appears on the HHS OIG exclusion list. |
+| `sources_checked` | array | List of data sources checked in this request. |
+| `source_live` | boolean | `true` if data was fetched live from source. `false` if served from cache. |
+| `cached` | boolean | Whether this response was served from cache. |
+| `cache_expires_at` | string | ISO 8601 timestamp when this cached result will be refreshed. |
+| `checked_at` | string | ISO 8601 timestamp of when this verification was performed. |
+| `verification_id` | string | Unique identifier for this verification. Use for audit trail and certificate retrieval. |
+| `certificate_hash` | string | SHA256 hash of the signed verification certificate. |
+
+### Status values
+
+| Status | Description | `verified` value |
+|---|---|---|
+| `active` | License is current and in good standing | `true` |
+| `inactive` | License exists but is not currently active | `false` |
+| `suspended` | License has been temporarily suspended | `false` |
+| `expired` | License has passed its expiry date | `false` |
+| `revoked` | License has been permanently revoked | `false` |
+| `not_found` | No matching provider found in sources checked | `false` |
+
+## Identity resolution
+
+VeriflowAPI uses fuzzy matching to resolve provider identity before verifying license status. This handles:
+
+- Name variations (e.g. "Bob" vs "Robert")
+- Middle initials included or omitted
+- Hyphenated last names
+- Minor typos in submitted names
+
+When multiple possible matches are found, we use `npi` and `dob` as tiebreakers. If ambiguity cannot be resolved, we return a `not_found` status with a descriptive error message.
+
+## Caching policy
+
+To maximize uptime and minimize response time, VeriflowAPI caches responses according to the following TTL policy:
+
+| Data type | Cache TTL |
+|---|---|
+| License status (active/inactive/suspended/expired/revoked) | 24 hours |
+| Static info (name, license number, school) | 30 days |
+| OIG exclusion status | 12 hours |
+
+When a response is served from cache, `cached` will be `true` and `source_live` will be `false`. The `cache_expires_at` field tells you exactly when fresh data will be fetched.
+
+This caching policy means VeriflowAPI maintains 99.9% uptime even when government source sites experience downtime.
+
+## Error responses
+
+### 400 Bad Request
+
+Returned when required parameters are missing or invalid.
+
+```json
+{
+  "error": {
+    "code": "invalid_request",
+    "message": "Missing required parameter: last_name",
+    "docs": "https://docs.veriflowapi.com/api-reference/verify"
+  }
+}
+```
+
+### 401 Unauthorized
+
+Returned when the API key is missing or invalid.
+
+```json
+{
+  "error": {
+    "code": "authentication_failed",
+    "message": "Invalid or missing API key.",
+    "docs": "https://docs.veriflowapi.com/authentication"
+  }
+}
+```
+
+### 429 Too Many Requests
+
+Returned when you exceed your plan's rate limit.
+
+```json
+{
+  "error": {
+    "code": "rate_limit_exceeded",
+    "message": "You have exceeded your monthly verification quota. Upgrade your plan or contact support.",
+    "reset_at": "2026-03-01T00:00:00Z",
+    "docs": "https://docs.veriflowapi.com/rate-limits"
+  }
+}
+```
+
+### 503 Service Unavailable
+
+Returned in the rare case that all data sources are unavailable and no cached data exists.
+
+```json
+{
+  "error": {
+    "code": "sources_unavailable",
+    "message": "All data sources are temporarily unavailable. We are working to restore service. Check status.veriflowapi.com for updates.",
+    "docs": "https://docs.veriflowapi.com/api-reference/verify"
+  }
+}
+```
+
+## Code examples
+
+### Python
+
+```python
+import requests
+
+def verify_provider(api_key, first_name, last_name, state, npi=None, dob=None):
+    payload = {
+        "first_name": first_name,
+        "last_name": last_name,
+        "state": state
+    }
+    if npi:
+        payload["npi"] = npi
+    if dob:
+        payload["dob"] = dob
+
+    response = requests.post(
+        "https://api.veriflowapi.com/v1/verify",
+        headers={
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json"
+        },
+        json=payload
+    )
+
+    if response.status_code == 200:
+        return response.json()
+    else:
+        raise Exception(f"API error {response.status_code}: {response.json()}")
+```
+
+### Node.js
+
+```javascript
+const axios = require('axios');
+
+async function verifyProvider(apiKey, { firstName, lastName, state, npi, dob }) {
+  const response = await axios.post(
+    'https://api.veriflowapi.com/v1/verify',
+    {
+      first_name: firstName,
+      last_name: lastName,
+      state,
+      ...(npi && { npi }),
+      ...(dob && { dob })
+    },
+    {
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json'
+      }
+    }
+  );
+
+  return response.data;
+}
+```
+
+### Ruby
+
+```ruby
+require 'net/http'
+require 'json'
+require 'uri'
+
+def verify_provider(api_key, first_name:, last_name:, state:, npi: nil, dob: nil)
+  uri = URI('https://api.veriflowapi.com/v1/verify')
+  http = Net::HTTP.new(uri.host, uri.port)
+  http.use_ssl = true
+
+  request = Net::HTTP::Post.new(uri)
+  request['Authorization'] = "Bearer #{api_key}"
+  request['Content-Type'] = 'application/json'
+  request.body = {
+    first_name: first_name,
+    last_name: last_name,
+    state: state,
+    npi: npi,
+    dob: dob
+  }.compact.to_json
+
+  response = http.request(request)
+  JSON.parse(response.body)
+end
+```

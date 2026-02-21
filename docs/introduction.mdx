@@ -1,0 +1,42 @@
+# Introduction
+
+**VeriflowAPI** is a high-availability REST API for verifying professional licenses across fragmented US government databases. One API call replaces days of manual credentialing.
+
+## What VeriflowAPI does
+
+When you submit a provider's details, VeriflowAPI simultaneously checks:
+
+- **NPPES NPI Registry** — federal database of all licensed healthcare providers
+- **OIG Exclusion List** — HHS list of excluded individuals from federal programs
+- **State Medical Boards** — real-time license status for CA, TX, NY, FL, and IL
+
+We normalize inconsistent data formats across all sources and return a single, clean JSON response in under 200ms — even when government sites are slow or down.
+
+## Who uses VeriflowAPI
+
+- **Telehealth platforms** verifying providers before onboarding
+- **Credentialing software** automating provider enrollment workflows
+- **Healthcare staffing platforms** screening candidates at scale
+- **Insurance and compliance teams** running periodic license audits
+- **Medical staffing agencies** validating contractor credentials
+
+## Key capabilities
+
+| Capability | Detail |
+|---|---|
+| Response time | Under 200ms average |
+| Uptime SLA | 99.9% guaranteed |
+| Data sources | NPPES, OIG, Big 5 state boards |
+| Cache freshness | 24 hours for status, 30 days for static data |
+| Verification certificates | SHA256-signed, audit-ready |
+| Webhook monitoring | Real-time alerts on status changes |
+
+## Base URL
+
+```
+https://api.veriflowapi.com/v1
+```
+
+## Need help?
+
+Email us at **support@veriflowapi.com**. We respond personally — no ticket queues, no bots.
