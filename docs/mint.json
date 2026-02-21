@@ -11,12 +11,6 @@
     "light": "#e8eeff",
     "dark": "#1238cc"
   },
-  "topbarLinks": [
-    {
-      "name": "Status",
-      "url": "https://status.veriflowapi.com"
-    }
-  ],
   "topbarCtaButton": {
     "name": "Get Early Access",
     "url": "https://veriflowapi.com/#waitlist"
