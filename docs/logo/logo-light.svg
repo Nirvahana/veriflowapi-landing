@@ -1,0 +1,11 @@
+<svg width="180" height="36" viewBox="0 0 180 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Icon mark - simple V checkmark -->
+  <rect width="36" height="36" rx="8" fill="#1a4fff"/>
+  <polyline points="9,18 16,25 27,12" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  
+  <!-- Veriflow text -->
+  <text x="46" y="24" font-family="Georgia, 'Times New Roman', serif" font-size="18" font-weight="700" fill="#0f1117" letter-spacing="-0.5">Veriflow</text>
+  
+  <!-- API text -->
+  <text x="128" y="24" font-family="Georgia, 'Times New Roman', serif" font-size="18" font-weight="700" fill="#1a4fff" letter-spacing="-0.5">API</text>
+</svg>
