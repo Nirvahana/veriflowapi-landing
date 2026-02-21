@@ -700,6 +700,9 @@
       h1 { font-size: 2.25rem; }
       .stats-bar { padding: 1.25rem; }
     }
+    @media (max-width: 768px) {
+      section[style*="grid-template-columns: 1fr 1fr"] > div { grid-template-columns: 1fr !important; gap: 2rem !important; }
+    }
   </style>
 </head>
 <body>
@@ -719,9 +722,9 @@
 <section class="hero">
   <div class="hero-left">
     <div class="badge">Early Access · Now Open</div>
-    <h1>Verify Any Medical License <em>in Under 200ms</em></h1>
+    <h1>Stop Scraping 50 State Boards. <em>Verify Providers in 200ms.</em></h1>
     <p class="hero-sub">
-      A single API to verify active status, disciplinary flags, and OIG exclusions across NPI registry and state medical boards. Built for telehealth, credentialing, and healthcare onboarding workflows.
+      One API call replaces days of manual credentialing. Verify active status, disciplinary flags, and OIG exclusions across NPI registry and state medical boards — with a signed audit certificate on every check.
     </p>
     <div class="trust-row">
       <div class="trust-item">
@@ -803,6 +806,36 @@
     </div>
   </div>
 </div>
+
+<!-- WHO ITS FOR -->
+<section style="background: var(--surface-2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 3.5rem 2rem;">
+  <div style="max-width: 1200px; margin: 0 auto;">
+    <div class="section-label">Who It's For</div>
+    <div class="section-title" style="margin-bottom: 2rem;">Built for teams who can't afford to get this wrong.</div>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem;">
+      <div style="background:#fff; border: 1px solid var(--border); border-radius: 10px; padding: 1.5rem;">
+        <div style="font-size: 1.5rem; margin-bottom: 0.75rem;">🏥</div>
+        <div style="font-weight: 600; font-size: 0.9375rem; color: var(--ink); margin-bottom: 0.35rem;">Telehealth Platforms</div>
+        <div style="font-size: 0.8125rem; color: var(--ink-muted); line-height: 1.6;">Onboarding multi-state providers who need instant license verification before their first appointment.</div>
+      </div>
+      <div style="background:#fff; border: 1px solid var(--border); border-radius: 10px; padding: 1.5rem;">
+        <div style="font-size: 1.5rem; margin-bottom: 0.75rem;">🏢</div>
+        <div style="font-weight: 600; font-size: 0.9375rem; color: var(--ink); margin-bottom: 0.35rem;">Credentialing Software</div>
+        <div style="font-size: 0.8125rem; color: var(--ink-muted); line-height: 1.6;">SaaS companies building provider management tools who need reliable, normalized license data via API.</div>
+      </div>
+      <div style="background:#fff; border: 1px solid var(--border); border-radius: 10px; padding: 1.5rem;">
+        <div style="font-size: 1.5rem; margin-bottom: 0.75rem;">🩺</div>
+        <div style="font-weight: 600; font-size: 0.9375rem; color: var(--ink); margin-bottom: 0.35rem;">Healthcare Staffing</div>
+        <div style="font-size: 0.8125rem; color: var(--ink-muted); line-height: 1.6;">Agencies placing locum tenens and travel nurses who verify credentials across multiple states daily.</div>
+      </div>
+      <div style="background:#fff; border: 1px solid var(--border); border-radius: 10px; padding: 1.5rem;">
+        <div style="font-size: 1.5rem; margin-bottom: 0.75rem;">🛡</div>
+        <div style="font-weight: 600; font-size: 0.9375rem; color: var(--ink); margin-bottom: 0.35rem;">Insurance &amp; Risk Teams</div>
+        <div style="font-size: 0.8125rem; color: var(--ink-muted); line-height: 1.6;">Underwriters and compliance teams screening providers for OIG exclusions and disciplinary history.</div>
+      </div>
+    </div>
+  </div>
+</section>
 
 <!-- DATA SOURCES -->
 <section class="sources-section" id="sources">
@@ -903,7 +936,7 @@
       <div class="plan-name">Developer</div>
       <div class="plan-price"><sup>$</sup>49</div>
       <div class="plan-period">per month</div>
-      <div class="plan-checks">500 verifications/month</div>
+      <div class="plan-checks">500 verifications/month<br><span style="font-size:0.75rem;color:var(--ink-muted);font-weight:400;">$0.15 per additional check</span></div>
       <ul class="plan-features">
         <li>NPPES + OIG nationwide</li>
         <li>Big 5 state boards</li>
@@ -918,7 +951,7 @@
       <div class="plan-name">Production</div>
       <div class="plan-price"><sup>$</sup>299</div>
       <div class="plan-period">per month</div>
-      <div class="plan-checks">5,000 verifications/month</div>
+      <div class="plan-checks">5,000 verifications/month<br><span style="font-size:0.75rem;color:var(--ink-muted);font-weight:400;">$0.08 per additional check</span></div>
       <ul class="plan-features">
         <li>Everything in Developer</li>
         <li>Webhook monitoring</li>
@@ -933,7 +966,7 @@
       <div class="plan-name">Scale</div>
       <div class="plan-price"><sup>$</sup>1,499</div>
       <div class="plan-period">per month</div>
-      <div class="plan-checks">50,000 verifications/month</div>
+      <div class="plan-checks">50,000 verifications/month<br><span style="font-size:0.75rem;color:var(--ink-muted);font-weight:400;">$0.04 per additional check</span></div>
       <ul class="plan-features">
         <li>Everything in Production</li>
         <li>Historical change log</li>
@@ -948,7 +981,7 @@
       <div class="plan-name">Enterprise</div>
       <div class="plan-price" style="font-size:1.75rem;padding-top:0.5rem;">Custom</div>
       <div class="plan-period">annual contract</div>
-      <div class="plan-checks">Unlimited verifications</div>
+      <div class="plan-checks">Unlimited verifications<br><span style="font-size:0.75rem;color:var(--ink-muted);font-weight:400;">Annual contract · Paid upfront</span></div>
       <ul class="plan-features">
         <li>Everything in Scale</li>
         <li>White-label option</li>
@@ -995,6 +1028,70 @@
       <h3>You're on the list. ✓</h3>
       <p>Thanks for your interest. We're reviewing applications and will reach out to <strong id="confirmed-email"></strong> personally when your spot opens.</p>
       <p style="margin-top:0.75rem;font-size:0.8125rem;color:#6b7280;">Questions? <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="5f2c2a2f2f302d2b1f293a2d36393330283e2f36713c3032">[email&#160;protected]</a></p>
+    </div>
+  </div>
+</section>
+
+<!-- WHY NOT BUILD IN HOUSE -->
+<section style="padding: 5rem 2rem; background: var(--surface-2); border-top: 1px solid var(--border);">
+  <div style="max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;">
+    <div>
+      <div class="section-label">Why Not Build In-House?</div>
+      <div class="section-title">We make it look simple.<br>It isn't.</div>
+      <p style="font-size: 1rem; color: var(--ink-light); line-height: 1.7; font-weight: 300; margin-top: 1rem;">
+        Every engineering team thinks about building this. Most start. Few finish. None want to maintain it.
+      </p>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+      <div style="background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.25rem; display: flex; align-items: flex-start; gap: 1rem;">
+        <span style="font-size: 1.25rem; flex-shrink:0;">🔄</span>
+        <div><div style="font-weight: 600; font-size: 0.875rem; color: var(--ink);">50+ different state board formats</div><div style="font-size: 0.8rem; color: var(--ink-muted); margin-top: 0.2rem;">HTML tables, PDFs, CSVs, broken APIs — each state does it differently.</div></div>
+      </div>
+      <div style="background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.25rem; display: flex; align-items: flex-start; gap: 1rem;">
+        <span style="font-size: 1.25rem; flex-shrink:0;">🤖</span>
+        <div><div style="font-weight: 600; font-size: 0.875rem; color: var(--ink);">CAPTCHAs and aggressive rate limiting</div><div style="font-size: 0.8rem; color: var(--ink-muted); margin-top: 0.2rem;">Government sites actively block scrapers. Residential proxies, browser fingerprinting, solver services — all required.</div></div>
+      </div>
+      <div style="background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.25rem; display: flex; align-items: flex-start; gap: 1rem;">
+        <span style="font-size: 1.25rem; flex-shrink:0;">⚠️</span>
+        <div><div style="font-weight: 600; font-size: 0.875rem; color: var(--ink);">Schema changes without warning</div><div style="font-size: 0.8rem; color: var(--ink-muted); margin-top: 0.2rem;">State boards redesign portals randomly. Your scraper breaks silently and returns bad data.</div></div>
+      </div>
+      <div style="background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.25rem; display: flex; align-items: flex-start; gap: 1rem;">
+        <span style="font-size: 1.25rem; flex-shrink:0;">📅</span>
+        <div><div style="font-weight: 600; font-size: 0.875rem; color: var(--ink);">OIG exclusion list updates monthly</div><div style="font-size: 0.8rem; color: var(--ink-muted); margin-top: 0.2rem;">Miss an update and you've onboarded a federally excluded provider. That's your liability.</div></div>
+      </div>
+      <div style="background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.25rem; display: flex; align-items: flex-start; gap: 1rem;">
+        <span style="font-size: 1.25rem; flex-shrink:0;">🔧</span>
+        <div><div style="font-weight: 600; font-size: 0.875rem; color: var(--ink);">Ongoing maintenance is a full-time job</div><div style="font-size: 0.8rem; color: var(--ink-muted); margin-top: 0.2rem;">We handle the monitoring, alerting, fixing, and caching so your team never has to.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST SIGNALS -->
+<section style="padding: 3rem 2rem; border-top: 1px solid var(--border);">
+  <div style="max-width: 1200px; margin: 0 auto;">
+    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 1.5rem 3rem;">
+      <div style="display:flex; align-items:center; gap:0.5rem; font-size:0.8125rem; font-weight:600; color:var(--ink-light);">
+        <span style="color:var(--success);">✓</span> Public Data Sources Only
+      </div>
+      <div style="display:flex; align-items:center; gap:0.5rem; font-size:0.8125rem; font-weight:600; color:var(--ink-light);">
+        <span style="color:var(--success);">✓</span> No PHI Stored
+      </div>
+      <div style="display:flex; align-items:center; gap:0.5rem; font-size:0.8125rem; font-weight:600; color:var(--ink-light);">
+        <span style="color:var(--success);">✓</span> Data Refreshed Daily
+      </div>
+      <div style="display:flex; align-items:center; gap:0.5rem; font-size:0.8125rem; font-weight:600; color:var(--ink-light);">
+        <span style="color:var(--success);">✓</span> Built on AWS
+      </div>
+      <div style="display:flex; align-items:center; gap:0.5rem; font-size:0.8125rem; font-weight:600; color:var(--ink-light);">
+        <span style="color:var(--success);">✓</span> SOC 2 Roadmap
+      </div>
+      <div style="display:flex; align-items:center; gap:0.5rem; font-size:0.8125rem; font-weight:600; color:var(--ink-light);">
+        <span style="color:var(--success);">✓</span> BAA Available
+      </div>
+      <div style="display:flex; align-items:center; gap:0.5rem; font-size:0.8125rem; font-weight:600; color:var(--ink-light);">
+        <span style="color:var(--success);">✓</span> 99.9% Uptime SLA
+      </div>
     </div>
   </div>
 </section>
@@ -1056,3 +1153,5 @@
   // Smooth scroll for nav links
   document.querySelectorAll('a[href^="#"]').forEach(a => {
     a.addEventListe
+</body>
+</html>
