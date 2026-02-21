@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Terms of Service — VeriflowAPI</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { max-width: 100%; overflow-x: hidden; }
+
+    :root {
+      --ink: #0f1117;
+      --ink-light: #3a3d4a;
+      --ink-muted: #6b7080;
+      --surface: #fafaf8;
+      --surface-2: #f4f3ef;
+      --accent: #1a4fff;
+      --border: #e2e0d8;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--surface);
+      color: var(--ink);
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    nav {
+      background: rgba(250,250,248,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-logo {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.25rem;
+      color: var(--ink);
+      text-decoration: none;
+      letter-spacing: -0.02em;
+    }
+
+    .nav-logo span { color: var(--accent); }
+
+    .nav-back {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--ink-muted);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: color 0.2s;
+    }
+
+    .nav-back:hover { color: var(--ink); }
+
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 4rem 2rem 6rem;
+    }
+
+    .page-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+    }
+
+    h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 2.5rem;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+      margin-bottom: 0.5rem;
+      line-height: 1.1;
+    }
+
+    .last-updated {
+      font-size: 0.875rem;
+      color: var(--ink-muted);
+      margin-bottom: 3rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.375rem;
+      color: var(--ink);
+      margin-top: 2.5rem;
+      margin-bottom: 0.75rem;
+      letter-spacing: -0.01em;
+    }
+
+    p {
+      font-size: 0.9375rem;
+      color: var(--ink-light);
+      margin-bottom: 1rem;
+      line-height: 1.75;
+    }
+
+    ul {
+      margin: 0.75rem 0 1rem 1.25rem;
+    }
+
+    ul li {
+      font-size: 0.9375rem;
+      color: var(--ink-light);
+      margin-bottom: 0.4rem;
+      line-height: 1.7;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    a:hover { text-decoration: underline; }
+
+    .highlight-box {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem 1.5rem;
+      margin: 1.5rem 0;
+    }
+
+    .highlight-box p {
+      margin: 0;
+      font-size: 0.9rem;
+    }
+
+    .warning-box {
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      border-radius: 8px;
+      padding: 1.25rem 1.5rem;
+      margin: 1.5rem 0;
+    }
+
+    .warning-box p {
+      margin: 0;
+      font-size: 0.9rem;
+      color: #92400e;
+    }
+
+    footer {
+      background: #0a0c12;
+      padding: 2rem;
+      text-align: center;
+      border-top: 1px solid #1e2130;
+    }
+
+    .footer-logo {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.125rem;
+      color: #fff;
+      margin-bottom: 0.5rem;
+    }
+
+    .footer-logo span { color: var(--accent); }
+
+    .footer-text {
+      font-size: 0.8125rem;
+      color: #4b5563;
+    }
+
+    .footer-text a { color: #6b7280; text-decoration: none; }
+    .footer-text a:hover { color: #9ca3af; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">Veriflow<span>API</span></a>
+  <a href="/" class="nav-back">← Back to home</a>
+</nav>
+
+<div class="container">
+  <div class="page-label">Legal</div>
+  <h1>Terms of Service</h1>
+  <p class="last-updated">Last updated: February 21, 2026</p>
+
+  <div class="highlight-box">
+    <p>These Terms of Service govern your use of VeriflowAPI. By using our service you agree to these terms. Please read them carefully. If you have questions, email us at <a href="mailto:support@veriflowapi.com">support@veriflowapi.com</a> before using the service.</p>
+  </div>
+
+  <h2>1. About VeriflowAPI</h2>
+  <p>VeriflowAPI ("we", "our", "us", or "the Service") is a medical license verification API operated by an individual developer. The Service provides programmatic access to publicly available government databases for the purpose of verifying professional licenses.</p>
+  <p>By accessing or using VeriflowAPI you agree to be bound by these Terms of Service and our <a href="/privacy.html">Privacy Policy</a>.</p>
+
+  <h2>2. Eligibility</h2>
+  <p>You must be at least 18 years old and capable of entering into a legally binding agreement to use this Service. By using VeriflowAPI you represent that you meet these requirements.</p>
+  <p>VeriflowAPI is intended for business use. By using the Service you represent that you are using it for legitimate business purposes related to professional license verification.</p>
+
+  <h2>3. API Access and API Keys</h2>
+  <p>Upon approval of your account you will receive an API key. You are responsible for:</p>
+  <ul>
+    <li>Keeping your API key confidential and secure</li>
+    <li>All activity that occurs under your API key</li>
+    <li>Notifying us immediately if you believe your API key has been compromised</li>
+  </ul>
+  <p>You may not share, sell, or transfer your API key to any third party without our written consent. Each customer receives one API key per plan. Additional keys are available on Enterprise plans.</p>
+
+  <h2>4. Acceptable Use</h2>
+  <p>You agree to use VeriflowAPI only for lawful purposes and in accordance with these Terms. Specifically, you agree to use the Service only to verify professional licenses for legitimate business purposes such as:</p>
+  <ul>
+    <li>Provider onboarding and credentialing workflows</li>
+    <li>Compliance and regulatory screening</li>
+    <li>Healthcare staffing and placement verification</li>
+    <li>Insurance underwriting and risk assessment</li>
+  </ul>
+
+  <p>You agree NOT to use VeriflowAPI to:</p>
+  <ul>
+    <li>Stalk, harass, or investigate individuals for personal purposes</li>
+    <li>Build consumer-facing products that display provider information without appropriate consent</li>
+    <li>Circumvent or attempt to circumvent our rate limits or access controls</li>
+    <li>Reverse engineer, decompile, or attempt to extract our underlying data sources</li>
+    <li>Resell or redistribute our API data without written permission</li>
+    <li>Use the Service in any way that violates applicable laws or regulations</li>
+    <li>Use verification results as the sole basis for employment decisions without human review</li>
+  </ul>
+
+  <h2>5. Data Accuracy Disclaimer</h2>
+
+  <div class="warning-box">
+    <p><strong>Important:</strong> VeriflowAPI provides verification data sourced from public government databases. While we strive for accuracy, we cannot guarantee that our data is complete, current, or error-free at all times.</p>
+  </div>
+
+  <p>You acknowledge and agree that:</p>
+  <ul>
+    <li>Verification results should be used as one input in a broader credentialing process, not as the sole determinant</li>
+    <li>Government source databases may contain errors, delays, or omissions beyond our control</li>
+    <li>Cached data may not reflect the most current status of a license</li>
+    <li>VeriflowAPI is not a substitute for thorough credentialing processes required by law or regulation</li>
+    <li>You are solely responsible for your credentialing decisions and their consequences</li>
+    <li>We are not liable for any harm resulting from reliance on verification results</li>
+  </ul>
+
+  <h2>6. Payment and Billing</h2>
+  <p>Paid plans are billed monthly in advance. By subscribing to a paid plan you authorize us to charge your payment method on a recurring basis.</p>
+  <ul>
+    <li>All prices are in US Dollars unless otherwise stated</li>
+    <li>Subscriptions automatically renew unless cancelled before the renewal date</li>
+    <li>You may cancel your subscription at any time — cancellation takes effect at the end of your current billing period</li>
+    <li>We do not offer refunds for partial months of service</li>
+    <li>Overage charges are billed at the end of each billing cycle</li>
+    <li>We reserve the right to change pricing with 30 days notice to active customers</li>
+  </ul>
+
+  <h2>7. Free Trial</h2>
+  <p>Early access accounts include 100 free verification checks. After your free checks are used, you must subscribe to a paid plan to continue using the Service. We reserve the right to modify or discontinue the free trial offer at any time.</p>
+
+  <h2>8. Service Availability and SLA</h2>
+  <p>We target 99.9% API uptime. This SLA applies to our API availability and does not guarantee the availability of any specific government data source. When source sites are unavailable we serve cached data as described in our documentation.</p>
+  <p>We reserve the right to perform scheduled maintenance, which we will announce in advance where possible. Emergency maintenance may occur without notice.</p>
+
+  <h2>9. Intellectual Property</h2>
+  <p>VeriflowAPI, including our API, documentation, website, and brand, is our intellectual property. These Terms do not grant you any ownership rights in the Service.</p>
+  <p>The underlying government data we provide access to is publicly available and not our intellectual property. Our value is in the aggregation, normalization, and reliable delivery of that data.</p>
+
+  <h2>10. Limitation of Liability</h2>
+  <p>To the maximum extent permitted by law, VeriflowAPI and its operator shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising from your use of the Service, including but not limited to:</p>
+  <ul>
+    <li>Loss of revenue or profits</li>
+    <li>Costs of hiring an excluded or unlicensed provider</li>
+    <li>Regulatory fines or penalties</li>
+    <li>Data loss or corruption</li>
+    <li>Any harm arising from inaccurate verification results</li>
+  </ul>
+  <p>Our total liability to you for any claim arising from use of the Service shall not exceed the amount you paid us in the three months preceding the claim.</p>
+
+  <h2>11. Indemnification</h2>
+  <p>You agree to indemnify and hold harmless VeriflowAPI and its operator from any claims, damages, losses, or expenses (including reasonable legal fees) arising from your use of the Service, your violation of these Terms, or your violation of any third-party rights.</p>
+
+  <h2>12. Termination</h2>
+  <p>We may suspend or terminate your access to VeriflowAPI at any time if:</p>
+  <ul>
+    <li>You violate these Terms of Service</li>
+    <li>We reasonably believe your use is fraudulent or abusive</li>
+    <li>Required by law or regulation</li>
+  </ul>
+  <p>You may terminate your account at any time by contacting us at <a href="mailto:support@veriflowapi.com">support@veriflowapi.com</a>.</p>
+
+  <h2>13. Changes to These Terms</h2>
+  <p>We may update these Terms from time to time. We will notify active customers of material changes by email at least 14 days before the changes take effect. Continued use of the Service after that date constitutes acceptance of the updated Terms.</p>
+
+  <h2>14. Governing Law</h2>
+  <p>These Terms are governed by and construed in accordance with applicable law. Any disputes arising from these Terms or your use of the Service shall be resolved through good-faith negotiation first, and if unresolved, through binding arbitration.</p>
+
+  <h2>15. Entire Agreement</h2>
+  <p>These Terms of Service and our Privacy Policy constitute the entire agreement between you and VeriflowAPI regarding your use of the Service and supersede all prior agreements.</p>
+
+  <h2>16. Contact</h2>
+  <p>For any questions about these Terms, contact us at <a href="mailto:support@veriflowapi.com">support@veriflowapi.com</a>. We respond to all inquiries personally.</p>
+
+</div>
+
+<footer>
+  <div class="footer-logo">Veriflow<span>API</span></div>
+  <p class="footer-text">
+    © 2026 VeriflowAPI · <a href="mailto:support@veriflowapi.com">support@veriflowapi.com</a> · <a href="/terms.html">Terms</a> · <a href="/privacy.html">Privacy</a>
+  </p>
+</footer>
+
+</body>
+</html>
