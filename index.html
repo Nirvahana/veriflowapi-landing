@@ -801,8 +801,8 @@
 <div class="stats-bar">
   <div class="stats-inner">
     <div class="stat-item">
-      <div class="stat-num">50</div>
-      <div class="stat-label">US States Covered</div>
+      <div class="stat-num">3</div>
+      <div class="stat-label">Deep State Integrations</div>
     </div>
     <div class="stat-item">
       <div class="stat-num">&lt;200ms</div>
@@ -880,15 +880,21 @@
     </div>
     <div class="source-card">
       <span class="source-badge badge-state">State</span>
-      <div class="source-name">Texas Medical Board</div>
-      <div class="source-desc">Active license verification and sanction history for Texas licensed physicians.</div>
+      <div class="source-name">Florida Department of Health</div>
+      <div class="source-desc">Official bulk data portal — real-time license status, disciplinary actions, and expiry for FL licensed physicians.</div>
       <div class="source-status"><span class="status-dot"></span>Live · 24hr Cache</div>
     </div>
     <div class="source-card">
       <span class="source-badge badge-state">State</span>
-      <div class="source-name">New York + Florida + Illinois</div>
-      <div class="source-desc">Deep integration with the remaining top-5 US states covering 40% of telehealth volume.</div>
+      <div class="source-name">Illinois IDFPR</div>
+      <div class="source-desc">Official bulk license lookup — approved for primary source verification by Joint Commission and NCQA.</div>
       <div class="source-status"><span class="status-dot"></span>Live · 24hr Cache</div>
+    </div>
+    <div class="source-card" style="background: var(--surface-2); border-style: dashed;">
+      <span class="source-badge" style="background:#fef3c7;color:#92400e;">Coming Soon</span>
+      <div class="source-name">Texas &amp; New York</div>
+      <div class="source-desc">Deep state board integration for TX and NY in progress. NPPES + OIG baseline coverage active for all 50 states.</div>
+      <div class="source-status" style="color:var(--ink-muted);"><span class="status-dot" style="background:var(--ink-muted);"></span>In Development</div>
     </div>
     <div class="source-card" style="background: var(--surface-2); border-style: dashed;">
       <span class="source-badge" style="background:#f3f4f6;color:#6b7280;">Coming Soon</span>
@@ -1231,19 +1237,4 @@
       if (response.ok) {
         document.getElementById('confirmed-email').textContent = email;
         form.style.display = 'none';
-        document.getElementById('success-msg').style.display = 'block';
-      } else {
-        submitBtn.textContent = 'Something went wrong. Try again.';
-        submitBtn.disabled = false;
-      }
-    } catch (err) {
-      submitBtn.textContent = 'Something went wrong. Try again.';
-      submitBtn.disabled = false;
-    }
-  });
-
-  // Smooth scroll for nav links
-  document.querySelectorAll('a[href^="#"]').forEach(a => {
-    a.addEventListe
-</body>
-</html>
+        document.get
