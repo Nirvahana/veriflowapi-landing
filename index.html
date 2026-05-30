@@ -13,6 +13,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>VeriflowAPI — Medical License Verification API</title>
+  <meta name="description" content="One API call for federal NPI + OIG exclusion screening nationwide, plus deep state-board coverage. Signed audit certificates, webhook monitoring, fuzzy name matching. Start free with 100 verifications." />
+  <meta property="og:title" content="VeriflowAPI — Medical License Verification API" />
+  <meta property="og:description" content="Stop scraping state boards. Verify providers in one API call, with a tamper-evident signed certificate on every check." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://veriflowapi.com" />
+  <meta name="twitter:card" content="summary_large_image" />
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -726,20 +732,21 @@
     <li><a href="#features">Features</a></li>
     <li><a href="#pricing">Pricing</a></li>
     <li><a href="https://docs.veriflowapi.com/introduction" class="nav-cta" style="background:transparent;color:var(--ink-light) !important;border:1.5px solid var(--border);">API Docs</a></li>
-    <li><a href="#waitlist" class="nav-cta">Get Early Access</a></li>
+    <li><a href="https://app.veriflowapi.com/login" style="color:var(--ink-light) !important;font-weight:500;">Sign In</a></li>
+    <li><a href="https://app.veriflowapi.com/signup" class="nav-cta">Start Free →</a></li>
   </ul>
 </nav>
 
 <!-- HERO -->
 <section class="hero">
   <div class="hero-left">
-    <div class="badge">Early Access · Now Open</div>
-    <h1>Stop Scraping 50 State Boards. <em>Verify Providers in 200ms.</em></h1>
+    <div class="badge">Live · 100 Free Verifications</div>
+    <h1>Stop Scraping State Boards. <em>Verify Providers in One Call.</em></h1>
     <p class="hero-sub">
-      One API call replaces days of manual credentialing. Verify active status, disciplinary flags, and OIG exclusions across NPI registry and state medical boards — with a signed audit certificate on every check.
+      Federal NPI + OIG exclusion screening nationwide, plus deep Texas state-board coverage today (Florida, Illinois next). Every check returns a tamper-evident, SHA‑256‑signed audit certificate — JSON or PDF.
     </p>
     <div style="display:flex;gap:1rem;margin-bottom:2rem;flex-wrap:wrap;">
-      <a href="#waitlist" style="background:var(--accent);color:#fff;padding:0.75rem 1.5rem;border-radius:7px;font-size:0.9375rem;font-weight:600;text-decoration:none;transition:background 0.2s;" onmouseover="this.style.background='#1238cc'" onmouseout="this.style.background='var(--accent)'">Start Free Trial →</a>
+      <a href="https://app.veriflowapi.com/signup" style="background:var(--accent);color:#fff;padding:0.75rem 1.5rem;border-radius:7px;font-size:0.9375rem;font-weight:600;text-decoration:none;transition:background 0.2s;" onmouseover="this.style.background='#1238cc'" onmouseout="this.style.background='var(--accent)'">Start Free → 100 verifications</a>
       <a href="https://docs.veriflowapi.com/introduction" style="background:transparent;color:var(--ink);padding:0.75rem 1.5rem;border-radius:7px;font-size:0.9375rem;font-weight:600;text-decoration:none;border:1.5px solid var(--border);transition:border-color 0.2s;" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--ink)'">View API Docs</a>
     </div>
     <div class="trust-row">
@@ -801,24 +808,24 @@
 <div class="stats-bar">
   <div class="stats-inner">
     <div class="stat-item">
-      <div class="stat-num">3</div>
-      <div class="stat-label">Deep State Integrations</div>
+      <div class="stat-num">50</div>
+      <div class="stat-label">States · Federal Coverage</div>
     </div>
     <div class="stat-item">
-      <div class="stat-num">&lt;200ms</div>
-      <div class="stat-label">Avg Response Time</div>
+      <div class="stat-num">83k+</div>
+      <div class="stat-label">OIG Exclusions Mirrored</div>
     </div>
     <div class="stat-item">
-      <div class="stat-num">99.9%</div>
-      <div class="stat-label">Uptime SLA</div>
+      <div class="stat-num">&lt;300ms</div>
+      <div class="stat-label">Cached Response Time</div>
     </div>
     <div class="stat-item">
-      <div class="stat-num">3</div>
-      <div class="stat-label">Data Sources / Check</div>
+      <div class="stat-num">7yr</div>
+      <div class="stat-label">Certificate Retention</div>
     </div>
     <div class="stat-item">
       <div class="stat-num">24hr</div>
-      <div class="stat-label">Cache Freshness</div>
+      <div class="stat-label">State Cache Freshness</div>
     </div>
   </div>
 </div>
@@ -861,48 +868,60 @@
 
   <div class="sources-grid">
     <div class="source-card">
-      <span class="source-badge badge-federal">Federal</span>
+      <span class="source-badge badge-federal">Federal · Nationwide</span>
       <div class="source-name">NPPES NPI Registry</div>
-      <div class="source-desc">National Provider Identifier database covering all licensed healthcare providers in the US.</div>
+      <div class="source-desc">National Provider Identifier database covering all licensed healthcare providers in the US. Live API integration on every check.</div>
       <div class="source-status"><span class="status-dot"></span>Live · Updated Daily</div>
     </div>
     <div class="source-card">
-      <span class="source-badge badge-federal">Federal</span>
-      <div class="source-name">OIG Exclusion List</div>
-      <div class="source-desc">HHS Office of Inspector General list of excluded individuals and entities from federal programs.</div>
-      <div class="source-status"><span class="status-dot"></span>Live · Updated Monthly</div>
+      <span class="source-badge badge-federal">Federal · Nationwide</span>
+      <div class="source-name">OIG LEIE Exclusion List</div>
+      <div class="source-desc">HHS Office of Inspector General list of excluded individuals and entities. 83,000+ records mirrored locally for sub-second lookups.</div>
+      <div class="source-status"><span class="status-dot"></span>Live · Refreshed every 12h</div>
     </div>
     <div class="source-card">
-      <span class="source-badge badge-state">State</span>
-      <div class="source-name">California Medical Board</div>
-      <div class="source-desc">Real-time license status, disciplinary actions, and expiry for CA licensed physicians.</div>
+      <span class="source-badge badge-state">State · Live</span>
+      <div class="source-name">Texas Medical Board</div>
+      <div class="source-desc">Real-time license status, expiry date, disciplinary restrictions, and license type for TX physicians, PAs, acupuncturists, and more.</div>
       <div class="source-status"><span class="status-dot"></span>Live · 24hr Cache</div>
     </div>
-    <div class="source-card">
-      <span class="source-badge badge-state">State</span>
+    <div class="source-card" style="background: var(--surface-2); border-style: dashed;">
+      <span class="source-badge" style="background:#fef3c7;color:#92400e;">Loading Soon</span>
       <div class="source-name">Florida Department of Health</div>
-      <div class="source-desc">Official bulk data portal — real-time license status, disciplinary actions, and expiry for FL licensed physicians.</div>
-      <div class="source-status"><span class="status-dot"></span>Live · 24hr Cache</div>
+      <div class="source-desc">Adapter complete for the official MQA daily bulk data portal — license status, disciplinary actions, expiry. Awaiting data load (this month).</div>
+      <div class="source-status" style="color:var(--warn);"><span class="status-dot" style="background:var(--warn);"></span>Adapter ready · Loading shortly</div>
     </div>
-    <div class="source-card">
-      <span class="source-badge badge-state">State</span>
+    <div class="source-card" style="background: var(--surface-2); border-style: dashed;">
+      <span class="source-badge" style="background:#fef3c7;color:#92400e;">Loading Soon</span>
       <div class="source-name">Illinois IDFPR</div>
-      <div class="source-desc">Official bulk license lookup — approved for primary source verification by Joint Commission and NCQA.</div>
-      <div class="source-status"><span class="status-dot"></span>Live · 24hr Cache</div>
+      <div class="source-desc">Adapter complete for the official IDFPR bulk license lookup — recognized by Joint Commission &amp; NCQA as an approved primary source. Awaiting data load.</div>
+      <div class="source-status" style="color:var(--warn);"><span class="status-dot" style="background:var(--warn);"></span>Adapter ready · Loading shortly</div>
     </div>
     <div class="source-card" style="background: var(--surface-2); border-style: dashed;">
-      <span class="source-badge" style="background:#fef3c7;color:#92400e;">Coming Soon</span>
-      <div class="source-name">Texas &amp; New York</div>
-      <div class="source-desc">Deep state board integration for TX and NY in progress. NPPES + OIG baseline coverage active for all 50 states.</div>
-      <div class="source-status" style="color:var(--ink-muted);"><span class="status-dot" style="background:var(--ink-muted);"></span>In Development</div>
+      <span class="source-badge" style="background:#f3f4f6;color:#6b7280;">On Roadmap</span>
+      <div class="source-name">California · New York</div>
+      <div class="source-desc">Deeper state coverage for CA and NY in the pipeline. Federal NPPES + OIG screening is already live for these states today.</div>
+      <div class="source-status" style="color:var(--ink-muted);"><span class="status-dot" style="background:var(--ink-muted);"></span>Q3 2026</div>
     </div>
     <div class="source-card" style="background: var(--surface-2); border-style: dashed;">
-      <span class="source-badge" style="background:#f3f4f6;color:#6b7280;">Coming Soon</span>
-      <div class="source-name">Nursing · Pharmacy · Legal</div>
-      <div class="source-desc">Expanding to additional professions. Join the waitlist to request priority profession support.</div>
-      <div class="source-status" style="color:var(--ink-muted);"><span class="status-dot" style="background:var(--ink-muted);"></span>In Development</div>
+      <span class="source-badge" style="background:#f3f4f6;color:#6b7280;">On Roadmap</span>
+      <div class="source-name">FSMB · National Disciplinary</div>
+      <div class="source-desc">Federation of State Medical Boards Physician Data Center for nationwide disciplinary actions across all 50 states. Targeted for Q4.</div>
+      <div class="source-status" style="color:var(--ink-muted);"><span class="status-dot" style="background:var(--ink-muted);"></span>Q4 2026</div>
+    </div>
+    <div class="source-card" style="background: var(--surface-2); border-style: dashed;">
+      <span class="source-badge" style="background:#f3f4f6;color:#6b7280;">Tell Us</span>
+      <div class="source-name">Nursing · Pharmacy · DEA</div>
+      <div class="source-desc">Expanding to additional professions and the DEA Controlled Substance Registration database. Tell us which states &amp; professions you need most.</div>
+      <div class="source-status" style="color:var(--ink-muted);"><span class="status-dot" style="background:var(--ink-muted);"></span>Prioritized by demand</div>
     </div>
   </div>
+
+  <p style="text-align:center;color:var(--ink-muted);font-size:0.875rem;margin-top:2rem;">
+    <strong style="color:var(--ink);">Honest gating:</strong> states without ingested data return
+    <code style="background:var(--surface-2);padding:0.15rem 0.4rem;border-radius:4px;font-size:0.8125rem;">status: "unsupported_state"</code>
+    on live keys — we never fabricate data we don't have.
+  </p>
 </section>
 
 <!-- FEATURES -->
@@ -961,11 +980,12 @@
       <div class="plan-checks">500 verifications/month<br><span style="font-size:0.75rem;color:var(--ink-muted);font-weight:400;">$0.15 per additional check</span></div>
       <ul class="plan-features">
         <li>NPPES + OIG nationwide</li>
-        <li>Big 5 state boards</li>
-        <li>Signed certificates</li>
+        <li>Texas state board (live)</li>
+        <li>Signed certificates (JSON + PDF)</li>
+        <li>Webhook monitoring</li>
         <li>Email support</li>
       </ul>
-      <a href="#waitlist" class="plan-btn plan-btn-outline">Get Early Access</a>
+      <a href="https://app.veriflowapi.com/signup" class="plan-btn plan-btn-outline">Start Free →</a>
     </div>
 
     <div class="pricing-card featured">
@@ -976,12 +996,12 @@
       <div class="plan-checks">5,000 verifications/month<br><span style="font-size:0.75rem;color:var(--ink-muted);font-weight:400;">$0.08 per additional check</span></div>
       <ul class="plan-features">
         <li>Everything in Developer</li>
-        <li>Webhook monitoring</li>
-        <li>Bulk CSV verification</li>
-        <li>Priority support</li>
-        <li>Status page access</li>
+        <li>60 req/min burst</li>
+        <li>Bulk verify (100/call)</li>
+        <li>Idempotency-Key support</li>
+        <li>Priority email support</li>
       </ul>
-      <a href="#waitlist" class="plan-btn plan-btn-solid">Get Early Access</a>
+      <a href="https://app.veriflowapi.com/signup" class="plan-btn plan-btn-solid">Start Free →</a>
     </div>
 
     <div class="pricing-card">
@@ -991,12 +1011,12 @@
       <div class="plan-checks">50,000 verifications/month<br><span style="font-size:0.75rem;color:var(--ink-muted);font-weight:400;">$0.04 per additional check</span></div>
       <ul class="plan-features">
         <li>Everything in Production</li>
-        <li>Historical change log</li>
-        <li>Custom SLA agreement</li>
+        <li>300 req/min burst</li>
+        <li>HIPAA BAA available</li>
         <li>Dedicated Slack channel</li>
-        <li>BAA available</li>
+        <li>Onboarding session</li>
       </ul>
-      <a href="#waitlist" class="plan-btn plan-btn-outline">Get Early Access</a>
+      <a href="https://app.veriflowapi.com/signup" class="plan-btn plan-btn-outline">Start Free →</a>
     </div>
 
     <div class="pricing-card">
@@ -1092,15 +1112,23 @@
   </div>
 </section>
 
-<!-- WAITLIST -->
+<!-- WAITLIST / GET STARTED -->
 <section class="waitlist-section" id="waitlist">
   <div class="waitlist-inner">
-    <div class="section-label">Early Access</div>
-    <h2 class="section-title">Join the waitlist.<br>We'll be in touch personally.</h2>
-    <p class="section-sub">We're onboarding developers in batches. Early access includes 100 free verifications and direct line to the founding team.</p>
+    <div class="section-label">Get Started</div>
+    <h2 class="section-title">Sign up today.<br>Verify your first provider in 5 minutes.</h2>
+    <p class="section-sub">100 free verifications, no credit card. Create your API key, run <code style="background:var(--surface-2);padding:0.15rem 0.4rem;border-radius:4px;font-size:0.9em;">curl POST /v1/verify</code>, get a signed certificate back. Upgrade when you're ready — Stripe checkout in the dashboard.</p>
 
-    <form id="waitlist-form" action="https://formspree.io/f/xpqjywwg" method="POST">
-      <input type="hidden" name="_subject" value="New VeriflowAPI Waitlist Signup" />
+    <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-top:1.5rem;margin-bottom:2rem;">
+      <a href="https://app.veriflowapi.com/signup" style="background:var(--accent);color:#fff;padding:0.875rem 1.75rem;border-radius:7px;font-size:1rem;font-weight:600;text-decoration:none;transition:background 0.2s;" onmouseover="this.style.background='#1238cc'" onmouseout="this.style.background='var(--accent)'">Create your account →</a>
+      <a href="https://docs.veriflowapi.com/quickstart" style="background:transparent;color:var(--ink);padding:0.875rem 1.75rem;border-radius:7px;font-size:1rem;font-weight:600;text-decoration:none;border:1.5px solid var(--border);transition:border-color 0.2s;" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--ink)'">Read the Quickstart</a>
+    </div>
+
+    <p style="text-align:center;color:var(--ink-muted);font-size:0.875rem;margin-top:2.5rem;margin-bottom:1rem;">Looking for an annual contract, custom volume, BAA, or a specific state we haven't shipped yet?</p>
+    <details style="max-width:480px;margin:0 auto;background:#fff;border:1px solid var(--border);border-radius:10px;padding:1.25rem 1.5rem;">
+      <summary style="cursor:pointer;font-weight:600;font-size:0.9375rem;color:var(--ink);">Talk to the founder →</summary>
+    <form id="waitlist-form" action="https://formspree.io/f/xpqjywwg" method="POST" style="margin-top:1rem;">
+      <input type="hidden" name="_subject" value="New VeriflowAPI Inquiry" />
       <input type="hidden" name="_next" value="" />
       <div class="form-group">
         <label class="form-label" for="email">Work Email</label>
@@ -1118,9 +1146,10 @@
           <option value="other">Other</option>
         </select>
       </div>
-      <button type="submit" class="submit-btn">Request Early Access →</button>
-      <p class="form-note">Start your 100-check free trial. Integrate today. No sales call required.</p>
+      <button type="submit" class="submit-btn">Send →</button>
+      <p class="form-note">We respond personally within one business day.</p>
     </form>
+    </details>
 
     <div class="success-message" id="success-msg">
       <h3>You're on the list. ✓</h3>
@@ -1179,7 +1208,7 @@
         <span style="color:var(--success);">✓</span> Data Refreshed Daily
       </div>
       <div style="display:flex; align-items:center; gap:0.5rem; font-size:0.8125rem; font-weight:600; color:var(--ink-light);">
-        <span style="color:var(--success);">✓</span> Built on AWS
+        <span style="color:var(--success);">✓</span> Encrypted at Rest (Fernet)
       </div>
       <div style="display:flex; align-items:center; gap:0.5rem; font-size:0.8125rem; font-weight:600; color:var(--ink-light);">
         <span style="color:var(--success);">✓</span> SOC 2 Roadmap
@@ -1198,7 +1227,7 @@
 <footer>
   <div class="footer-logo">Veriflow<span>API</span></div>
   <p class="footer-text">
-    © 2026 VeriflowAPI · <a href="mailto:support@veriflowapi.com">support@veriflowapi.com</a> · <a href="/terms.html">Terms</a> · <a href="/privacy.html">Privacy</a>
+    © 2026 VeriflowAPI · <a href="mailto:support@veriflowapi.com">support@veriflowapi.com</a> · <a href="https://app.veriflowapi.com/login">Sign In</a> · <a href="https://docs.veriflowapi.com/introduction">API Docs</a> · <a href="/terms.html">Terms</a> · <a href="/privacy.html">Privacy</a>
   </p>
 </footer>
 
@@ -1237,4 +1266,18 @@
       if (response.ok) {
         document.getElementById('confirmed-email').textContent = email;
         form.style.display = 'none';
-        document.get
+        document.getElementById('success-msg').style.display = 'block';
+      } else {
+        submitBtn.textContent = 'Try Again →';
+        submitBtn.disabled = false;
+        alert('Something went wrong. Email support@veriflowapi.com and we will reach out personally.');
+      }
+    } catch (err) {
+      submitBtn.textContent = 'Try Again →';
+      submitBtn.disabled = false;
+      alert('Network error. Email support@veriflowapi.com and we will reach out personally.');
+    }
+  });
+</script>
+</body>
+</html>
