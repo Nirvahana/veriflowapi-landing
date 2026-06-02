@@ -34,49 +34,65 @@ The Office of Inspector General maintains a list of individuals and entities exc
 
 If `oig_excluded` is `true`, the provider must not be employed or contracted by any entity receiving federal healthcare funding. This is a hard disqualifier in most onboarding workflows.
 
-## State Sources — Big 5
+## State Sources — Live
 
-Full real-time license status is available for the five states that collectively account for approximately 40% of US telehealth volume.
-
-### California Medical Board
-
-| Detail | Value |
-|---|---|
-| License types | MD, DO, and postgraduate trainees |
-| Data includes | License number, status, expiry, disciplinary actions, probation |
-| Cache TTL | 24 hours |
+Deep state license data is available for **seven states** today. Texas is a live per-query scrape; the rest are full daily mirrors. Any other state returns `status: "unsupported_state"` on live keys — we never fabricate data we don't have.
 
 ### Texas Medical Board
 
 | Detail | Value |
 |---|---|
-| License types | MD, DO |
-| Data includes | License number, status, expiry, board actions |
-| Cache TTL | 24 hours |
+| Access | Live scrape, 24-hour per-query cache |
+| License types | MD, DO, PA, acupuncturists, and more |
+| Data includes | License number, type, status, expiry, disciplinary restrictions |
 
-### New York Office of the Professions
-
-| Detail | Value |
-|---|---|
-| License types | MD, DO, and 50+ other professions |
-| Data includes | License number, status, expiry, disciplinary history |
-| Cache TTL | 24 hours |
-
-### Florida Department of Health
+### Florida Department of Health (MQA)
 
 | Detail | Value |
 |---|---|
-| License types | MD, DO, ARNP, PA, and others |
-| Data includes | License number, status, expiry, complaint history |
-| Cache TTL | 24 hours |
+| Access | Full daily licensure mirror (~1.5M licensees, 180+ professions) |
+| License types | MD, DO, ARNP, PA, RN, Pharmacist, and many more |
+| Data includes | License number, profession, status, expiry, issue date, city, county |
 
-### Illinois Division of Professional Regulation
+### Illinois IDFPR
 
 | Detail | Value |
 |---|---|
-| License types | MD, DO, and allied health professions |
-| Data includes | License number, status, expiry |
-| Cache TTL | 24 hours |
+| Access | Full daily mirror via state open data; JCAHO/NCQA-approved primary source |
+| License types | Physicians, nurses, pharmacists, and allied health |
+| Data includes | License number, type, status, expiry, issue date, city, county |
+
+### Washington Department of Health
+
+| Detail | Value |
+|---|---|
+| Access | Full daily mirror of health-care provider credentials |
+| License types | Physicians, nurses, pharmacists, and more |
+| Data includes | Credential number, type, status, expiry, issue date, city |
+
+### Colorado DORA
+
+| Detail | Value |
+|---|---|
+| Access | Full daily mirror via state open data |
+| License types | Health professions and others |
+| Data includes | License number, type, status, expiry, issue date, city, county |
+
+### Connecticut DCP
+
+| Detail | Value |
+|---|---|
+| Access | Full daily mirror via state open data |
+| License types | Health professions and others |
+| Data includes | Credential number, type, status, expiry, issue date, city |
+
+### Alabama Board of Medical Examiners
+
+| Detail | Value |
+|---|---|
+| Access | Daily roster of active licenses; primary-source verified |
+| License types | MD, DO, CRNP/CNM |
+| Data includes | License number, type, status, expiry, issue date, supervising physician |
 
 ## What happens when a source is down
 
@@ -95,7 +111,7 @@ You can always check current source availability at **status.veriflowapi.com**.
 
 ## Remaining states
 
-For the 45 states not in the Big 5, VeriflowAPI returns NPPES and OIG data which covers federal credential status. State-level license status for remaining states is on our roadmap.
+For states not yet mirrored — including California and New York, which are on our roadmap — VeriflowAPI returns NPPES and OIG data, which covers federal credential status nationwide. State-level license status for additional states is added based on demand.
 
 If you have an urgent need for a specific state, email support@veriflowapi.com — we prioritize state additions based on customer demand.
 

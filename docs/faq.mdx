@@ -4,9 +4,9 @@
 
 ### What professions does VeriflowAPI currently support?
 
-VeriflowAPI currently supports medical doctors (MD and DO) in all 50 US states via NPPES and OIG, with deep state-level data for California, Texas, New York, Florida, and Illinois.
+VeriflowAPI screens providers in all 50 US states via NPPES (identity/NPI) and OIG (federal exclusions), with deep state-level license data for **seven states**: Texas, Florida, Illinois, Washington, Colorado, Connecticut, and Alabama.
 
-Nursing, pharmacy, mental health practitioners, and contractor licenses are in development. Email support@veriflowapi.com to request priority support for a specific profession.
+California and New York are on the roadmap; nursing/pharmacy expansion and additional states are added based on demand. Email support@veriflowapi.com to request priority support for a specific profession.
 
 ### How accurate is VeriflowAPI?
 
@@ -16,7 +16,7 @@ For high-stakes decisions, we recommend using both NPI and DOB in your request t
 
 ### Can VeriflowAPI verify providers in all 50 states?
 
-Yes, for basic NPI and OIG screening. For full state-level license status — including expiry date and disciplinary history — we currently support the Big 5 states: California, Texas, New York, Florida, and Illinois. Additional states are being added based on customer demand.
+Yes, for federal NPI and OIG screening (nationwide). For full state-level license status — including expiry date and disciplinary history — we currently support seven states: Texas, Florida, Illinois, Washington, Colorado, Connecticut, and Alabama. Other states return `status: "unsupported_state"`. Additional states are added based on customer demand.
 
 ### Do you support international license verification?
 

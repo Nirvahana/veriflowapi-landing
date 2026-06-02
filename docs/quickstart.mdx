@@ -21,7 +21,7 @@ curl -X POST https://api.veriflowapi.com/v1/verify \
   -d '{
     "first_name": "Sarah",
     "last_name": "Chen",
-    "state": "CA",
+    "state": "FL",
     "npi": "1234567890"
   }'
 ```
@@ -35,12 +35,12 @@ You will receive a response like this:
   "verified": true,
   "status": "active",
   "name": "Dr. Sarah Chen",
-  "license_number": "CA-A-98234",
-  "state": "California",
+  "license_number": "ME149820",
+  "state": "Florida",
   "expiry_date": "2027-06-30",
   "disciplinary_flags": false,
   "oig_excluded": false,
-  "sources_checked": ["NPPES", "OIG", "CA Medical Board"],
+  "sources_checked": ["NPPES", "OIG", "FL Department of Health"],
   "source_live": true,
   "cached": false,
   "cache_expires_at": "2026-02-21T10:30:00Z",
@@ -89,7 +89,7 @@ def verify_provider(first_name, last_name, state, npi=None):
         return False
 
 # Example usage
-verify_provider("Sarah", "Chen", "CA", "1234567890")
+verify_provider("Sarah", "Chen", "FL", "1234567890")
 ```
 
 ### Node.js
@@ -124,7 +124,7 @@ async function verifyProvider({ firstName, lastName, state, npi }) {
 verifyProvider({
   firstName: 'Sarah',
   lastName: 'Chen',
-  state: 'CA',
+  state: 'FL',
   npi: '1234567890'
 });
 ```
@@ -165,7 +165,7 @@ function verifyProvider($firstName, $lastName, $state, $npi = null) {
     }
 }
 
-verifyProvider('Sarah', 'Chen', 'CA', '1234567890');
+verifyProvider('Sarah', 'Chen', 'FL', '1234567890');
 ```
 
 ## What's next?

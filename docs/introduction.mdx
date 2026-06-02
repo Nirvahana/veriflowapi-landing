@@ -8,7 +8,7 @@ When you submit a provider's details, VeriflowAPI simultaneously checks:
 
 - **NPPES NPI Registry** — federal database of all licensed healthcare providers
 - **OIG Exclusion List** — HHS list of excluded individuals from federal programs
-- **State Medical Boards** — real-time license status for CA, TX, NY, FL, and IL
+- **State Medical Boards** — deep license status for TX, FL, IL, WA, CO, CT, and AL (more added by demand)
 
 We normalize inconsistent data formats across all sources and return a single, clean JSON response in under 200ms — even when government sites are slow or down.
 
@@ -26,7 +26,7 @@ We normalize inconsistent data formats across all sources and return a single, c
 |---|---|
 | Response time | Under 200ms average |
 | Uptime SLA | 99.9% guaranteed |
-| Data sources | NPPES, OIG, Big 5 state boards |
+| Data sources | NPPES, OIG, + 7 state boards |
 | Cache freshness | 24 hours for status, 30 days for static data |
 | Verification certificates | SHA256-signed, audit-ready |
 | Webhook monitoring | Real-time alerts on status changes |

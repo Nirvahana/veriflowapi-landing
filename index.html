@@ -743,7 +743,7 @@
     <div class="badge">Live · 100 Free Verifications</div>
     <h1>Stop Scraping State Boards. <em>Verify Providers in One Call.</em></h1>
     <p class="hero-sub">
-      Federal NPI + OIG exclusion screening nationwide, plus deep Texas state-board coverage today (Florida, Illinois next). Every check returns a tamper-evident, SHA‑256‑signed audit certificate — JSON or PDF.
+      Federal NPI + OIG exclusion screening nationwide, plus deep state-board coverage across 7 states today — Texas, Florida, Illinois, Washington, Colorado, Connecticut, and Alabama. Every check returns a tamper-evident, SHA‑256‑signed audit certificate — JSON or PDF.
     </p>
     <div style="display:flex;gap:1rem;margin-bottom:2rem;flex-wrap:wrap;">
       <a href="https://app.veriflowapi.com/signup" style="background:var(--accent);color:#fff;padding:0.75rem 1.5rem;border-radius:7px;font-size:0.9375rem;font-weight:600;text-decoration:none;transition:background 0.2s;" onmouseover="this.style.background='#1238cc'" onmouseout="this.style.background='var(--accent)'">Start Free → 100 verifications</a>
@@ -779,7 +779,7 @@
   -d <span class="t-string">'{
     "first_name": "Sarah",
     "last_name": "Chen",
-    "state": "CA",
+    "state": "FL",
     "npi": "1234567890"
   }'</span></pre>
 
@@ -787,13 +787,13 @@
   <span class="t-key">"verified"</span><span class="t-punct">:</span> <span class="t-bool-true">true</span><span class="t-punct">,</span>
   <span class="t-key">"status"</span><span class="t-punct">:</span> <span class="t-string">"active"</span><span class="t-punct">,</span>
   <span class="t-key">"name"</span><span class="t-punct">:</span> <span class="t-string">"Dr. Sarah Chen"</span><span class="t-punct">,</span>
-  <span class="t-key">"license_number"</span><span class="t-punct">:</span> <span class="t-string">"CA-A-98234"</span><span class="t-punct">,</span>
-  <span class="t-key">"state"</span><span class="t-punct">:</span> <span class="t-string">"California"</span><span class="t-punct">,</span>
+  <span class="t-key">"license_number"</span><span class="t-punct">:</span> <span class="t-string">"ME149820"</span><span class="t-punct">,</span>
+  <span class="t-key">"state"</span><span class="t-punct">:</span> <span class="t-string">"Florida"</span><span class="t-punct">,</span>
   <span class="t-key">"expiry_date"</span><span class="t-punct">:</span> <span class="t-string">"2027-06-30"</span><span class="t-punct">,</span>
   <span class="t-key">"disciplinary_flags"</span><span class="t-punct">:</span> <span class="t-bool-false">false</span><span class="t-punct">,</span>
   <span class="t-key">"oig_excluded"</span><span class="t-punct">:</span> <span class="t-bool-false">false</span><span class="t-punct">,</span>
   <span class="t-key">"sources_checked"</span><span class="t-punct">:</span> <span class="t-punct">[</span>
-    <span class="t-string">"NPPES"</span><span class="t-punct">,</span> <span class="t-string">"OIG"</span><span class="t-punct">,</span> <span class="t-string">"CA Medical Board"</span>
+    <span class="t-string">"NPPES"</span><span class="t-punct">,</span> <span class="t-string">"OIG"</span><span class="t-punct">,</span> <span class="t-string">"FL Department of Health"</span>
   <span class="t-punct">],</span>
   <span class="t-key">"checked_at"</span><span class="t-punct">:</span> <span class="t-string">"2026-02-20T10:30:00Z"</span><span class="t-punct">,</span>
   <span class="t-key">"verification_id"</span><span class="t-punct">:</span> <span class="t-string">"vrf_a1b2c3d4e5"</span><span class="t-punct">,</span>
@@ -888,14 +888,38 @@
     <div class="source-card">
       <span class="source-badge badge-state">State · Live</span>
       <div class="source-name">Florida Department of Health</div>
-      <div class="source-desc">Full daily licensure mirror from the MQA bulk data portal — 1.43M licensees across 180+ professions (MD, DO, APRN, PA, RN, Pharmacist and more). License #, status, expiry, issue date, city, county.</div>
-      <div class="source-status"><span class="status-dot"></span>Live · 24hr Cache · 1.43M records</div>
+      <div class="source-desc">Full daily licensure mirror from the MQA bulk data portal — 1.5M+ licensees across 180+ professions (MD, DO, APRN, PA, RN, Pharmacist and more). License #, status, expiry, issue date, city, county.</div>
+      <div class="source-status"><span class="status-dot"></span>Live · Updated Daily · 1.5M+ records</div>
     </div>
-    <div class="source-card" style="background: var(--surface-2); border-style: dashed;">
-      <span class="source-badge" style="background:#fef3c7;color:#92400e;">Loading Soon</span>
+    <div class="source-card">
+      <span class="source-badge badge-state">State · Live</span>
       <div class="source-name">Illinois IDFPR</div>
-      <div class="source-desc">Adapter complete for the official IDFPR bulk license lookup — recognized by Joint Commission &amp; NCQA as an approved primary source. Awaiting data load.</div>
-      <div class="source-status" style="color:var(--warn);"><span class="status-dot" style="background:var(--warn);"></span>Adapter ready · Loading shortly</div>
+      <div class="source-desc">Full daily mirror of the official IDFPR licensee database — recognized by Joint Commission &amp; NCQA as an approved primary source. License #, type, status, expiry, issue date, city, county.</div>
+      <div class="source-status"><span class="status-dot"></span>Live · Updated Daily</div>
+    </div>
+    <div class="source-card">
+      <span class="source-badge badge-state">State · Live</span>
+      <div class="source-name">Washington DOH</div>
+      <div class="source-desc">Full daily mirror of Washington health-care provider credentials — physicians, nurses, pharmacists and more. Credential #, type, status, expiry, issue date, city.</div>
+      <div class="source-status"><span class="status-dot"></span>Live · Updated Daily</div>
+    </div>
+    <div class="source-card">
+      <span class="source-badge badge-state">State · Live</span>
+      <div class="source-name">Colorado DORA</div>
+      <div class="source-desc">Full daily mirror of Colorado professional &amp; occupational licenses. License #, type, status, expiry, issue date, city, county.</div>
+      <div class="source-status"><span class="status-dot"></span>Live · Updated Daily</div>
+    </div>
+    <div class="source-card">
+      <span class="source-badge badge-state">State · Live</span>
+      <div class="source-name">Connecticut DCP</div>
+      <div class="source-desc">Full daily mirror of Connecticut state licenses &amp; credentials, including health professions. Credential #, type, status, expiry, issue date, city.</div>
+      <div class="source-status"><span class="status-dot"></span>Live · Updated Daily</div>
+    </div>
+    <div class="source-card">
+      <span class="source-badge badge-state">State · Live</span>
+      <div class="source-name">Alabama BME</div>
+      <div class="source-desc">Daily roster of active Alabama medical licenses — primary-source verified. License #, type, status, expiry, issue date, supervising physician.</div>
+      <div class="source-status"><span class="status-dot"></span>Live · Updated Daily</div>
     </div>
     <div class="source-card" style="background: var(--surface-2); border-style: dashed;">
       <span class="source-badge" style="background:#f3f4f6;color:#6b7280;">On Roadmap</span>
@@ -980,7 +1004,7 @@
       <div class="plan-checks">500 verifications/month<br><span style="font-size:0.75rem;color:var(--ink-muted);font-weight:400;">$0.15 per additional check</span></div>
       <ul class="plan-features">
         <li>NPPES + OIG nationwide</li>
-        <li>Texas state board (live)</li>
+        <li>7 state boards (TX, FL, IL, WA, CO, CT, AL)</li>
         <li>Signed certificates (JSON + PDF)</li>
         <li>Webhook monitoring</li>
         <li>Email support</li>
