@@ -52,6 +52,7 @@ POST https://api.veriflowapi.com/v1/verify
 {
   "verified": true,
   "status": "active",
+  "match_confidence": "high",
   "name": "Dr. Sarah Chen",
   "license_number": "ME149820",
   "state": "Florida",
@@ -78,6 +79,7 @@ POST https://api.veriflowapi.com/v1/verify
 |---|---|---|
 | `verified` | boolean | Top-level pass/fail. `true` if provider was found, license is active, and no OIG exclusion exists. |
 | `status` | string | Current license status. See [Status Values](#status-values) below. |
+| `match_confidence` | string | Strength of the identity match: `high` (matched by NPI), `medium` (exact name), `low` (name nickname/typo variant), or `null` when not found. Lower values are name-only matches — supply an `npi` for `high`. See [Identity resolution](#identity-resolution). |
 | `name` | string | Provider's full name as it appears in source records. |
 | `license_number` | string | State license number. |
 | `state` | string | Full state name. |
@@ -105,14 +107,24 @@ POST https://api.veriflowapi.com/v1/verify
 
 ## Identity resolution
 
-VeriflowAPI uses fuzzy matching to resolve provider identity before verifying license status. This handles:
+Before verifying license status, VeriflowAPI resolves provider identity by matching the last name exactly, then the first name. First-name matching accepts:
 
-- Name variations (e.g. "Bob" vs "Robert")
+- Nicknames where one form is a prefix of the other (e.g. "Bob" vs "Robert")
 - Middle initials included or omitted
 - Hyphenated last names
 - Minor typos in submitted names
 
-When multiple possible matches are found, we use `npi` and `dob` as tiebreakers. If ambiguity cannot be resolved, we return a `not_found` status with a descriptive error message.
+It deliberately does **not** match genuinely different given names that merely look alike (e.g. "John" vs "Joan", "Satish" vs "Satinder"). Those return `not_found` rather than a false match — a wrong-person confirmation is worse than a miss.
+
+Every successful match reports a `match_confidence`:
+
+| Confidence | Meaning |
+|---|---|
+| `high` | Matched on the `npi` — exact identity. |
+| `medium` | Exact first + last name, no NPI. |
+| `low` | Name nickname/typo variant, no NPI. |
+
+Because name-only matching is inherently ambiguous for common names, **supply an `npi` whenever available** for `high`-confidence, exact-identity verification. When ambiguity cannot be resolved, we return `not_found`.
 
 ## Caching policy
 
