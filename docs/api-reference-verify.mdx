@@ -126,6 +126,24 @@ Every successful match reports a `match_confidence`:
 
 Because name-only matching is inherently ambiguous for common names, **supply an `npi` whenever available** for `high`-confidence, exact-identity verification. When ambiguity cannot be resolved, we return `not_found`.
 
+## Sandbox &amp; testing
+
+Test keys (`vf_test_`) run against the **same data and coverage as production** — an ordinary provider returns exactly what a live key would, including `unsupported_state` for states we don't yet cover. This makes your sandbox integration faithful to production.
+
+To exercise every branch of your integration deterministically, use **reserved test last names** (case-insensitive) on a `vf_test_` key. They work in any state and force a specific outcome, similar to test card numbers:
+
+| Last name | Result |
+|---|---|
+| `Sandbox_Active` | `verified: true`, `status: "active"` |
+| `Sandbox_Expired` | `status: "expired"`, not verified |
+| `Sandbox_Suspended` | `status: "suspended"`, not verified, disciplinary flag |
+| `Sandbox_Revoked` | `status: "revoked"`, not verified, disciplinary flag |
+| `Sandbox_NotFound` | `status: "not_found"`, not verified (also simulates a name mismatch) |
+| `Sandbox_Excluded` | `oig_excluded: true`, not verified |
+| `Sandbox_Disciplined` | `verified: true`, `disciplinary_flags: true` |
+
+To simulate `unsupported_state`, query any state we don't cover (e.g. `OH`) with an ordinary name. These triggers apply **only to test keys** — on a live key they are treated as ordinary names.
+
 ## Caching policy
 
 To maximize uptime and minimize response time, VeriflowAPI caches responses according to the following TTL policy:
