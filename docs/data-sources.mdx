@@ -36,7 +36,7 @@ If `oig_excluded` is `true`, the provider must not be employed or contracted by 
 
 ## State Sources — Live
 
-Deep state license data is available for **seven states** today. Texas is a live per-query scrape; the rest are full daily mirrors. Any other state returns `status: "unsupported_state"` on live keys — we never fabricate data we don't have.
+Deep state license data is available for **eight states** today. Texas and New York are live per-query scrapes; the rest are full daily mirrors. Any other state returns `status: "unsupported_state"` on live keys — we never fabricate data we don't have.
 
 ### Texas Medical Board
 
@@ -94,6 +94,16 @@ Deep state license data is available for **seven states** today. Texas is a live
 | License types | MD, DO, CRNP/CNM |
 | Data includes | License number, type, status, expiry, issue date, supervising physician |
 
+### New York Office of the Professions
+
+| Detail | Value |
+|---|---|
+| Access | Live per-query search of the state verification API, 24-hour per-query cache |
+| License types | Physicians, psychologists, social workers, mental health counselors, marriage & family therapists, PT, OT, SLP, and more |
+| Data includes | License number, profession, registration status, registered-through date, enforcement actions |
+
+New York licenses do not "expire"; the triennial **registration** does. A currently registered licensee returns `status: "active"`; a lapsed registration returns `status: "expired"`. For physicians, disciplinary actions are published by the NYS Department of Health (OPMC) rather than the Office of the Professions, so enforcement flags on `060` (Medicine) records come from that separate source.
+
 ## What happens when a source is down
 
 Government websites experience downtime — planned maintenance, traffic spikes, infrastructure migrations. VeriflowAPI is architected to handle this gracefully.
@@ -111,7 +121,7 @@ You can always check current source availability at **status.veriflowapi.com**.
 
 ## Remaining states
 
-For states not yet mirrored — including California and New York, which are on our roadmap — VeriflowAPI returns NPPES and OIG data, which covers federal credential status nationwide. State-level license status for additional states is added based on demand.
+For states not yet mirrored — including California, which is on our roadmap — VeriflowAPI returns NPPES and OIG data, which covers federal credential status nationwide. State-level license status for additional states is added based on demand.
 
 If you have an urgent need for a specific state, email support@veriflowapi.com — we prioritize state additions based on customer demand.
 
