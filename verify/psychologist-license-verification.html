@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Psychologist License Verification API | VeriflowAPI</title>
+<meta name="description" content="Verify Psychologist licenses in one API call across 6 states, with NPPES + OIG screening. Start free with 100 verifications."/>
+<link rel="canonical" href="https://veriflowapi.com/verify/psychologist-license-verification.html"/>
+<meta property="og:title" content="Psychologist License Verification API | VeriflowAPI"/>
+<meta property="og:description" content="Verify Psychologist licenses in one API call across 6 states, with NPPES + OIG screening. Start free with 100 verifications."/>
+<meta property="og:type" content="website"/>
+<meta property="og:url" content="https://veriflowapi.com/verify/psychologist-license-verification.html"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<link rel="icon" href="/favicon.svg"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/verify/seo.css"/>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "WebPage", "name": "Psychologist License Verification API | VeriflowAPI", "description": "Verify Psychologist licenses in one API call across 6 states, with NPPES + OIG screening. Start free with 100 verifications.", "url": "https://veriflowapi.com/verify/psychologist-license-verification.html"}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Which states can I verify Psychologist licenses in?", "acceptedAnswer": {"@type": "Answer", "text": "Live today in FL, WA, IL, CO, CT, NY. Federal NPI and OIG screening is nationwide."}}, {"@type": "Question", "name": "Is the license the same as a board certification?", "acceptedAnswer": {"@type": "Answer", "text": "We verify the underlying state license (the legal authorization to practice) plus federal screening. National sub-certifications from private boards are separate registries."}}]}]}</script>
+</head>
+<body>
+<header class="nav"><div class="wrap">
+  <a class="logo" href="/">Veri<span>flow</span>API</a>
+  <a class="cta" href="https://app.veriflowapi.com/signup">Start Free &rarr;</a>
+</div></header>
+
+<main class="wrap">
+  <section class="hero">
+    <div class="badge">Profession coverage</div>
+    <h1>Psychologist License Verification</h1>
+    <p class="sub">One API call verifies a psychologist's state license, NPI identity, and federal exclusion status.</p>
+    <a class="cta cta-lg" href="https://app.veriflowapi.com/signup">Start free &rarr; 100 verifications</a>
+    <div class="free">No credit card required. One API call returns license status, NPI identity, and OIG exclusion screening.</div>
+  </section>
+
+  <section>
+    <div class="grid">
+      <div class="card"><h3>One call, normalized</h3><p>Skip per-board formats and portals. Submit a provider, get a single clean JSON response.</p></div>
+      <div class="card"><h3>Federal screening built in</h3><p>NPPES identity and OIG exclusion checks run nationwide on every verification.</p></div>
+      <div class="card"><h3>Signed certificate</h3><p>Every check returns a tamper-evident, SHA-256 signed certificate, retained seven years.</p></div>
+    </div>
+  </section>
+
+  <section><h2>Verify Psychologist licenses</h2><p>A psychologist holds a Licensed Psychologist license, which VeriflowAPI verifies directly against the issuing state board. Coverage today:</p><div class="states"><span class="pill">FL</span><span class="pill">WA</span><span class="pill">IL</span><span class="pill">CO</span><span class="pill">CT</span><span class="pill">NY</span></div><p class='muted'>Federal NPPES identity and OIG exclusion screening run on every check in all 50 states. Other states return an honest unsupported_state response.</p></section>
+
+  <section>
+    <h2>Example request</h2>
+    <pre><span class="c"># One call verifies license + NPI + OIG</span>
+POST https://api.veriflowapi.com/v1/verify
+
+{
+  <span class="k">"first_name"</span>: <span class="s">"Jane"</span>,
+  <span class="k">"last_name"</span>: <span class="s">"Provider"</span>,
+  <span class="k">"state"</span>: <span class="s">"FL"</span>
+}
+
+<span class="c"># Response</span>
+{
+  <span class="k">"verified"</span>: <span class="b">true</span>,
+  <span class="k">"status"</span>: <span class="s">"active"</span>,
+  <span class="k">"state"</span>: <span class="s">"Florida"</span>,
+  <span class="k">"license_number"</span>: <span class="s">"..."</span>,
+  <span class="k">"expiry_date"</span>: <span class="s">"2027-05-31"</span>,
+  <span class="k">"oig_excluded"</span>: <span class="b">false</span>,
+  <span class="k">"sources_checked"</span>: [<span class="s">"NPPES"</span>, <span class="s">"OIG"</span>, <span class="s">"FL Department of Health"</span>],
+  <span class="k">"certificate_hash"</span>: <span class="s">"sha256_..."</span>
+}</pre>
+  </section>
+
+  <section class="faq">
+    <h2>FAQ</h2>
+    <details><summary>Which states can I verify Psychologist licenses in?</summary><p>Live today in FL, WA, IL, CO, CT, NY. Federal NPI and OIG screening is nationwide.</p></details>
+    <details><summary>Is the license the same as a board certification?</summary><p>We verify the underlying state license (the legal authorization to practice) plus federal screening. National sub-certifications from private boards are separate registries.</p></details>
+  </section>
+
+  <div class="cta-band">
+    <h2>Verify Psychologist licenses in one call</h2>
+    <p class="muted" style="max-width:560px;margin:0 auto 1.2rem;">Start with 100 free verifications. No credit card. Read the <a href="https://docs.veriflowapi.com/introduction">docs</a> or explore <a href="https://docs.veriflowapi.com/data-sources">coverage</a>.</p>
+    <a class="cta cta-lg" href="https://app.veriflowapi.com/signup">Create your account &rarr;</a>
+  </div>
+</main>
+
+<footer><div class="wrap">
+  &copy; 2026 SecureHealth AI LLC d/b/a Veriflow &middot;
+  <a href="/">Home</a> &middot;
+  <a href="https://docs.veriflowapi.com/introduction">Docs</a> &middot;
+  <a href="/terms.html">Terms</a> &middot;
+  <a href="/privacy.html">Privacy</a>
+</div></footer>
+</body>
+</html>
