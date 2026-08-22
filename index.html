@@ -1327,5 +1327,41 @@
     }
   });
 </script>
+<script>
+  // First-touch attribution forwarding. Marketing site and the app are different origins,
+  // so we cannot share localStorage; instead we capture first-touch here (UTM params +
+  // referrer) and append it to the signup/app CTA links so the signup page can record it.
+  (function () {
+    try {
+      var KEY = 'vf_first_touch';
+      var qs = new URLSearchParams(location.search);
+      var stored = null;
+      try { stored = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) {}
+      if (!stored) {
+        stored = {
+          utm_source: qs.get('utm_source') || '',
+          utm_medium: qs.get('utm_medium') || '',
+          utm_campaign: qs.get('utm_campaign') || '',
+          ref: document.referrer || ''
+        };
+        if (stored.utm_source || stored.ref) {
+          try { localStorage.setItem(KEY, JSON.stringify(stored)); } catch (e) {}
+        }
+      }
+      var params = new URLSearchParams();
+      if (stored.utm_source) params.set('utm_source', stored.utm_source);
+      if (stored.utm_medium) params.set('utm_medium', stored.utm_medium);
+      if (stored.utm_campaign) params.set('utm_campaign', stored.utm_campaign);
+      if (stored.ref) params.set('ref', stored.ref);
+      var extra = params.toString();
+      if (!extra) return;
+      var links = document.querySelectorAll('a[href*="app.veriflowapi.com/signup"]');
+      for (var i = 0; i < links.length; i++) {
+        var href = links[i].getAttribute('href');
+        links[i].setAttribute('href', href + (href.indexOf('?') !== -1 ? '&' : '?') + extra);
+      }
+    } catch (e) { /* attribution is best-effort; never block the page */ }
+  })();
+</script>
 </body>
 </html>
