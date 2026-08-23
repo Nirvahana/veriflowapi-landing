@@ -40,6 +40,12 @@ padding:.3rem .8rem;font-size:.85rem;font-weight:500;}
 .faq details{border-bottom:1px solid var(--border);padding:.9em 0;}
 .faq summary{font-weight:600;cursor:pointer;}
 .faq p{color:var(--ink-muted);margin:.6em 0 0;}
+.explore{margin:3em 0 1em;}
+.explore>h2{margin-bottom:.6em;}
+.explore .cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:2rem;}
+.explore h3{font-size:.8rem;text-transform:uppercase;letter-spacing:.03em;color:var(--ink-muted);margin:0 0 .6em;}
+.explore ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:.4rem;font-size:.92rem;}
+.explore li.cur a{color:var(--ink-muted);pointer-events:none;font-weight:600;}
 .cta-band{background:var(--accent-light);border-radius:16px;padding:40px;text-align:center;margin:48px 0;}
 .cta-band h2{margin-top:0;}
 footer{border-top:1px solid var(--border);padding:32px 0;color:var(--ink-muted);font-size:.85rem;}

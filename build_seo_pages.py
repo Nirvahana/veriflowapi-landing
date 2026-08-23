@@ -114,6 +114,12 @@ padding:.3rem .8rem;font-size:.85rem;font-weight:500;}
 .faq details{border-bottom:1px solid var(--border);padding:.9em 0;}
 .faq summary{font-weight:600;cursor:pointer;}
 .faq p{color:var(--ink-muted);margin:.6em 0 0;}
+.explore{margin:3em 0 1em;}
+.explore>h2{margin-bottom:.6em;}
+.explore .cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:2rem;}
+.explore h3{font-size:.8rem;text-transform:uppercase;letter-spacing:.03em;color:var(--ink-muted);margin:0 0 .6em;}
+.explore ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:.4rem;font-size:.92rem;}
+.explore li.cur a{color:var(--ink-muted);pointer-events:none;font-weight:600;}
 .cta-band{background:var(--accent-light);border-radius:16px;padding:40px;text-align:center;margin:48px 0;}
 .cta-band h2{margin-top:0;}
 footer{border-top:1px solid var(--border);padding:32px 0;color:var(--ink-muted);font-size:.85rem;}
@@ -179,6 +185,11 @@ PAGE = """<!doctype html>
     __FAQ__
   </section>
 
+  <section class="explore">
+    <h2>Explore more</h2>
+    <div class="cols">__EXPLORE__</div>
+  </section>
+
   <div class="cta-band">
     <h2>__CTA_H__</h2>
     <p class="muted" style="max-width:560px;margin:0 auto 1.2rem;">Start with 100 free verifications. No credit card. Read the <a href="https://docs.veriflowapi.com/introduction">docs</a> or explore <a href="https://docs.veriflowapi.com/data-sources">coverage</a>.</p>
@@ -226,6 +237,19 @@ def faq_html(qas: list[tuple[str, str]]) -> str:
         f"<details><summary>{q}</summary><p>{a}</p></details>" for q, a in qas)
 
 
+def explore_block(current: str) -> str:
+    """Cross-link every generated page to all its siblings (current page shown muted)."""
+    def li(href: str, label: str) -> str:
+        cur = ' class="cur"' if href == f"/{current}" else ""
+        return f'<li{cur}><a href="{href}">{label}</a></li>'
+    states = "".join(li(f"/verify/{s}-license-verification.html", n) for s, n, _, _ in STATES)
+    profs = "".join(li(f"/verify/{s}-license-verification.html", n) for s, n, _, _ in PROFESSIONS)
+    cases = "".join(li(f"/for/{s}.html", n) for s, n, _, _ in USE_CASES)
+    return (f'<div><h3>By state</h3><ul>{states}</ul></div>'
+            f'<div><h3>By role</h3><ul>{profs}</ul></div>'
+            f'<div><h3>By use case</h3><ul>{cases}</ul></div>')
+
+
 def jsonld(title: str, desc: str, canon: str, qas: list[tuple[str, str]]) -> str:
     import json
     faqs = [{"@type": "Question", "name": q,
@@ -248,6 +272,7 @@ def render(*, path, title, desc, badge, h1, sub, body, code, cta_h, qas):
         "__CSS__": "/verify/seo.css", "__SIGNUP__": SIGNUP, "__BADGE__": badge,
         "__H1__": h1, "__SUB__": sub, "__BODY__": body, "__CODE__": code,
         "__CTA_H__": cta_h, "__FAQ__": faq_html(qas),
+        "__EXPLORE__": explore_block(path),
         "__JSONLD__": jsonld(title, desc, canon, qas),
     }
     for k, v in repl.items():
