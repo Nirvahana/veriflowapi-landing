@@ -150,8 +150,8 @@ To maximize uptime and minimize response time, VeriflowAPI caches responses acco
 
 | Data type | Cache TTL |
 |---|---|
-| License status (active/inactive/suspended/expired/revoked) | 24 hours |
-| Static info (name, license number, school) | 30 days |
+| State license status (active/inactive/suspended/expired/revoked) | 24 hours |
+| NPPES identity (name, NPI) | 24 hours |
 | OIG exclusion status | 12 hours |
 
 When a response is served from cache, `cached` will be `true` and `source_live` will be `false`. The `cache_expires_at` field tells you exactly when fresh data will be fetched.

@@ -10,7 +10,7 @@ When you submit a provider's details, VeriflowAPI simultaneously checks:
 - **OIG Exclusion List** — HHS list of excluded individuals from federal programs
 - **State Medical Boards** — deep license status for TX, FL, IL, WA, CO, CT, AL, and NY (more added by demand)
 
-We normalize inconsistent data formats across all sources and return a single, clean JSON response in under 200ms — even when government sites are slow or down.
+We normalize inconsistent data formats across all sources and return a single, clean JSON response. Cached results return in milliseconds; a live check against a state portal takes longer. When a government source is unavailable, we serve the most recent cached data, clearly flagged with `source_live: false`.
 
 ## Who uses VeriflowAPI
 
@@ -24,10 +24,10 @@ We normalize inconsistent data formats across all sources and return a single, c
 
 | Capability | Detail |
 |---|---|
-| Response time | Under 200ms average |
+| Response time | Milliseconds on cached data; live source checks vary by state |
 | Uptime SLA | 99.9% guaranteed |
 | Data sources | NPPES, OIG, + 8 state boards |
-| Cache freshness | 24 hours for status, 30 days for static data |
+| Cache freshness | License status 24h; federal exclusions (OIG) 12h |
 | Verification certificates | SHA256-signed, audit-ready |
 | Webhook monitoring | Real-time alerts on status changes |
 
