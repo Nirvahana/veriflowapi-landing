@@ -40,9 +40,9 @@ POST https://api.veriflowapi.com/v1/verify
 | `last_name` | string | Yes | Provider's last name. |
 | `state` | string | Yes | Two-letter US state code (e.g. `CA`, `TX`, `NY`). The state where the license was issued. |
 | `npi` | string | No | 10-digit National Provider Identifier. Strongly recommended — significantly improves match accuracy. |
-| `dob` | string | No | Date of birth in ISO 8601 format (`YYYY-MM-DD`). Used to disambiguate providers with similar names. |
+| `dob` | string | No | Date of birth in ISO 8601 format (`YYYY-MM-DD`). Disambiguates same-name providers and, in particular, clears false OIG exclusion matches on common names. See [OIG exclusion matching](#oig-exclusion-matching). |
 
-**Note on NPI:** While `npi` is optional, we strongly recommend including it whenever available. Without an NPI, identity resolution relies solely on name and state matching, which can produce false positives for common names.
+**Note on `npi` and `dob`:** Both are optional but strongly recommended whenever available. Without them, identity resolution relies on name and state alone, which can produce false positives for common names — including false matches against the OIG exclusion list. Supplying `npi` and/or `dob` disambiguates the provider and clears same-name collisions.
 
 ## Response
 
@@ -85,7 +85,7 @@ POST https://api.veriflowapi.com/v1/verify
 | `state` | string | Full state name. |
 | `expiry_date` | string | License expiry date in ISO 8601 format (`YYYY-MM-DD`). |
 | `disciplinary_flags` | boolean | `true` if any disciplinary actions, sanctions, or malpractice findings are on record. |
-| `oig_excluded` | boolean | `true` if provider appears on the HHS OIG exclusion list. |
+| `oig_excluded` | boolean | `true` if the provider matches the HHS OIG exclusion list. A matching `npi` or `dob` confirms; a *different* `npi` or `dob` rules out a same-name stranger; a name-only match is reported conservatively (still `true`). See [OIG exclusion matching](#oig-exclusion-matching). |
 | `sources_checked` | array | List of data sources checked in this request. |
 | `source_live` | boolean | `true` if data was fetched live from source. `false` if served from cache. |
 | `cached` | boolean | Whether this response was served from cache. |
@@ -125,6 +125,16 @@ Every successful match reports a `match_confidence`:
 | `low` | Name nickname/typo variant, no NPI. |
 
 Because name-only matching is inherently ambiguous for common names, **supply an `npi` whenever available** for `high`-confidence, exact-identity verification. When ambiguity cannot be resolved, we return `not_found`.
+
+## OIG exclusion matching
+
+The OIG LEIE (List of Excluded Individuals/Entities) is matched by name and then narrowed by the identifiers you supply. Because roughly 90% of LEIE records carry no NPI, name is the primary key — so a common name can collide with an excluded stranger. VeriflowAPI uses `npi` and `dob` to resolve those collisions:
+
+- **A matching `npi`** confirms the exclusion — the strongest signal, an exact identity match.
+- **A different `npi` or `dob`** on a same-name record rules it out as a different person, so `oig_excluded` returns `false`.
+- **A name-only match** — no identifier supplied, or none on the LEIE record — is reported conservatively as `oig_excluded: true`. We would rather surface a possible match for your review than silently clear a real exclusion.
+
+To avoid false positives on common names, **supply `dob` (and `npi` where you have it) on every check.** Most LEIE records carry a date of birth, so a `dob` clears a same-name stranger even when the record has no NPI.
 
 ## Sandbox &amp; testing
 
