@@ -36,7 +36,7 @@ If `oig_excluded` is `true`, the provider must not be employed or contracted by 
 
 ## State Sources — Live
 
-Deep state license data is available for **eight states** today. Texas and New York are live per-query scrapes; the rest are full daily mirrors. Any other state returns `status: "unsupported_state"` on live keys — we never fabricate data we don't have.
+Deep state license data is available for **nine states** today. Texas, New York, and Pennsylvania are live per-query scrapes; the rest are full daily mirrors. Any other state returns `status: "unsupported_state"` on live keys — we never fabricate data we don't have.
 
 ### Texas Medical Board
 
@@ -103,6 +103,16 @@ Deep state license data is available for **eight states** today. Texas and New Y
 | Data includes | License number, profession, registration status, registered-through date, enforcement actions |
 
 New York licenses do not "expire"; the triennial **registration** does. A currently registered licensee returns `status: "active"`; a lapsed registration returns `status: "expired"`. For physicians, disciplinary actions are published by the NYS Department of Health (OPMC) rather than the Office of the Professions, so enforcement flags on `060` (Medicine) records come from that separate source.
+
+### Pennsylvania Licensing System (PALS)
+
+| Detail | Value |
+|---|---|
+| Access | Live per-query search of the PALS verification service, 24-hour per-query cache |
+| License types | Physicians (MD/DO), psychologists, social workers, marriage & family therapists, professional counselors, PT, OT, SLP |
+| Data includes | License number, license type, board, status, issue date, expiry, disciplinary actions |
+
+PALS lists every license a person holds (for example an expired training permit alongside an active MD license); we resolve to the active, highest-tier license. Licensee contact details returned by the state are never stored.
 
 ## What happens when a source is down
 
