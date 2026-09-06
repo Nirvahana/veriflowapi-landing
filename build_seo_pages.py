@@ -37,15 +37,17 @@ STATES = [
      "physicians, psychologists, social workers, counselors, PT, OT, and SLP"),
     ("pennsylvania", "Pennsylvania", "Pennsylvania Licensing System (PALS)",
      "physicians, psychologists, social workers, counselors, MFTs, PT, OT, and SLP, with disciplinary actions"),
+    ("ohio", "Ohio", "Ohio eLicense",
+     "physicians, psychologists, social workers, counselors, MFTs, PT, OT, and SLP, with board actions"),
 ]
 STATE_ABBR = {"texas": "TX", "florida": "FL", "illinois": "IL", "washington": "WA",
-              "colorado": "CO", "connecticut": "CT", "alabama": "AL", "newyork": "NY", "pennsylvania": "PA"}
+              "colorado": "CO", "connecticut": "CT", "alabama": "AL", "newyork": "NY", "pennsylvania": "PA", "ohio": "OH"}
 
 # Professions (slug, display, license, covered-state abbreviations).
-ALL_CLINICAL = ["FL", "WA", "IL", "CO", "CT", "NY", "PA"]
+ALL_CLINICAL = ["FL", "WA", "IL", "CO", "CT", "NY", "PA", "OH"]
 PROFESSIONS = [
     ("physician", "Physician", "State Medical MD/DO license",
-     ["TX", "FL", "IL", "WA", "CO", "CT", "AL", "NY", "PA"]),
+     ["TX", "FL", "IL", "WA", "CO", "CT", "AL", "NY", "PA", "OH"]),
     ("psychologist", "Psychologist", "Licensed Psychologist license", ALL_CLINICAL),
     ("clinical-social-worker", "Licensed Clinical Social Worker (LCSW)",
      "clinical social work license", ALL_CLINICAL),
@@ -379,7 +381,7 @@ def main() -> None:
              "One REST endpoint and a bearer token. Most teams run their first live check the same "
              "day, with 100 free verifications to test."),
             ("Which states and roles are covered?",
-             "Deep license data for nine states today (TX, FL, IL, WA, CO, CT, AL, NY, PA) across "
+             "Deep license data for ten states today (TX, FL, IL, WA, CO, CT, AL, NY, PA, OH) across "
              "physician and behavioral-health roles, plus nationwide federal screening. See the "
              "coverage page for the current list."),
         ]

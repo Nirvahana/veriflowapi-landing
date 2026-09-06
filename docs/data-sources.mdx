@@ -36,7 +36,7 @@ If `oig_excluded` is `true`, the provider must not be employed or contracted by 
 
 ## State Sources — Live
 
-Deep state license data is available for **nine states** today. Texas, New York, and Pennsylvania are live per-query scrapes; the rest are full daily mirrors. Any other state returns `status: "unsupported_state"` on live keys — we never fabricate data we don't have.
+Deep state license data is available for **ten states** today. Texas, New York, Pennsylvania, and Ohio are live per-query scrapes; the rest are full daily mirrors. Any other state returns `status: "unsupported_state"` on live keys — we never fabricate data we don't have.
 
 ### Texas Medical Board
 
@@ -113,6 +113,16 @@ New York licenses do not "expire"; the triennial **registration** does. A curren
 | Data includes | License number, license type, board, status, issue date, expiry, disciplinary actions |
 
 PALS lists every license a person holds (for example an expired training permit alongside an active MD license); we resolve to the active, highest-tier license. Licensee contact details returned by the state are never stored.
+
+### Ohio eLicense
+
+| Detail | Value |
+|---|---|
+| Access | Live per-query search of the eLicense Ohio verification service, 24-hour per-query cache |
+| License types | Physicians (MD/DO), psychologists, social workers, professional counselors, marriage & family therapists, PT, OT, SLP |
+| Data includes | License number, license type, board, status and sub-status, issue and expiry dates, board-action flag and summary |
+
+Ohio's top-level status is coarse (Active / Inactive / Closed); the informative detail is the sub-status (Expired, Lapsed, Suspended, Retired, ...), which we normalize. eLicense Ohio states that the Joint Commission and NCQA accept its online status as primary-source verification. Address and alias data returned by the state are never stored.
 
 ## What happens when a source is down
 
