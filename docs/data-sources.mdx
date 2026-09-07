@@ -36,7 +36,7 @@ If `oig_excluded` is `true`, the provider must not be employed or contracted by 
 
 ## State Sources — Live
 
-Deep state license data is available for **eleven states** today. Texas, New York, Pennsylvania, and Ohio are live per-query scrapes; the rest are full mirrors (refreshed daily, or monthly for California). Any other state returns `status: "unsupported_state"` on live keys — we never fabricate data we don't have.
+Deep state license data is available for **twelve states** today. Texas, New York, Pennsylvania, Ohio, and Michigan are live per-query scrapes; the rest are full mirrors (refreshed daily, or monthly for California). Any other state returns `status: "unsupported_state"` on live keys — we never fabricate data we don't have.
 
 ### Texas Medical Board
 
@@ -124,6 +124,16 @@ PALS lists every license a person holds (for example an expired training permit 
 
 Ohio's top-level status is coarse (Active / Inactive / Closed); the informative detail is the sub-status (Expired, Lapsed, Suspended, Retired, ...), which we normalize. eLicense Ohio states that the Joint Commission and NCQA accept its online status as primary-source verification. Address and alias data returned by the state are never stored.
 
+### Michigan LARA (MiPLUS)
+
+| Detail | Value |
+|---|---|
+| Access | Live per-query search of LARA's public MiPLUS licensee portal, 24-hour per-query cache |
+| License types | Medical doctors, osteopathic physicians, psychologists, master's and bachelor's social workers, professional counselors, marriage & family therapists, PT, OT, SLP |
+| Data includes | License number, license type, status, issue and expiry dates, current board conditions |
+
+Michigan publishes no bulk licensee file, so the portal is queried at verification time. Two limits are worth planning around. Michigan labels a license whose expiry has passed but which is still inside the renewal window as "Active - In Late Renewal"; we report that as **expired**, because the date has passed and practice is not authorized. And LARA publishes no NPI anywhere, so Michigan resolves on name alone. Discipline appears as current conditions such as probation or suspension, without the order narrative, which LARA issues separately in monthly disciplinary reports. Address data returned by the state is never stored.
+
 ### California Department of Consumer Affairs (DCA)
 
 | Detail | Value |
@@ -144,6 +154,8 @@ When a source is unavailable during a request:
 2. The response includes `"source_live": false` and `"cached": true`
 3. The `cache_expires_at` field tells you when fresh data will next be fetched
 4. Our monitoring system detects the outage and begins retry attempts automatically
+
+If there is **no** cached data for that provider, we do not guess. The response returns `status: "source_unavailable"` with `verified: false`, which is deliberately distinct from `not_found`. `not_found` means the board answered and holds no matching record; `source_unavailable` means we could not ask it. Treat the first as an exception to investigate and the second as a retry. The federal signals in the same response (NPPES identity and OIG exclusion) are still valid.
 
 This approach ensures our 99.9% uptime SLA holds even when individual government sites experience extended downtime.
 

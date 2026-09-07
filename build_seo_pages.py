@@ -103,6 +103,24 @@ STATES = [
                 "detail lives in a sub-status such as Expired, Lapsed, Suspended or Retired. "
                 "We read the sub-status and normalise it, so a credential that reads active "
                 "upstream but has actually lapsed is reported as expired."),
+    dict(slug="michigan", abbr="MI", name="Michigan",
+         board="Dept. of Licensing and Regulatory Affairs (LARA)", method="Live per-query",
+         refresh="Checked live, cached 24 hours", records="Live lookup",
+         discipline="Partial",
+         detail="Michigan publishes no bulk licensee file, so we query LARA's public MiPLUS "
+                "portal at the moment you ask and cache the answer for 24 hours. It covers "
+                "medical doctors and osteopathic physicians, psychologists, master's and "
+                "bachelor's social workers, professional counselors, marriage and family "
+                "therapists, physical therapists, occupational therapists and "
+                "speech-language pathologists, returning licence number, type, status and "
+                "expiry date.",
+         caveat="Michigan labels a licence whose expiry has already passed but which is "
+                "still inside the renewal window as &ldquo;Active - In Late Renewal&rdquo;. "
+                "We report that as expired, because the date has passed and practice is not "
+                "authorised. LARA also publishes no NPI, so Michigan matches on name alone, "
+                "and the portal shows current sanctions such as probation or suspension "
+                "without the order narrative, which LARA issues separately in monthly "
+                "disciplinary reports."),
     dict(slug="florida", abbr="FL", name="Florida",
          board="Department of Health, Medical Quality Assurance (MQA)",
          method="Daily mirror", refresh="Refreshed daily",
@@ -170,11 +188,11 @@ STATES = [
                 "standing rather than reconstructing a lapsed licence's history."),
 ]
 
-ALL_CLINICAL = ["FL", "WA", "IL", "CO", "CT", "NY", "PA", "OH", "CA"]
+ALL_CLINICAL = ["FL", "WA", "IL", "CO", "CT", "NY", "PA", "OH", "CA", "MI"]
 NO_CA = [s for s in ALL_CLINICAL if s != "CA"]
 ROLES = [
     ("Physician (MD / DO)", "State medical or osteopathic licence",
-     ["TX", "FL", "IL", "WA", "CO", "CT", "AL", "NY", "PA", "OH", "CA"]),
+     ["TX", "FL", "IL", "WA", "CO", "CT", "AL", "NY", "PA", "OH", "CA", "MI"]),
     ("Psychologist / Neuropsychologist", "Licensed Psychologist", ALL_CLINICAL),
     ("Licensed Clinical Social Worker", "LCSW", ALL_CLINICAL),
     ("Professional / Mental Health Counselor", "LPC, LPCC or LMHC", ALL_CLINICAL),
@@ -183,12 +201,18 @@ ROLES = [
     ("Occupational Therapist", "OT", ALL_CLINICAL),
     ("Speech-Language Pathologist", "SLP", NO_CA),
 ]
-ALL_ABBR = ["TX", "FL", "IL", "WA", "CO", "CT", "AL", "NY", "PA", "OH", "CA"]
+ALL_ABBR = ["TX", "FL", "IL", "WA", "CO", "CT", "AL", "NY", "PA", "OH", "CA", "MI"]
 
 # --- Retired URLs -> what replaced them ---------------------------------------
 REDIRECTS: dict[str, str] = {}
+# Only states that HAD a retired per-state page get a redirect stub. A state added after the
+# consolidation (Michigan) never had one, and inventing a stub would re-create the thin-page
+# pattern the consolidation removed.
+_RETIRED_STATE_PAGES = {"california", "texas", "newyork", "pennsylvania", "ohio", "florida",
+                        "illinois", "washington", "colorado", "connecticut", "alabama"}
 for _s in STATES:
-    REDIRECTS[f"verify/{_s['slug']}-license-verification.html"] = f"/coverage.html#{_s['slug']}"
+    if _s["slug"] in _RETIRED_STATE_PAGES:
+        REDIRECTS[f"verify/{_s['slug']}-license-verification.html"] =             f"/coverage.html#{_s['slug']}"
 for _p in ("physician", "psychologist", "clinical-social-worker", "professional-counselor",
            "marriage-family-therapist", "physical-therapist", "occupational-therapist",
            "speech-language-pathologist"):
@@ -376,7 +400,7 @@ def coverage_page() -> str:
         + "</tr>" for name, lic, states in ROLES)
 
     body = f"""  <section class="hero">
-    <div class="badge">11 states live &middot; updated September 2026</div>
+    <div class="badge">12 states live &middot; updated September 2026</div>
     <h1>What VeriflowAPI actually verifies</h1>
     <p class="sub">Every state we cover, the board each result comes from, how fresh it is,
     and the specific limits of each source. Federal identity and exclusion screening runs
@@ -476,7 +500,7 @@ POST https://api.veriflowapi.com/v1/verify
 """
     return page(
         path="coverage.html",
-        title="License Verification Coverage: 11 States, Board by Board | VeriflowAPI",
+        title="License Verification Coverage: 12 States, Board by Board | VeriflowAPI",
         desc="Every state VeriflowAPI verifies, the board each result comes from, how often "
              "it refreshes, and the honest limits of each source. Plus nationwide NPPES and "
              "OIG screening on every check.",
@@ -484,10 +508,10 @@ POST https://api.veriflowapi.com/v1/verify
         cta_h="Verify a provider in any of these states",
         qas=[
             ("Which states can VeriflowAPI verify licenses in?",
-             "Eleven states today: Texas, Florida, Illinois, Washington, Colorado, "
-             "Connecticut, Alabama, New York, Pennsylvania, Ohio and California. Federal "
-             "NPPES identity and OIG exclusion screening runs in all 50 states on every "
-             "check."),
+             "Twelve states today: Texas, Florida, Illinois, Washington, Colorado, "
+             "Connecticut, Alabama, New York, Pennsylvania, Ohio, California and Michigan. "
+             "Federal NPPES identity and OIG exclusion screening runs in all 50 states on "
+             "every check."),
             ("Is this primary-source verification?",
              "The data comes from the state boards themselves. The Illinois IDFPR lookup is "
              "recognised by the Joint Commission and NCQA as an approved primary source, and "
@@ -496,8 +520,9 @@ POST https://api.veriflowapi.com/v1/verify
             ("How current is the data?",
              "Mirrored states refresh daily, except California which follows its source's "
              "monthly publication. Live per-query states (Texas, New York, Pennsylvania, "
-             "Ohio) are checked at request time and cached for 24 hours. Every certificate "
-             "records the as-of date, so staleness is visible rather than hidden."),
+             "Ohio, Michigan) are checked at request time and cached for 24 hours. Every "
+             "certificate records the as-of date, so staleness is visible rather than "
+             "hidden."),
             ("What happens when a state board is down?",
              "We serve the most recent cached result and flag it with source_live: false and "
              "cached: true, so you can decide whether to accept it. If there is no cached "
@@ -571,7 +596,7 @@ POST /v1/verify  {{"first_name":"Jane","last_name":"Provider","state":<span clas
     <h2>Coverage that matches a behavioural-health panel</h2>
     <p>Telehealth panels skew towards behavioural health, which is where state coverage
     usually thins out. Psychologists, LCSWs, LPC/LMHCs and LMFTs are verifiable in nine states
-    today, and physicians in eleven. The <a href="/coverage.html#professions">role matrix</a>
+    today, and physicians in twelve. The <a href="/coverage.html#professions">role matrix</a>
     shows which state covers which licence, and uncovered states return an explicit
     <code>unsupported_state</code> rather than a guess &mdash; so you know precisely where
     human review is still required.</p>
@@ -582,7 +607,7 @@ POST /v1/verify  {{"first_name":"Jane","last_name":"Provider","state":<span clas
         title="License Verification for Telehealth Platforms | VeriflowAPI",
         desc="Telehealth licensure follows the patient's state. Verify a clinician per state, "
              "catch lapses mid-engagement with signed webhooks, and cover behavioural-health "
-             "roles across 11 states.",
+             "roles across 12 states.",
         body=body,
         cta_h="Verify your panel, state by state",
         qas=[
