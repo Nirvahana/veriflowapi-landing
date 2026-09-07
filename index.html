@@ -20,16 +20,16 @@
   <meta property="og:url" content="https://veriflowapi.com" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="VeriflowAPI — Medical License Verification API" />
-  <meta name="twitter:description" content="Federal NPI + OIG screening nationwide, plus deep state-board coverage for 12 states. Tamper-evident signed certificate on every check." />
+  <meta name="twitter:description" content="Federal NPI + OIG screening nationwide, plus deep state-board coverage for 13 states. Tamper-evident signed certificate on every check." />
   <link rel="canonical" href="https://veriflowapi.com/" />
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@graph": [
       {"@type":"Organization","@id":"https://veriflowapi.com/#org","name":"VeriflowAPI","url":"https://veriflowapi.com/","logo":"https://veriflowapi.com/logo/logo-dark.svg","description":"API for verifying US medical and professional licenses against federal and state sources."},
-      {"@type":"SoftwareApplication","name":"VeriflowAPI","applicationCategory":"DeveloperApplication","operatingSystem":"Any (REST API)","url":"https://veriflowapi.com/","description":"One API call for federal NPI + OIG exclusion screening nationwide, plus deep state-board license verification for Texas, Florida, Illinois, Washington, Colorado, Connecticut, Alabama, New York, Pennsylvania, Ohio, California and Michigan. Tamper-evident signed certificates, webhook monitoring, fuzzy name matching.","offers":{"@type":"Offer","price":"0","priceCurrency":"USD","description":"Start free with 100 verifications"},"publisher":{"@id":"https://veriflowapi.com/#org"}},
+      {"@type":"SoftwareApplication","name":"VeriflowAPI","applicationCategory":"DeveloperApplication","operatingSystem":"Any (REST API)","url":"https://veriflowapi.com/","description":"One API call for federal NPI + OIG exclusion screening nationwide, plus deep state-board license verification for Texas, Florida, Illinois, Washington, Colorado, Connecticut, Alabama, New York, Pennsylvania, Ohio, California, Michigan and New Jersey. Tamper-evident signed certificates, webhook monitoring, fuzzy name matching.","offers":{"@type":"Offer","price":"0","priceCurrency":"USD","description":"Start free with 100 verifications"},"publisher":{"@id":"https://veriflowapi.com/#org"}},
       {"@type":"FAQPage","mainEntity":[
-        {"@type":"Question","name":"Which states does VeriflowAPI cover?","acceptedAnswer":{"@type":"Answer","text":"Federal NPPES (identity/NPI) and OIG LEIE (exclusions) screening is nationwide. Deep state-level license data is live for Texas, Florida, Illinois, Washington, Colorado, Connecticut, Alabama, New York, Pennsylvania, Ohio, California and Michigan; other states return status: unsupported_state."}},
+        {"@type":"Question","name":"Which states does VeriflowAPI cover?","acceptedAnswer":{"@type":"Answer","text":"Federal NPPES (identity/NPI) and OIG LEIE (exclusions) screening is nationwide. Deep state-level license data is live for Texas, Florida, Illinois, Washington, Colorado, Connecticut, Alabama, New York, Pennsylvania, Ohio, California, Michigan and New Jersey; other states return status: unsupported_state."}},
         {"@type":"Question","name":"How fresh is the data?","acceptedAnswer":{"@type":"Answer","text":"NPPES refreshes daily, OIG every 12 hours, and the state license mirrors refresh daily. Each certificate records when the source was read."}},
         {"@type":"Question","name":"Is VeriflowAPI a primary source for verification?","acceptedAnswer":{"@type":"Answer","text":"The Illinois IDFPR bulk lookup is recognized by the Joint Commission and NCQA as an approved primary source. Every verification returns a tamper-evident, SHA-256-signed audit certificate."}},
         {"@type":"Question","name":"Is there a free tier?","acceptedAnswer":{"@type":"Answer","text":"Yes — start free with 100 verifications, no credit card required."}}
@@ -761,7 +761,7 @@
     <div class="badge">Live · 100 Free Verifications</div>
     <h1>Stop Scraping State Boards. <em>Verify Providers in One Call.</em></h1>
     <p class="hero-sub">
-      Federal NPI + OIG exclusion screening nationwide, plus deep state-board coverage across 12 states today — Texas, Florida, Illinois, Washington, Colorado, Connecticut, Alabama, New York, Pennsylvania, Ohio, California, and Michigan. Every check returns a tamper-evident, SHA‑256‑signed audit certificate — JSON or PDF.
+      Federal NPI + OIG exclusion screening nationwide, plus deep state-board coverage across 13 states today — Texas, Florida, Illinois, Washington, Colorado, Connecticut, Alabama, New York, New Jersey, Pennsylvania, Ohio, California, and Michigan. Every check returns a tamper-evident, SHA‑256‑signed audit certificate — JSON or PDF.
     </p>
     <div style="display:flex;gap:1rem;margin-bottom:2rem;flex-wrap:wrap;">
       <a href="https://app.veriflowapi.com/signup" style="background:var(--accent);color:#fff;padding:0.75rem 1.5rem;border-radius:7px;font-size:0.9375rem;font-weight:600;text-decoration:none;transition:background 0.2s;" onmouseover="this.style.background='#1238cc'" onmouseout="this.style.background='var(--accent)'">Start Free → 100 verifications</a>
@@ -956,6 +956,12 @@
       <div class="source-name">Ohio eLicense</div>
       <div class="source-desc">Real-time license status, sub-status, expiry, and board actions for OH physicians, psychologists, social workers, counselors, MFTs, PT, OT, and SLP across five health boards.</div>
       <div class="source-status"><span class="status-dot"></span>Live · 24hr Cache</div>
+    </div>
+    <div class="source-card">
+      <span class="source-badge badge-state">State &middot; Daily</span>
+      <div class="source-name">New Jersey DCA</div>
+      <div class="source-desc">Daily mirror of the NJ Division of Consumer Affairs licence rosters &mdash; physicians, PAs, psychologists, social workers, counselors, MFTs, PT, OT, and speech/audiology. License #, type, status, issue and expiry dates.</div>
+      <div class="source-status"><span class="status-dot"></span>Live &middot; Updated Daily &middot; 294k records</div>
     </div>
     <div class="source-card">
       <span class="source-badge badge-state">State &middot; Live</span>
@@ -1305,7 +1311,7 @@
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem;">
       <a href="/coverage.html" style="display:block; background:#fff; border:1px solid var(--border); border-radius:10px; padding:1.25rem 1.5rem; text-decoration:none;">
         <div style="font-weight:600; color:var(--ink); margin-bottom:.35rem;">State &amp; profession coverage &rarr;</div>
-        <div style="font-size:.875rem; color:var(--ink-muted);">12 states, 8 clinical roles, and what each source does and does not include.</div>
+        <div style="font-size:.875rem; color:var(--ink-muted);">13 states, 8 clinical roles, and what each source does and does not include.</div>
       </a>
       <a href="/for/telehealth.html" style="display:block; background:#fff; border:1px solid var(--border); border-radius:10px; padding:1.25rem 1.5rem; text-decoration:none;">
         <div style="font-weight:600; color:var(--ink); margin-bottom:.35rem;">For telehealth platforms &rarr;</div>
