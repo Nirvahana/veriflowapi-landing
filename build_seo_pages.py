@@ -39,24 +39,28 @@ STATES = [
      "physicians, psychologists, social workers, counselors, MFTs, PT, OT, and SLP, with disciplinary actions"),
     ("ohio", "Ohio", "Ohio eLicense",
      "physicians, psychologists, social workers, counselors, MFTs, PT, OT, and SLP, with board actions"),
+    ("california", "California", "California Department of Consumer Affairs (DCA)",
+     "physicians, osteopathic physicians, psychologists, LCSW/LMFT/LPCC, PT, and OT from the monthly DCA public files"),
 ]
 STATE_ABBR = {"texas": "TX", "florida": "FL", "illinois": "IL", "washington": "WA",
-              "colorado": "CO", "connecticut": "CT", "alabama": "AL", "newyork": "NY", "pennsylvania": "PA", "ohio": "OH"}
+              "colorado": "CO", "connecticut": "CT", "alabama": "AL", "newyork": "NY", "pennsylvania": "PA", "ohio": "OH", "california": "CA"}
 
 # Professions (slug, display, license, covered-state abbreviations).
 ALL_CLINICAL = ["FL", "WA", "IL", "CO", "CT", "NY", "PA", "OH"]
+# CA covers every clinical board except Speech-Language Pathology (its DCA file is empty).
+CLINICAL_CA = [*ALL_CLINICAL, "CA"]
 PROFESSIONS = [
     ("physician", "Physician", "State Medical MD/DO license",
-     ["TX", "FL", "IL", "WA", "CO", "CT", "AL", "NY", "PA", "OH"]),
-    ("psychologist", "Psychologist", "Licensed Psychologist license", ALL_CLINICAL),
+     ["TX", "FL", "IL", "WA", "CO", "CT", "AL", "NY", "PA", "OH", "CA"]),
+    ("psychologist", "Psychologist", "Licensed Psychologist license", CLINICAL_CA),
     ("clinical-social-worker", "Licensed Clinical Social Worker (LCSW)",
-     "clinical social work license", ALL_CLINICAL),
+     "clinical social work license", CLINICAL_CA),
     ("professional-counselor", "Licensed Professional Counselor (LPC / LMHC)",
-     "professional / mental-health counselor license", ALL_CLINICAL),
+     "professional / mental-health counselor license", CLINICAL_CA),
     ("marriage-family-therapist", "Marriage and Family Therapist (LMFT)",
-     "LMFT license", ALL_CLINICAL),
-    ("physical-therapist", "Physical Therapist", "PT license", ALL_CLINICAL),
-    ("occupational-therapist", "Occupational Therapist", "OT license", ALL_CLINICAL),
+     "LMFT license", CLINICAL_CA),
+    ("physical-therapist", "Physical Therapist", "PT license", CLINICAL_CA),
+    ("occupational-therapist", "Occupational Therapist", "OT license", CLINICAL_CA),
     ("speech-language-pathologist", "Speech-Language Pathologist", "SLP license", ALL_CLINICAL),
 ]
 
@@ -381,7 +385,7 @@ def main() -> None:
              "One REST endpoint and a bearer token. Most teams run their first live check the same "
              "day, with 100 free verifications to test."),
             ("Which states and roles are covered?",
-             "Deep license data for ten states today (TX, FL, IL, WA, CO, CT, AL, NY, PA, OH) across "
+             "Deep license data for eleven states today (TX, FL, IL, WA, CO, CT, AL, NY, PA, OH, CA) across "
              "physician and behavioral-health roles, plus nationwide federal screening. See the "
              "coverage page for the current list."),
         ]

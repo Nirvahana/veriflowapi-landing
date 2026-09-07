@@ -36,7 +36,7 @@ If `oig_excluded` is `true`, the provider must not be employed or contracted by 
 
 ## State Sources — Live
 
-Deep state license data is available for **ten states** today. Texas, New York, Pennsylvania, and Ohio are live per-query scrapes; the rest are full daily mirrors. Any other state returns `status: "unsupported_state"` on live keys — we never fabricate data we don't have.
+Deep state license data is available for **eleven states** today. Texas, New York, Pennsylvania, and Ohio are live per-query scrapes; the rest are full mirrors (refreshed daily, or monthly for California). Any other state returns `status: "unsupported_state"` on live keys — we never fabricate data we don't have.
 
 ### Texas Medical Board
 
@@ -124,6 +124,16 @@ PALS lists every license a person holds (for example an expired training permit 
 
 Ohio's top-level status is coarse (Active / Inactive / Closed); the informative detail is the sub-status (Expired, Lapsed, Suspended, Retired, ...), which we normalize. eLicense Ohio states that the Joint Commission and NCQA accept its online status as primary-source verification. Address and alias data returned by the state are never stored.
 
+### California Department of Consumer Affairs (DCA)
+
+| Detail | Value |
+|---|---|
+| Access | Monthly mirror of the DCA public licensee files (refreshed on the 1st of each month) |
+| License types | Physicians (MD), osteopathic physicians (DO), psychologists, LCSW / LMFT / LPCC (Board of Behavioral Sciences), PT, OT |
+| Data includes | License number, license type, board, status, issue date, expiry date |
+
+The DCA files carry status and expiry but no disciplinary history, and the Speech-Language Pathology board's public file is empty, so SLP is not yet covered in California. Discipline and SLP will follow via DCA's iServices API.
+
 ## What happens when a source is down
 
 Government websites experience downtime — planned maintenance, traffic spikes, infrastructure migrations. VeriflowAPI is architected to handle this gracefully.
@@ -141,7 +151,7 @@ You can always check current source availability at **status.veriflowapi.com**.
 
 ## Remaining states
 
-For states not yet mirrored — including California, which is on our roadmap — VeriflowAPI returns NPPES and OIG data, which covers federal credential status nationwide. State-level license status for additional states is added based on demand.
+For states not yet mirrored, VeriflowAPI returns NPPES and OIG data, which covers federal credential status nationwide. State-level license status for additional states is added based on demand.
 
 If you have an urgent need for a specific state, email support@veriflowapi.com — we prioritize state additions based on customer demand.
 
