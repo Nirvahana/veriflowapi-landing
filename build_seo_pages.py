@@ -13,6 +13,8 @@ Output:
     for/telehealth.html               genuinely distinct use-case pages
     for/credentialing-software.html
     for/healthcare-staffing.html
+    research/state-license-data-sources.html
+                                      reference page: what every state publishes (not what we verify)
     verify/seo.css                    shared stylesheet
     <retired urls>                    redirect stubs -> the page that replaced them
     sitemap.xml                       canonical pages only (stubs excluded)
@@ -308,6 +310,22 @@ padding:.7rem .9rem;border-radius:0 8px 8px 0;font-size:.92rem;margin-top:.8em;}
 footer{border-top:1px solid var(--border);padding:32px 0;color:var(--ink-muted);font-size:.85rem;}
 footer a{color:var(--ink-muted);}
 .muted{color:var(--ink-muted);}
+/* Research pages: wide reference tables scroll inside their own container. */
+.tablewrap{overflow-x:auto;margin:1em 0;}
+.tablewrap table{min-width:820px;font-size:.86rem;}
+.tablewrap td{vertical-align:top;}
+.acc-free{color:var(--success);font-weight:600;white-space:nowrap;}
+.acc-live{color:var(--accent-dark);font-weight:600;white-space:nowrap;}
+.acc-paid{color:var(--warn);font-weight:600;white-space:nowrap;}
+.acc-blocked{color:#b42318;font-weight:600;white-space:nowrap;}
+.acc-unv{color:var(--ink-muted);font-weight:600;white-space:nowrap;}
+.chip{display:inline-block;background:var(--accent-light);color:var(--accent-dark);font-size:.72rem;
+font-weight:600;padding:.1rem .45rem;border-radius:100px;margin-left:.3rem;vertical-align:middle;}
+.case{background:#fff;border:1px solid var(--border);border-radius:12px;padding:20px 22px;margin:14px 0;}
+.case h3{margin:0 0 .4em;font-family:'DM Serif Display',serif;font-size:1.1rem;}
+.case p{margin:.5em 0;}
+.legend{font-size:.85rem;color:var(--ink-muted);margin:.4em 0 1em;}
+.legend span{margin-right:1em;}
 @media(max-width:640px){h1{font-size:1.95rem;}.hero{padding:38px 0 26px;}
 table{font-size:.85rem;}th,td{padding:.45rem .4rem;}}
 """
@@ -852,6 +870,845 @@ POST /v1/verify/bulk
         ])
 
 
+# --- Research: state licence data sources ------------------------------------
+# One long reference page about what the STATES publish (for everyone, including states we do not
+# cover), as opposed to coverage.html, which is about what WE verify. Every row and every claim
+# traces to docs/research/ in the API repo (README.md, state-*.md, tail-states-sweep.md), researched
+# 2026-09-07. Where that research marks something inferred or unverified, the row says so.
+#
+# Columns: abbr, name, physicians source, behavioural-health / therapy source, access label, notes.
+# Access labels: Free bulk | Live lookup | Paid | Blocked | Unverified (and combinations).
+LIVE_ON_VERIFLOW = {"TX", "FL", "IL", "WA", "CO", "CT", "AL", "NY", "NJ", "DE", "PA", "OH", "CA",
+                    "MI"}
+
+SOURCES = [
+    ("AL", "Alabama",
+     "Board of Medical Examiners roster of active licences (dashboard.albme.gov, an ASP.NET "
+     "roster postback). Free.",
+     "Not researched.",
+     "Free bulk",
+     "The roster lists currently active licences only, so it confirms present standing and "
+     "cannot show a lapsed or revoked licence; absence is not a negative finding."),
+    ("AK", "Alaska",
+     "DCCED Division of Corporations, Business and Professional Licensing search. Every path "
+     "returns 403 from DataDome, with the cookie scoped to all of alaska.gov.",
+     "Same agency, same block.",
+     "Blocked",
+     "gis.data.alaska.gov is open but carries only business licences, no professional-licence "
+     "dataset. No Socrata portal."),
+    ("AZ", "Arizona",
+     "Arizona Medical Board: Cloudflare managed challenge on azmd.gov, an Azure Application "
+     "Gateway 403 plus a robots.txt Disallow: / on the GL Suite verification host. The "
+     "osteopathic board is on Thentia Cloud behind an AWS WAF CAPTCHA.",
+     "Board of Behavioral Health Examiners, Psychology, PT and OT boards: Cloudflare challenge "
+     "on every board site and an AWS WAF CAPTCHA on every Thentia tenant (tenant names inferred "
+     "from search results, since no board site could be read). SLP sits with the Dept of Health "
+     "Services, also behind Cloudflare.",
+     "Blocked",
+     "No open-data portal (data.az.gov does not resolve). The medical board's own pages, which "
+     "could not be read directly, describe a physician and PA database sold on CD-ROM for $100 "
+     "with unpublished columns. Three bot-defence products across three hosting stacks."),
+    ("AR", "Arkansas",
+     "Arkansas State Medical Board WebForms lookup (armedicalboard.adh.arkansas.gov): open, "
+     "no challenge, name or licence-number search only, also covers OT.",
+     "One shared portal (search.statesolutions.us) covers psychology, counselling and MFT, and "
+     "SLP by query parameter, served without a challenge. Social work and PT sit behind "
+     "portal.arkansas.gov and were not verified.",
+     "Live lookup",
+     "No bulk file, no Socrata domain. Three to four separate systems for eight professions."),
+    ("CA", "California",
+     "Department of Consumer Affairs public licensee files for the Medical Board and "
+     "Osteopathic Medical Board, refreshed the 1st of each month, fetched through a public Box "
+     "token minted at dca.ca.gov. The DCA iServices JSON API needs a manually approved key; "
+     "the search site search.dca.ca.gov is WAF-blocked.",
+     "Board of Psychology and Board of Behavioral Sciences (LCSW, LMFT, LPCC) files in the same "
+     "monthly release, plus PT and OT boards. The Speech-Language Pathology board's file is "
+     "published empty.",
+     "Free bulk",
+     "The six agency files are tab-delimited despite their spreadsheet extension. Status "
+     "vocabulary is Current, Delinquent and Current Inactive. No disciplinary history in the "
+     "files; that is only in the API."),
+    ("CO", "Colorado",
+     "Department of Regulatory Agencies (DORA) professional and occupational licence dataset on "
+     "data.colorado.gov (Socrata), refreshed daily.",
+     "Same dataset: psychology, clinical social work, professional counselling, MFT, PT, OT, SLP.",
+     "Free bulk",
+     "Profession is encoded as a licence-type prefix rather than a readable name, so a "
+     "prefix-to-profession map is needed before the file is useful."),
+    ("CT", "Connecticut",
+     "Department of Consumer Protection licence and credential dataset on data.ct.gov (Socrata), "
+     "refreshed daily, health professions alongside every other regulated occupation.",
+     "Same dataset.",
+     "Free bulk",
+     "One combined name field rather than first and last, and credential numbers are reused "
+     "across record types, so rows must be split and deduplicated to one per credential."),
+    ("DE", "Delaware",
+     "Division of Professional Regulation dataset on data.delaware.gov (Socrata, pjnv-eaih): "
+     "353,352 rows, all professions in one file, refreshed each morning. Free.",
+     "Same file: Psychology, Social Work Examiners, Mental Health, PT, OT, Speech and Hearing.",
+     "Free bulk",
+     "The file's own disciplinary_action column is the literal N on every row statewide, "
+     "revoked licences included. The separate register (dz6p-akeq) joins on licence number and "
+     "is the truth. No NPI, no date of birth."),
+    ("DC", "District of Columbia",
+     "DC Health HRLA verification portal on Salesforce Experience Cloud "
+     "(dohenterprise.my.site.com/ver), no bot defence.",
+     "Same portal: all eight professions including audiology and SLP.",
+     "Live lookup",
+     "Verified negative on bulk: the full Open Data DC catalogue (1,885 datasets) has no "
+     "health-professional licensee dataset, only business, DMV, alcohol and cannabis. No "
+     "Socrata domain."),
+    ("FL", "Florida",
+     "Department of Health MQA licensure data download "
+     "(data-download.mqa.flhealthsource.gov), a full file of roughly 1.5 million licensees "
+     "across 180-plus professions, behind an account sign-in.",
+     "Same file.",
+     "Free bulk",
+     "Carries dedicated out-of-state telehealth registration categories as their own licence "
+     "types."),
+    ("GA", "Georgia",
+     "Composite Medical Board: live lookup is reCAPTCHA v2. The physicians (MD and DO) data "
+     "file costs $500 per snapshot, ordered on a form, emailed, no refresh cadence, and carries "
+     "Status, Public Board Action and Date of Action columns.",
+     "Six boards under the Secretary of State's GOALS portal (Salesforce Experience Cloud) with "
+     "reCAPTCHA v3 and a v2 fallback. The only bulk product described is a $3,000 roster mailed "
+     "on CD and paid by cheque (read from search snippets; sos.ga.gov could not be fetched).",
+     "Paid / Blocked",
+     "Free and current: monthly Public Board Actions PDFs from 2005 to the present, a mix of "
+     "text and scanned pages. The data-file licence forbids distribution for the purpose of "
+     "resale. A free third-party mirror exists but is frozen at a 2019 extract."),
+    ("HI", "Hawaii",
+     "DCCA Professional and Vocational Licensing search: 403 with a Cloudflare interstitial "
+     "on the search path.",
+     "Same consolidated agency, same challenge.",
+     "Blocked",
+     "Bulk availability unknown because the pages that would describe it sit behind the same "
+     "challenge."),
+    ("ID", "Idaho",
+     "Division of Occupational and Professional Licenses eDOPL portal on FAST Enterprises: "
+     "public tiles for individual search, a bulk list search and a discipline search, no login, "
+     "no CAPTCHA widget rendered. Driving the search event returned HTTP 422 in testing, a "
+     "protocol gap rather than a block.",
+     "Same portal and the same 48-board dropdown.",
+     "Live lookup (unproven)",
+     "The app config declares a reCAPTCHA type without rendering one on the public search, so "
+     "the posture could change. Whether the bulk-list tile exports a file is unverified. "
+     "Eleven real status strings including Canceled, Not Granted and Unlicensed."),
+    ("IL", "Illinois",
+     "IDFPR licensee database on data.illinois.gov (Socrata, pzzh-kp68), roughly 4.2 million "
+     "records, refreshed daily. IDFPR is recognised by the Joint Commission and NCQA as an "
+     "approved primary source.",
+     "Same dataset. A single social-work category rather than a separate clinical designation.",
+     "Free bulk",
+     "The status TERMINATED VALID REASON means an ended licence; any substring test that "
+     "treats the word valid as active will misreport it (1,642 licences in one measurement)."),
+    ("IN", "Indiana",
+     "Professional Licensing Agency on MyLicense (mylicense.in.gov): 403 from Cloudflare. Bulk "
+     "download is paid: $150 for the first record and $10 per additional 1,000.",
+     "Same agency, same block and the same paid file.",
+     "Paid / Blocked",
+     "The paid file's documented fields are name, licence number, address, issue date, "
+     "expiration date and status."),
+    ("IA", "Iowa",
+     "Board of Medicine on an AMANDA (Granicus) Angular SPA (amanda-portal.idph.state.ia.us), "
+     "no WAF, JSON REST backend. The public licence-query route was not located in the "
+     "bundles.",
+     "Bureau of Professional Licensure on a second AMANDA portal for psychology, social work, "
+     "counselling, PT, OT and SLP.",
+     "Unverified",
+     "The agency consolidated; the verification systems did not. At least six platforms across "
+     "the health boards. No bulk file found."),
+    ("KS", "Kansas",
+     "Board of Healing Arts (MD, DO, PT, OT): a plain form POST at kansas.gov/ssrv-ksbhada that "
+     "returns result rows with no CAPTCHA. The simplest live source found in this research.",
+     "Behavioral Sciences Regulatory Board on MyLicense/Versa WebForms "
+     "(licensing.ks.gov/Verification_BSRB): psychology, social work, LPC, LMFT, open.",
+     "Live lookup",
+     "The statewide portal prolicenseverify.ks.gov has a JSON search with a CSV flag, but it is "
+     "reCAPTCHA-gated. SLP sits with the health department, unverified. No bulk file."),
+    ("KY", "Kentucky",
+     "Board of Medical Licensure: the verification app returned a 500 at the path tried, and the "
+     "board's own page describes purchasing a verification. Unverified.",
+     "Social work at secure.kentucky.gov/formservices/BSW is open and clean; the same path "
+     "shape returned 404 for six other boards, so each must be found individually.",
+     "Live lookup (partial)",
+     "Separate board per profession, several applications, nothing blocked. No bulk file, no "
+     "Socrata domain."),
+    ("LA", "Louisiana",
+     "State Board of Medical Examiners publishes a free monthly Official List of Active "
+     "Licensees as a 30.9 MB, 1,265-page PDF with a real text layer: 50,600 records, "
+     "physicians, compact physicians, PAs, OT and OTAs. The live portal is invisible "
+     "reCAPTCHA v2.",
+     "Psychologists: an open JSON search at lsbepportal.com with disciplinaryAction and "
+     "hasBoardOrder booleans. Social work: a plain HTML form whose robots.txt is Disallow: /. "
+     "LPC/LMFT, PT and SLP boards: 403 from an AWS load balancer on every path.",
+     "Free bulk / Live / Blocked",
+     "The PDF has no status column; it is active-only. Extracting it with pdftotext in layout "
+     "mode inserts spaces mid-word and silently corrupts names; raw mode does not. Five boards "
+     "run on Cicero Licensing. No open-data portal."),
+    ("ME", "Maine",
+     "ALMS Online, one ASP.NET WebForms query application (pfr.maine.gov/almsonline) shared "
+     "by the Office of Professional and Occupational Regulation and the medical and osteopathic "
+     "boards. No WAF.",
+     "Same form: the regulator dropdown includes psychologists, social workers, counselling "
+     "professionals, PT, OT and speech, audiology and hearing.",
+     "Free bulk / Live",
+     "The state's own help page documents downloading a search result to a comma-delimited "
+     "file, so a per-regulator export is a free bulk mirror."),
+    ("MD", "Maryland",
+     "Board of Physicians publishes free CSVs on the 1st of each month "
+     "(doctor_list_revised.csv, allied_health_list.csv, inactive and emeritus rosters). The "
+     "live bpqapp profile carries orders, pending charges and malpractice with no CAPTCHA, "
+     "under a disclaimer that commercial use is not appropriate.",
+     "Five Dept of Health boards on mdbnc.health.maryland.gov (two on the OARS platform, three "
+     "on legacy ASP.NET), all open, no CAPTCHA, each stating it is a primary source updated "
+     "daily. Occupational Therapy is on MyLicense and answers Please solve the CAPTCHA.",
+     "Free bulk / Live",
+     "The physician CSV holds only Active and Probation rows (48,632 and 56), one row per "
+     "practice area, and was a month stale on the day it was checked. "
+     "No health-practitioner roster on opendata.maryland.gov."),
+    ("MA", "Massachusetts",
+     "Board of Registration in Medicine: an open, unauthenticated JSON API at "
+     "api.medboard.mass.gov (the backend of findmydoctor.mass.gov) returning NPI, four "
+     "categories of disciplinary action, and malpractice history. No key, no CAPTCHA, no WAF.",
+     "Dept of Public Health boards on madph.mylicense.com. The host refused TCP connections "
+     "from two independent networks, so it is unverified; the site's own indexed help text "
+     "describes a free data-file download of search results.",
+     "Live lookup / Unverified",
+     "The best physician source found in any state and the only one publishing NPI. Surname "
+     "matching is by prefix and results cap at 5,000 rows, so always send a first name. "
+     "mass.gov itself is Akamai-403 to automated clients."),
+    ("MI", "Michigan",
+     "LARA's MiPLUS portal on Accela (aca-prod.accela.com/MILARA): WebForms postback search, "
+     "stateless detail page. No bulk file exists.",
+     "Same portal: psychology, social work, counselling, MFT, PT, OT, SLP.",
+     "Live lookup",
+     "The results grid stops at 50 rows with no pager, sorted by licence type, so a common "
+     "surname hides rows. Active - In Late Renewal means the expiry has passed. No NPI. "
+     "www.michigan.gov returns 403 to datacenter addresses."),
+    ("MN", "Minnesota",
+     "Board of Medical Practice redirects to a Radware Bot Manager CAPTCHA.",
+     "Behavioral Health and Therapy boards: the same Radware CAPTCHA. The Dept of Health "
+     "occupations lookup returns 403.",
+     "Blocked",
+     "Fragmented and protected: a separate board per profession, all behind bot defence. No "
+     "bulk file found."),
+    ("MS", "Mississippi",
+     "State Board of Medical Licensure: reCAPTCHA v2 on the free search (a postback answered "
+     "You did not pass CAPTCHA validation). A $300 roster CSV of current licensees with no "
+     "status column, and a $500-per-year profile licence that prohibits use in any web "
+     "application; both prohibit resale.",
+     "Psychology, LPC and PT boards on classic ASP; Social Work and MFT, and the Dept of "
+     "Health licensure for OT and SLP, on the state's LARS WebForms platform. All five open, "
+     "no CAPTCHA, updated daily.",
+     "Live lookup / Blocked",
+     "The exact inverse of Oregon. The psychology register publishes no status field at all. "
+     "OT/SLP rows encode the profession only in the licence-number prefix and use 12/31/9999 "
+     "as a never-expires sentinel. A Public Records Act request is the resale-clause-free route."),
+    ("MO", "Missouri",
+     "Division of Professional Registration's MOPRO portal on Salesforce Experience Cloud "
+     "(mopro.mo.gov), one search across 38 boards. The guest Aura endpoint answers without a "
+     "token, but the search controller's method names live in lazily loaded components.",
+     "Same portal.",
+     "Unverified",
+     "reCAPTCHA v3 is loaded on every page; whether the search enforces it is unknown. A "
+     "license-downloads page exists but renders nothing without JavaScript. The pre-2025 free "
+     "listings at pr.mo.gov are gone (404)."),
+    ("MT", "Montana",
+     "Dept of Labor and Industry, consolidated: an Accela shell for applications, and a public "
+     "lookup on ebizws.mt.gov that returns an F5 Request Rejected page on every path.",
+     "Same portal, same block.",
+     "Blocked",
+     "Montana's own pages say a free licensee list by licence type can be downloaded from the "
+     "lookup. It exists; the WAF is in front of it."),
+    ("NE", "Nebraska",
+     "DHHS Licensure Unit, consolidated, on MyLicense/Versa (the renewal host answers). The "
+     "public lookup host was unreachable from the research network.",
+     "Same system.",
+     "Unverified / Paid",
+     "Practitioner lists are sold through the state eGov list service; price unverified."),
+    ("NV", "Nevada",
+     "Board of Medical Examiners: an F5 Shape JavaScript challenge on the verify page, and a "
+     "Thentia Cloud tenant behind an AWS WAF.",
+     "PT board on Thentia (AWS WAF). MFT and counsellor board on Certemy (unverified). Social "
+     "work on classic ASP, unreachable. Psychology points to the PSYPACT registry.",
+     "Blocked",
+     "Separate board per profession, mid-migration onto two vendors that both front with bot "
+     "defence. The PT board sells a licensee mailing list, price not stated."),
+    ("NH", "New Hampshire",
+     "Office of Professional Licensure and Certification publishes one free .xlsx of every "
+     "licensee: 198,312 rows, 9 columns, no registration, no fee, no licence agreement. Every "
+     "nh.gov host returned an Akamai 403 to a non-browser client, so the file was read from an "
+     "archive copy.",
+     "Same file: Mental Health, Psychology and Allied Health umbrellas. The live portal is "
+     "MyLicense behind a JavaScript proof-of-work challenge that sniffs for headless clients.",
+     "Free bulk (unreachable) / Blocked",
+     "The file holds current licences only: 97.8% Active, zero Expired, zero Revoked, one "
+     "Suspended. Observed refresh dates: Feb 2025, May 2025, Dec 2025, Aug 2026. The URL "
+     "changes on every refresh. Discipline is published separately per board."),
+    ("NJ", "New Jersey",
+     "Division of Consumer Affairs bulk roster on MyLicense (newjersey.mylicense.com, "
+     "Verification_Bulk): pipe-delimited, one download per profession, confirmed on a charge "
+     "screen that reads $0.00. Around 342,000 rows across eight professions.",
+     "Same roster: Psychology, Social Work Examiners, Marriage and Family Therapy (which also "
+     "holds professional counselors), PT, OT, Audiology (which holds SLP).",
+     "Free bulk",
+     "43 status values. No discipline column; the Board Action flag exists only on the live "
+     "detail page. Literal pipe characters inside address fields shift a few rows. Roughly one "
+     "row in seven is an application with no licence number. Contains licensee email."),
+    ("NM", "New Mexico",
+     "NM Medical Board community on the shared Salesforce tenant nmrldlpi.my.site.com "
+     "(path inferred, not verified).",
+     "Regulation and Licensing Dept boards on the same tenant; the public search page and Aura "
+     "endpoint return 200.",
+     "Live lookup",
+     "The old GL Suite host is dead. No free bulk found; formal verifications go through a paid "
+     "third party (inferred)."),
+    ("NY", "New York",
+     "Office of the Professions ROSA JSON API (api.nysed.gov/rosa), search-only, no bulk file.",
+     "Same API: psychology, social work, mental health counselling, MFT, PT, OT, SLP, with "
+     "enforcement actions for the non-physician professions.",
+     "Live lookup",
+     "A New York licence does not expire; the triennial registration does. Physician discipline "
+     "sits with the Dept of Health's Office of Professional Medical Conduct. Common surnames "
+     "time out."),
+    ("NC", "North Carolina",
+     "Medical Board: Cloudflare Turnstile above the search button. A $150 monthly Excel roster "
+     "with unpublished columns and a no-resale clause, and a DataLiNC monitoring subscription "
+     "with no published price.",
+     "Psychology: reCAPTCHA enforced server-side on a JSON API. Social work: image CAPTCHA "
+     "(iGov). Counselors: Turnstile. MFT: reCAPTCHA v2 (LearningBuilder). PT: Cloudflare "
+     "block. OT: open Telerik grid. SLP: open, same vendor product as the medical board "
+     "without the Turnstile.",
+     "Blocked / Live (OT, SLP)",
+     "Eight boards on five platforms. The OT grid has no status column, only Good standing, "
+     "even on a licence expired in 2012. PT compact privileges are not in the PT board's data."),
+    ("ND", "North Dakota",
+     "Nothing verified: every board host resolved to a research-sandbox sinkhole address.",
+     "Same.",
+     "Unverified",
+     "From search results only: one small board per profession sharing an identical classic-ASP "
+     "verify layout, which suggests one vendor. No evidence of any WAF, only of a network path "
+     "that could not get out."),
+    ("OH", "Ohio",
+     "eLicense Ohio (elicense.ohio.gov), Salesforce Visualforce remoting with per-method "
+     "tokens. The friendly search URL is F5-protected. An official DataOhio daily CSV of all "
+     "boards exists behind an OH|ID access request.",
+     "Same system: Psychology; Counselor, Social Worker and MFT Board; OT/PT/AT Board; Speech "
+     "and Hearing Professionals Board.",
+     "Live lookup",
+     "Headline status is coarse (Active, Inactive, Closed); the sub-status carries Expired, "
+     "Lapsed, Suspended or Retired. Over-broad searches return null. eLicense states that the "
+     "Joint Commission and NCQA accept its online status as primary source."),
+    ("OK", "Oklahoma",
+     "State Board of Medical Licensure and Supervision (also PT, OT, SLP): 403 from an AWS load "
+     "balancer, plus a published policy that data mining results in IP blocking, with a "
+     "subscriber service at an unpublished price.",
+     "Behavioral Health Licensure (LPC/LMFT) on Thentia Cloud behind an AWS WAF. Psychology: "
+     "a plain PHP form, open. Social work: platform unverified.",
+     "Blocked / Paid",
+     "No Socrata domain. The one open board covers one profession."),
+    ("OR", "Oregon",
+     "Oregon Medical Board in-house ASP.NET WebForms lookup: open, covers all current and "
+     "former licensees, board actions with linked order PDFs, and a statement that it is a "
+     "primary source per Joint Commission and NCQA standards. Terms of service say personal "
+     "and non-commercial use; bulk access is by email request.",
+     "Psychology, LPC/LMFT, social work, PT, OT and SLP boards are all Thentia Cloud tenants "
+     "returning an AWS WAF Human Verification page. Each sells a one-off Excel snapshot: $35 by "
+     "cheque (psychology, counselling), $100 (PT, OT), link expiring after seven days.",
+     "Live / Blocked / Paid",
+     "The historical medical board download no longer exists; the only Socrata dataset is "
+     "aggregate licence counts. Only the psychology board's list offers a discipline column. "
+     "The search returns 526 rows for a common surname in one page, with no cap."),
+    ("PA", "Pennsylvania",
+     "PALS unauthenticated JSON API (pals.pa.gov/api/Search): omit the profession to search "
+     "every board. reCAPTCHA v3 is loaded but not enforced.",
+     "Same API: Psychology, Social Workers/MFTs/Professional Counselors, PT, OT, SLP.",
+     "Live lookup",
+     "Names match by prefix, results cap at 500, every licence a person ever held is returned "
+     "with expired training permits often first, discipline is empty unless the detail call "
+     "carries the person id, and the API returns licensee email and phone."),
+    ("RI", "Rhode Island",
+     "Dept of Health on MyLicense/Versa (healthri.mylicense.com), plain IIS, no WAF, 517 "
+     "licence types in one dropdown.",
+     "Same portal: Psychology, Social Work, MFT and mental health, PT, OT, SLP.",
+     "Live lookup",
+     "No export control on the page; a naive GET returns Invalid search criteria, the real "
+     "search is a POST with the standard MyLicense field names."),
+    ("SC", "South Carolina",
+     "Labor, Licensing and Regulation: one in-house ASP.NET WebForms app for 46 boards, with "
+     "reCAPTCHA v2 in the shared search control, continuously CAPTCHA-gated since about 2013 "
+     "(BotDetect before that).",
+     "Same app, same control, same site key.",
+     "Blocked / Paid",
+     "No bulk file, free or paid, on the domain. Each board sells a $10 licensee list by "
+     "cheque, delivered by email or CD, under a signed anti-commercial-solicitation "
+     "certification (Code section 30-2-50). The LLR hosts were TCP-unreachable from two "
+     "networks; findings are from archived pages."),
+    ("SD", "South Dakota",
+     "Board of Medical and Osteopathic Examiners (also PT and OT): a Blazor Server app over a "
+     "stateful SignalR circuit plus an explicit reCAPTCHA.",
+     "Social work, psychology and counsellor boards under Social Services: unreachable from "
+     "the research network, unverified.",
+     "Blocked / Unverified",
+     "Blazor Server is the least tractable platform seen; there is no plain request to replay "
+     "even before the CAPTCHA."),
+    ("TN", "Tennessee",
+     "Dept of Health, Division of Health Related Boards: one verification system for all "
+     "boards on internet.health.tn.gov, which returns a bare 403 from an AWS load balancer on "
+     "every path including robots.txt, from two independent networks.",
+     "Same host, same 403.",
+     "Unverified / Blocked",
+     "Structurally the best state in the round: one department, daily refresh and a Licensure "
+     "Reports builder that one search snippet describes as a bulk export, all unverified. Claims "
+     "of a $0.02-per-query state API come from SEO spam, not tn.gov."),
+    ("TX", "Texas",
+     "Texas Medical Board public verification portal (profile.tmb.state.tx.us), ASP.NET "
+     "WebForms. No bulk file.",
+     "Not researched.",
+     "Live lookup",
+     "Training permits are listed alongside full licences, and a physician who trained in "
+     "Texas often holds both."),
+    ("UT", "Utah",
+     "Division of Professional Licensing: the free lookup at secure.utah.gov/llv uses reCAPTCHA "
+     "v3 and escalates to an interactive v2 checkbox after a rejected submit. A self-service "
+     "data request sells the full list at $0.01 per record (minimum $5) with Disciplinary "
+     "Action and Docket Numbers columns and a last-updated filter for deltas.",
+     "Same division, same lookup, same file.",
+     "Paid / Blocked",
+     "The lookup itself runs off a nightly snapshot (Information Current as of the previous "
+     "day). dopl.utah.gov, including its data-download page, is behind a Cloudflare "
+     "interstitial. No Socrata or CKAN portal."),
+    ("VT", "Vermont",
+     "Board of Medical Practice dataset on Socrata (vtmbl-reporting.data.socrata.com, "
+     "mxkz-bi85): 25,794 rows covering physicians, PAs and podiatrists, refreshed daily. Free.",
+     "Office of Professional Regulation Pega portal: 403 from an F5 device. The state's docs "
+     "describe a Profession Roster Download tab inside it.",
+     "Free bulk / Blocked",
+     "The physician file's actions column takes only two values across the whole dataset, None "
+     "and Comments, so it is a weak flag rather than a history."),
+    ("VA", "Virginia",
+     "Dept of Health Professions lookup (dhp.virginiainteractive.org), ASP.NET MVC, no "
+     "CAPTCHA, stateless detail by 10-digit occupation-coded licence number, refreshed each "
+     "business day. Banner reads Not For Commercial Use with a volume limit; a $95 per user "
+     "per year License Verification Subscription is the stated route for regular use.",
+     "Same lookup, all eight professions under thirteen boards.",
+     "Live lookup (subscription)",
+     "The paid bulk extract ($100 plus $20 per 1,000 records, UTF-16LE) has no status column. "
+     "The Additional Public Information flag can include proceedings with a finding of no "
+     "violation. Licences that expired before 2000 are not searchable."),
+    ("WA", "Washington",
+     "Dept of Health health-care provider credential dataset on data.wa.gov (Socrata): about "
+     "2.4 million credentials, refreshed daily.",
+     "Same dataset, including mental health counsellors, social workers, MFTs, psychologists, "
+     "PT, OT, SLP and state-licensed behavior analysts.",
+     "Free bulk",
+     "One of the few states licensing behavior analysts at state level."),
+    ("WV", "West Virginia",
+     "Board of Medicine and osteopathic board hosts were sinkholed by the research network; "
+     "unverified.",
+     "Social work: DotNetNuke WebForms, open. Psychology: SharePoint WebForms, open. "
+     "Counseling (LPC and LMFT): Certemy, needs an anonymous token from the bundle. PT: "
+     "Cloudflare 403. OT: a WordPress 500 on the verify page, with a mailing-list request.",
+     "Live (partial) / Unverified",
+     "Eight-plus separate boards, no free bulk file."),
+    ("WI", "Wisconsin",
+     "Dept of Safety and Professional Services, consolidated. Every wi.gov name failed DNS in "
+     "the research sandbox, so the platform (Salesforce, from the URL shape) is inferred.",
+     "Same system.",
+     "Paid / Unverified",
+     "The credential list is $2,000 for all types plus $4 per 1,000 records, free to government "
+     "agencies on request."),
+    ("WY", "Wyoming",
+     "Board of Medicine on GL Suite: 403 with an Azure WAF title.",
+     "Mental Health Professions (LPC, LCSW, LMFT), Psychology and SLP boards publish their "
+     "rosters as public Google Sheets; the CSV export links return real rows. PT and OT boards "
+     "were not located.",
+     "Free bulk (5 of 8) / Blocked",
+     "The psychology sheet states its own last-update date and calls itself a primary source. "
+     "Hand-maintained sheets carry junk header rows above the real header."),
+]
+
+_ACCESS_CLASS = [("Blocked", "acc-blocked"), ("Paid", "acc-paid"), ("Unverified", "acc-unv"),
+                 ("Free bulk", "acc-free"), ("Live", "acc-live")]
+
+
+def _access_class(label: str) -> str:
+    # First label wins, so a "Free bulk / Blocked" row reads as a free-bulk state.
+    for key, cls in _ACCESS_CLASS:
+        if label.startswith(key):
+            return cls
+    return "acc-unv"
+
+
+def research_page() -> str:
+    rows = "".join(
+        f'<tr id="src-{abbr.lower()}"><td><strong>{name}</strong>'
+        + ('<span class="chip">verified by us</span>' if abbr in LIVE_ON_VERIFLOW else "")
+        + f'</td><td>{phys}</td><td>{bh}</td>'
+        f'<td class="{_access_class(access)}">{access}</td><td>{notes}</td></tr>'
+        for abbr, name, phys, bh, access, notes in sorted(SOURCES, key=lambda r: r[1]))
+
+    body = f"""  <section class="hero">
+    <div class="badge">Research &middot; last researched September 2026</div>
+    <h1>Where US licence data comes from: a state-by-state map</h1>
+    <p class="sub">Which states publish healthcare licensee data, in what form, who charges for it,
+    who blocks automated access, and the data-quality traps inside the files. All 50 states and
+    DC, with URLs, platforms and prices.</p>
+    <p class="muted" style="font-size:.9rem;max-width:660px">This page is about what the
+    <em>states</em> publish, for anyone who needs it. It covers states VeriflowAPI does not verify.
+    For what we verify today, see the <a href="/coverage.html">coverage page</a>. Facts were checked
+    on 7 September 2026 with ordinary HTTP requests; nothing behind a CAPTCHA or WAF was probed
+    further, and anything read from a search snippet or an archive rather than the live site is
+    labelled inferred or unverified.</p>
+  </section>
+
+  <section>
+    <h2>The three ways a state publishes licence data</h2>
+    <p>Every US licensing board holds the same core record: a person, a licence number, a type, a
+    status, an issue date, an expiry date, and usually some indicator of discipline. How that record
+    reaches the public falls into three shapes, and the shape decides how fresh and how reliable a
+    downstream verification can be.</p>
+    <h3>1. A free bulk file</h3>
+    <p>The best case is a whole-database export on a schedule. Delaware puts its entire Division of
+    Professional Regulation database on Socrata (<code>data.delaware.gov</code>, dataset
+    <code>pjnv-eaih</code>): 353,352 rows, every profession, refreshed each morning. Illinois,
+    Washington, Colorado and Connecticut do the same on their own Socrata portals. Vermont does it
+    for physicians only (25,794 rows on <code>vtmbl-reporting.data.socrata.com</code>). A federated
+    catalogue search across the 23 least-requested states found licensee datasets on exactly two
+    Socrata domains, Delaware's and Vermont's; Nevada, West Virginia, Kansas, South Dakota, Wyoming,
+    North Dakota, Arkansas, Oklahoma, Alaska and DC have no Socrata portal at all.</p>
+    <p>Bulk also arrives in less tidy containers. Maryland's Board of Physicians publishes CSVs on the
+    1st of each month with seven preamble lines before the header. Louisiana's medical board
+    publishes a 1,265-page PDF every month. New Hampshire publishes a 13 MB <code>.xlsx</code> whose
+    filename carries its as-of date. New Jersey's roster is a pipe-delimited text file generated on
+    demand behind a confirmation screen that charges $0.00. Wyoming's small boards publish Google
+    Sheets. Each of these is a real, free, complete file, and each needs its own parser.</p>
+    <p>A bulk file makes verification fast and lets you see the whole population, but it is only as
+    fresh as the state's publication schedule, which ranges from every morning (Delaware) to
+    roughly quarterly with an eight-month gap observed (New Hampshire). A mirror must carry the
+    file's as-of date, or a licence revoked after the last export reads as active.</p>
+    <h3>2. A live lookup portal</h3>
+    <p>Most states publish no file and offer a search form instead. What the form runs on matters
+    more than what it looks like: an ASP.NET WebForms postback (Texas, Oregon's medical board,
+    Maine), an Accela portal (Michigan), a Salesforce community (Ohio, Missouri,
+    DC, New Mexico), a MyLicense/Versa instance (Rhode Island, Kansas, Nebraska), or an open JSON
+    API (Pennsylvania, New York, Massachusetts physicians, Louisiana psychologists). A live lookup
+    is as fresh as the board's own database, often same-day, but every check is a round trip to a
+    server you do not control, the result may be capped or prefix-matched, and a board can turn on
+    bot defence overnight without notice.</p>
+    <h3>3. Nothing usable</h3>
+    <p>The third shape is a search form behind an interactive CAPTCHA or a web application
+    firewall, with either no bulk product or one that arrives by post. Arizona's every board sits
+    behind Cloudflare, an AWS WAF CAPTCHA or an Azure gateway 403, and the one purchasable file is a
+    CD-ROM. South Carolina has CAPTCHA-gated all 46 of its boards continuously for more than a
+    decade. Georgia's Secretary of State roster is, by the state's own description, a $3,000 CD
+    paid by cheque. For a verification
+    product that does not solve CAPTCHAs or evade firewalls, these states are not slow; they are
+    unavailable, and the only honest routes are a public-records request, a data agreement, or a
+    sanctioned API key from the vendor.</p>
+  </section>
+
+  <section>
+    <h2>The platform effect: the vendor decides, not the profession</h2>
+    <p>An easy assumption is that physician data is open because medical boards are large and well
+    funded, and behavioural-health data is closed because counselling boards are small. The
+    evidence does not follow profession lines. It follows which software vendor each board
+    consolidated onto, which is a procurement accident.</p>
+    <p>Oregon and Mississippi are exact inverses. In Oregon the medical board runs an in-house
+    ASP.NET lookup that is open, returns board actions with linked order PDFs, and describes itself
+    as a primary source per Joint Commission and NCQA standards; the six psychology, counselling,
+    social work, PT, OT and SLP boards all moved to Thentia Cloud, and every one of their tenants
+    returns an AWS WAF Human Verification page. In Mississippi the medical board is the one with
+    reCAPTCHA v2 on its search, while the psychology, counselling, social work and MFT, PT, and
+    health department OT/SLP registers all run on in-house or state-IT software and are wide open,
+    updated daily. South Carolina blocks both equally with one shared control.</p>
+    <p>What each platform typically means, from the states where it was confirmed:</p>
+    <div class="grid">
+      <div class="card"><h3>Socrata open data</h3><p>Free, daily, whole-database CSV or JSON with
+      no login. Delaware, Illinois, Washington, Colorado, Connecticut, Vermont physicians.</p></div>
+      <div class="card"><h3>Accela</h3><p>An open WebForms postback that must replay every form
+      input and send Origin and Referer headers, with a stateless detail page. Michigan. Montana
+      uses Accela for applications but moved its public lookup behind an F5 firewall.</p></div>
+      <div class="card"><h3>Salesforce communities</h3><p>Open JSON transports: Visualforce
+      remoting in Ohio, Aura in DC, New Mexico and Missouri. Tokens rotate on deploy and must be
+      re-read from the page. Georgia's GOALS is the same family with reCAPTCHA in front.</p></div>
+      <div class="card"><h3>MyLicense / Versa</h3><p>Open WebForms with identical field names
+      (<code>t_web_lookup__*</code>) across instances. Rhode Island, Kansas BSRB, New Jersey
+      (with a free bulk roster). Maryland OT and Indiana run the same product with a CAPTCHA or
+      Cloudflare in front, so it is per-tenant.</p></div>
+      <div class="card"><h3>Thentia Cloud</h3><p>A clean public REST API on paper, but an AWS WAF
+      CAPTCHA on every tenant found: Oregon (six boards, confirmed from the boards' own sites),
+      Nevada, Oklahoma behavioural health, and Arizona (tenant names inferred). Treat as blocked
+      until a sanctioned key exists.</p></div>
+      <div class="card"><h3>Shared reCAPTCHA search controls</h3><p>One CAPTCHA widget wired into
+      a control every board reuses: South Carolina (46 boards, one site key), Georgia, the
+      Mississippi medical board, most of North Carolina.</p></div>
+    </div>
+    <p>One methodological trap is worth stating because it produced a wrong conclusion once.
+    Thentia's WAF answers <em>any</em> subdomain of <code>portalus.thentiacloud.net</code> with the
+    byte-identical Human Verification page, including a made-up control name that does not exist.
+    Finding that <code>&lt;state&gt;.portalus.thentiacloud.net</code> is WAF-blocked therefore
+    proves nothing about whether the state uses Thentia. Tenancy has to be confirmed from the
+    board's own site linking to the tenant, which is how the Oregon finding stands and why a
+    Thentia hit for South Carolina turned out to be a false positive (its real lookup is an
+    in-house application).</p>
+  </section>
+
+  <section id="table">
+    <h2>State by state: physicians, behavioural health, access</h2>
+    <p>The behavioural-health column covers psychology, clinical social work, professional
+    counselling, marriage and family therapy, and, where the state groups them the same way,
+    physical therapy, occupational therapy and speech-language pathology. States marked
+    <span class="chip">verified by us</span> are the fourteen VeriflowAPI verifies today; their
+    rows describe the same public source we use, which is also simply what the state publishes.</p>
+    <div class="legend">
+      <span class="acc-free">Free bulk</span> a complete file at no cost &middot;
+      <span class="acc-live">Live lookup</span> an open search, no CAPTCHA &middot;
+      <span class="acc-paid">Paid</span> the usable product costs money &middot;
+      <span class="acc-blocked">Blocked</span> CAPTCHA or WAF on the only route &middot;
+      <span class="acc-unv">Unverified</span> could not be reached or read on 7 Sep 2026
+    </div>
+    <div class="tablewrap">
+    <table>
+      <thead><tr><th>State</th><th>Physicians source</th><th>Behavioural health / therapy source</th>
+      <th>Access</th><th>Notes</th></tr></thead>
+      <tbody>{rows}</tbody>
+    </table>
+    </div>
+    <p class="muted">Network caveat: the research sandbox could not resolve or connect to several
+    state hosts (all of <code>wi.gov</code>, the small North Dakota, South Dakota and West Virginia
+    board domains, <code>nebraska.gov</code>, <code>in.gov</code>, and the Massachusetts and South
+    Carolina MyLicense and LLR hosts). Those are recorded as unverified, never as blocked, because
+    a connection that never left our network says nothing about the state.</p>
+  </section>
+
+  <section>
+    <h2>Case studies: what the files actually do</h2>
+    <div class="case">
+      <h3>Georgia: $500, no refresh, and a resale clause</h3>
+      <p>The Composite Medical Board's data request page lists eleven priced lists and a custom
+      option. Physicians (MD and DO) cost $500; all professions $1,100; each allied group $200. The file is emailed after
+      payment and carries Status, First License Date, Expiration Date, Public Board Action and Date
+      of Action, which is everything a verification needs except NPI. There is no subscription and
+      no published cadence: refresh means buy again. The licence text states that no part of the
+      data will be distributed for the purpose of resale, and that the data is provided as is.</p>
+      <p>Do not confuse it with the cheaper-looking self-serve roster on the same site, which has no
+      Status column and contains only currently licensed practitioners, so a revoked physician
+      simply disappears. The six behavioural and therapy boards sit under the Secretary of State's
+      GOALS portal with reCAPTCHA v3 and a v2 fallback; the only bulk product described for them is
+      a $3,000 roster mailed on CD, payable by cheque or money order, partial lists not available.
+      The one free, current Georgia source is the monthly Public Board Actions PDF list, 253
+      documents from 2005 onward, useful as a discipline delta but carrying no roster.</p>
+    </div>
+    <div class="case">
+      <h3>Arizona: every board, every stack, blocked</h3>
+      <p>Every Arizona board host probed answered with a bot-defence page: a Cloudflare
+      managed challenge on the medical, osteopathic, PA, psychology, behavioural health, PT and OT
+      board sites and on the health department's SLP search; an AWS WAF CAPTCHA on every Thentia
+      tenant, including on <code>/robots.txt</code>; and, on the legacy GL Suite verification host,
+      both an Azure Application Gateway 403 and a robots.txt that disallows everything. The only
+      purchasable file is the medical board's physician and PA database on a $100 CD-ROM, described
+      on pages that could not themselves be read. Speech-language pathology is not board-licensed
+      at all in Arizona; it sits with the Department of Health Services.</p>
+    </div>
+    <div class="case">
+      <h3>Delaware: the whole database is free, and one column lies</h3>
+      <p>Delaware is the cheapest state to mirror found in this research: one Socrata dataset, all eight
+      professions, refreshed daily, with a companion dataset of disciplinary actions. But the
+      licence file's own <code>disciplinary_action</code> column reads N on all 353,352 rows,
+      revoked licences included. Mapping it would assert a clean record for the entire state. The
+      companion register's licence id joins to the file's licence number; 665 disciplined pairs in
+      the health professions resolve to exactly one row each, and 212 of those licences are
+      currently Active. The file also uses status values such as Non-Disciplinary Suspension, which
+      any substring test for the word discipline will read backwards.</p>
+    </div>
+    <div class="case">
+      <h3>New Jersey: a free roster with pipes inside the fields</h3>
+      <p>New Jersey's Division of Consumer Affairs directs bulk users away from its verification
+      form and to a roster download that is pipe-delimited, unquoted, and space-padded to fixed
+      widths. In the 138,115-row physician file, three rows had their status column shifted because
+      an address contained a literal pipe: one status cell held an email address, another a city
+      name. Validate every status against the 43-value vocabulary and reject rows whose field count
+      is wrong, or those rows become silent unknowns. The file has no discipline column; the Board
+      Action flag exists only on the live detail page. And Active Reduced Fee 65+ arrives with a
+      trailing space.</p>
+    </div>
+    <div class="case">
+      <h3>Michigan: Active, but expired</h3>
+      <p>Michigan's MiPLUS portal labels a licence whose expiry date has already passed but which
+      is still inside the renewal window as Active - In Late Renewal. Practice is not authorised on
+      an expired licence, so a status mapper that keys on the word Active reports a lapsed
+      clinician as current. The same portal caps its results grid at 50 rows with no pager, sorted
+      by licence type, so for a common surname the health licences can fall off the bottom of the
+      grid without any truncation notice. Michigan publishes no bulk file and no NPI.</p>
+    </div>
+    <div class="case">
+      <h3>Illinois: TERMINATED VALID REASON is not valid</h3>
+      <p>Illinois writes TERMINATED VALID REASON for a licence that has ended for a legitimate
+      reason. A normaliser that tests for the substring valid among its active keywords maps that
+      to active; in one measurement it reported 1,642 ended Illinois licences as current. The
+      general lesson is that substring status matching must test the negative words (terminated,
+      revoked, suspension) before the positive ones, and that qualified statuses (Active - With
+      Conditions, Active (With Restrictions), Active On Probation) must raise a discipline signal
+      rather than normalise to a clean active.</p>
+    </div>
+    <div class="case">
+      <h3>Massachusetts: the best physician source in the country</h3>
+      <p>The Board of Registration in Medicine's public search runs on an open JSON API at
+      <code>api.medboard.mass.gov/api-public</code> with no key, no cookie and no CAPTCHA. A
+      profile record carries the NPI, original and latest issue dates, expiry, in-state and
+      out-of-state board discipline, healthcare-facility discipline and criminal convictions, each
+      with dates, case numbers and instrument type, plus malpractice payment history for
+      Massachusetts and other states. No other state source found publishes NPI, which caps
+      name-only matching everywhere else. The API has a 5,000-row result cap and matches surnames
+      by prefix, so a search must always carry a first name. Its status vocabulary includes
+      Suspension as a noun, which a test for the verb suspend will miss.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>What primary source verification actually means here</h2>
+    <p>Primary source verification means reading the credential from the body that issued it. Several
+    boards say so in their own words: Illinois IDFPR and eLicense Ohio cite Joint Commission and
+    NCQA acceptance; the Oregon Medical Board's detail page states it is a primary source consistent
+    with those standards; Virginia's DHP says its lookup data serves as primary source verification
+    of the credential; the Maryland OARS boards, the Mississippi psychology and counselling boards,
+    the North Carolina social work board and even Wyoming's psychology spreadsheet make the same
+    claim. A mirror of a board's own published file, stamped with the file's as-of date, is a copy
+    of the primary source at a known time. A vendor's mirror of somebody else's mirror is not.</p>
+    <p>Freshness is the second half. The same board can expose the same data at very different
+    ages: Utah's public lookup prints Information Current as of the previous day, so a purchased
+    file is no staler than the state's own search; Maryland's physician CSV was dated 1 August on
+    7 September while its allied-health CSV was dated 1 September; Georgia's file is as old as your
+    last $500. A third-party physician mirror that is free and open in Georgia turns out to be an
+    extract dated 1 May 2019 on every record. Any verification record should carry the date the
+    source was read, and any file mirror should carry the date the file was generated.</p>
+    <p>The third half is absence. Alabama's roster, Georgia's self-serve roster, Mississippi's $300
+    roster, Louisiana's monthly PDF, New Hampshire's spreadsheet and Maryland's physician CSV all
+    publish current licensees only. New Hampshire's file has zero Expired, zero Lapsed, zero
+    Revoked rows, while the office's own status definitions describe all three. Virginia's lookup
+    excludes anything that expired before 2000. In every one of these sources a revoked clinician
+    is not marked revoked; they vanish. Absence from a current-licensees roster must be read as
+    not found, never as not licensed and never as no discipline.</p>
+  </section>
+
+  <section>
+    <h2>Commercial-use restrictions a builder must read</h2>
+    <p>Several open or purchasable sources carry terms that a commercial user should read before
+    building on them. These are reported as text to check, not as legal advice.</p>
+    <ul>
+      <li><strong>Georgia Composite Medical Board</strong> data file: no part of the data will be
+      distributed in any form or by any means for the purpose of resale; any other use constitutes
+      unlawful usage. The North Carolina Medical Board's $150 roster and the Mississippi medical
+      board's $300 roster use materially the same clause.</li>
+      <li><strong>Mississippi medical board</strong> $500-per-year profile licence: for internal
+      credentials verification only; use on a website or web application of any kind is strictly
+      prohibited. The state's Public Records Act process is the route without a contractual
+      clause.</li>
+      <li><strong>Maryland Board of Physicians</strong> Practitioner Profile System disclaimer:
+      commercial use of this information is not appropriate. The monthly rosters are published
+      under a Public Information Act framing instead; whether that separates the two is a question
+      for counsel.</li>
+      <li><strong>Oregon Medical Board</strong> terms of service: the service is for personal and
+      non-commercial use, and users may not copy, distribute, publish or sell information obtained
+      from it. The same pages invite bulk-data enquiries by email, which is the route to a written
+      exception.</li>
+      <li><strong>Virginia DHP</strong> lookup banner: Not For Commercial Use, with volume limits
+      and a $95 per user per year subscription for regular or high-volume verification. Whether
+      that subscription permits programmatic access is not published.</li>
+      <li><strong>AIM DocFinder</strong> (a free third-party physician mirror for several states):
+      intended for non-commercial use of the general public only; commercial users may be
+      blocked.</li>
+      <li><strong>Oklahoma medical board</strong>: the search is not intended for mass harvesting
+      and data mining results in IP blocking.</li>
+      <li><strong>South Carolina</strong> licensee lists: a signed certification under Code section
+      30-2-50 that the records will not be used for commercial solicitation, with a misdemeanour
+      penalty. The statute targets solicitation, and the form has an Other box, but it must be
+      signed once per board.</li>
+      <li><strong>Louisiana social work board</strong>: robots.txt is Disallow: / on the whole
+      site, with no CAPTCHA. A crawl directive rather than a contract, and worth a written
+      permission before automating.</li>
+    </ul>
+    <p>None of the Socrata states, Delaware, New Jersey, Maine, Kansas, Rhode Island, DC or the
+    open Maryland and Mississippi boards were found to publish any restriction on automated access
+    in the pages retrieved. That is different from a board having sanctioned it.</p>
+  </section>
+
+  <section>
+    <h2>Using this page</h2>
+    <p>If you are building or buying licence verification, the table above tells you which states
+    can be automated at all, which need a purchase order, and which need a phone call. What
+    VeriflowAPI verifies today, board by board, is on the <a href="/coverage.html">coverage
+    page</a>; the live health of each of those sources is on the <a href="/status.html">status
+    page</a>. If a state here matters to you and is not there yet, the research is the reason, and
+    the <a href="/">homepage</a> has the contact.</p>
+  </section>
+"""
+    return page(
+        path="research/state-license-data-sources.html",
+        title="Where US Licence Data Comes From: A State-by-State Map | VeriflowAPI",
+        desc="Which US states publish healthcare licensee data, which charge for it, and which "
+             "block automated access. All 50 states and DC: URLs, platforms, prices, traps.",
+        body=body,
+        cta_h="Verify against the sources that can be verified",
+        qas=[
+            ("Which states publish a free bulk file of healthcare licensees?",
+             "Delaware, Illinois, Washington, Colorado and Connecticut on Socrata portals, "
+             "refreshed daily; Vermont for physicians only. New Jersey's roster is a free "
+             "pipe-delimited download. Maryland's Board of Physicians publishes monthly CSVs. "
+             "Louisiana's medical board publishes a monthly PDF of active licensees. California's "
+             "Department of Consumer Affairs publishes monthly files per board. New Hampshire "
+             "publishes one spreadsheet of every licensee, if you can reach nh.gov. Wyoming's "
+             "smaller boards publish Google Sheets. Maine documents a CSV export inside its search."),
+            ("Which state medical boards charge for their licensee data?",
+             "Georgia sells its physician file for $500 per snapshot and all professions for "
+             "$1,100. North Carolina's medical board roster is $150 per month. Mississippi's is "
+             "$300 per roster or $500 per year for a profile licence. Arizona's medical board "
+             "describes a $100 CD-ROM. Indiana charges $150 plus $10 per 1,000 records. Wisconsin "
+             "charges $2,000 plus $4 per 1,000. Utah sells its full list at $0.01 per record with "
+             "discipline columns. Virginia's bulk extract is $100 plus $20 per 1,000 but has no "
+             "status column. Oregon's non-physician boards sell snapshots at $35 to $100 each."),
+            ("Which states block automated access to licence lookups entirely?",
+             "Arizona (Cloudflare, AWS WAF and Azure gateway on every board), South Carolina "
+             "(reCAPTCHA on all 46 boards), Minnesota (Radware CAPTCHA), Hawaii (Cloudflare), "
+             "Alaska (DataDome), Montana (F5 on the public lookup) and Nevada (F5 Shape and "
+             "Thentia). Tennessee and New Hampshire return plain 403s whose scope is unknown. "
+             "Several other states block one board while leaving others open."),
+            ("Does any state board publish NPI numbers?",
+             "Only one was found: the Massachusetts Board of Registration in Medicine's public "
+             "API returns npiNumber on physician profiles. Every other state source located, "
+             "including every Socrata file, MyLicense portal and Thentia tenant, publishes name, "
+             "licence number, status and dates but no NPI and no date of birth. South Carolina's "
+             "archived detail template shows a birth date field, unconfirmed on the live site."),
+            ("Is a state board's online lookup accepted as primary source verification?",
+             "Several boards state so explicitly: Illinois IDFPR and eLicense Ohio cite Joint "
+             "Commission and NCQA acceptance, the Oregon Medical Board and Virginia DHP make the "
+             "same claim, and Maryland's OARS boards describe their data as primary sources "
+             "updated daily. A mirror of a board's own published file, stamped with the file's "
+             "as-of date, is a copy of the primary source at a known time."),
+            ("Why can absence from a state roster not mean the person is unlicensed?",
+             "Because many rosters contain current licensees only. Alabama's roster, Georgia's "
+             "self-serve roster, Mississippi's $300 roster, Louisiana's monthly PDF, New "
+             "Hampshire's spreadsheet and Maryland's physician CSV all omit expired, revoked and "
+             "surrendered licences rather than marking them. A revoked clinician vanishes. "
+             "Absence must be read as not found, never as not licensed."),
+            ("What is Thentia Cloud and why does it matter for licence verification?",
+             "Thentia Cloud is a licensing platform that small boards consolidate onto. Every "
+             "tenant found, in Oregon (confirmed from the boards' own sites), Nevada, Oklahoma "
+             "and Arizona (tenant names inferred), answers with an AWS WAF Human Verification "
+             "CAPTCHA. "
+             "Its WAF returns the identical page for any subdomain, including made-up ones, so a "
+             "WAF hit on a guessed tenant name proves nothing about whether a state uses it."),
+            ("How current is state licence data?",
+             "It ranges from same-day to indefinitely stale. Delaware refreshes every morning and "
+             "Virginia each business day. Utah's own lookup runs off a nightly snapshot. Maryland "
+             "promises the 1st of each month and slipped a month. New Hampshire refreshed four "
+             "times in eighteen months. Georgia's purchased file is as old as the last order. Any "
+             "verification record should carry the date the source was read."),
+        ])
+
+
 def write_sitemap(urls: list[str]) -> None:
     core = ["/", "/status.html", "/terms.html", "/privacy.html"]
     lines = ['<?xml version="1.0" encoding="UTF-8"?>',
@@ -864,7 +1721,8 @@ def write_sitemap(urls: list[str]) -> None:
 
 def main() -> None:
     write("verify/seo.css", CSS)
-    urls = [coverage_page(), telehealth_page(), credentialing_page(), staffing_page()]
+    urls = [coverage_page(), telehealth_page(), credentialing_page(), staffing_page(),
+            research_page()]
 
     for path, target in REDIRECTS.items():
         html = STUB.replace("__TARGET_ABS__", SITE + target).replace("__TARGET__", target)
