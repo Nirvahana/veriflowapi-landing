@@ -36,7 +36,7 @@ If `oig_excluded` is `true`, the provider must not be employed or contracted by 
 
 ## State Sources — Live
 
-Deep state license data is available for **thirteen states** today. Texas, New York, Pennsylvania, Ohio, and Michigan are live per-query scrapes; the rest are full mirrors (refreshed daily, or monthly for California). Any other state returns `status: "unsupported_state"` on live keys — we never fabricate data we don't have.
+Deep state license data is available for **fourteen states** today. Texas, New York, Pennsylvania, Ohio, and Michigan are live per-query scrapes; the rest are full mirrors (refreshed daily, or monthly for California). Any other state returns `status: "unsupported_state"` on live keys — we never fabricate data we don't have.
 
 ### Texas Medical Board
 
@@ -123,6 +123,16 @@ PALS lists every license a person holds (for example an expired training permit 
 | Data includes | License number, license type, board, status and sub-status, issue and expiry dates, board-action flag and summary |
 
 Ohio's top-level status is coarse (Active / Inactive / Closed); the informative detail is the sub-status (Expired, Lapsed, Suspended, Retired, ...), which we normalize. eLicense Ohio states that the Joint Commission and NCQA accept its online status as primary-source verification. Address and alias data returned by the state are never stored.
+
+### Delaware Division of Professional Regulation (DPR)
+
+| Detail | Value |
+|---|---|
+| Access | Daily mirror of Delaware's consolidated licence dataset, plus the published disciplinary register |
+| License types | Medical practice (MD/DO/PA), psychology, social work, mental health counselling, physical therapy and athletic training, occupational therapy, speech and hearing |
+| Data includes | License number, license type, profession, status, issue date, expiry date, disciplinary action |
+
+Delaware publishes its whole licence database as open data, refreshed every morning. The licence file has a disciplinary column of its own, but it reads "no" on every row in the state including revoked licences, so we ignore it and join the state's separate disciplinary register on the licence number instead. That distinction matters: several hundred Delaware licensees are currently active **and** carry a board action, which the licence file alone would have reported as clean. Delaware publishes no NPI, and no street address, email or phone appears in either dataset.
 
 ### New Jersey Division of Consumer Affairs (DCA)
 

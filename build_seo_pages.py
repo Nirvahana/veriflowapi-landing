@@ -103,6 +103,21 @@ STATES = [
                 "detail lives in a sub-status such as Expired, Lapsed, Suspended or Retired. "
                 "We read the sub-status and normalise it, so a credential that reads active "
                 "upstream but has actually lapsed is reported as expired."),
+    dict(slug="delaware", abbr="DE", name="Delaware",
+         board="Division of Professional Regulation (DPR)", method="Daily mirror",
+         refresh="Refreshed daily", records="63,000 licensees",
+         discipline="Yes",
+         detail="Delaware publishes its whole consolidated licence database as open data, "
+                "refreshed every morning, so the state is mirrored daily. It covers medical "
+                "practice, psychology, social work, mental health counselling, physical "
+                "therapy, occupational therapy and speech and hearing in a single file, with "
+                "a separate register of board disciplinary actions that we join on the "
+                "licence number.",
+         caveat="The licence file carries its own disciplinary column, but it reads “no” "
+                "on every row in the state, revoked licences included, so we ignore it and use "
+                "the published disciplinary register instead. That matters: several hundred "
+                "Delaware licensees are currently active AND carry a board action, which the "
+                "file alone would have reported as clean. Delaware publishes no NPI."),
     dict(slug="newjersey", abbr="NJ", name="New Jersey",
          board="Division of Consumer Affairs (DCA)", method="Daily mirror",
          refresh="Refreshed daily", records="294,000 licensees",
@@ -205,11 +220,12 @@ STATES = [
                 "standing rather than reconstructing a lapsed licence's history."),
 ]
 
-ALL_CLINICAL = ["FL", "WA", "IL", "CO", "CT", "NY", "PA", "OH", "CA", "MI", "NJ"]
+ALL_CLINICAL = ["FL", "WA", "IL", "CO", "CT", "NY", "PA", "OH", "CA", "MI", "NJ", "DE"]
 NO_CA = [s for s in ALL_CLINICAL if s != "CA"]
 ROLES = [
     ("Physician (MD / DO)", "State medical or osteopathic licence",
-     ["TX", "FL", "IL", "WA", "CO", "CT", "AL", "NY", "PA", "OH", "CA", "MI", "NJ"]),
+     ["TX", "FL", "IL", "WA", "CO", "CT", "AL", "NY", "PA", "OH", "CA", "MI", "NJ",
+      "DE"]),
     ("Psychologist / Neuropsychologist", "Licensed Psychologist", ALL_CLINICAL),
     ("Licensed Clinical Social Worker", "LCSW", ALL_CLINICAL),
     ("Professional / Mental Health Counselor", "LPC, LPCC or LMHC", ALL_CLINICAL),
@@ -218,7 +234,8 @@ ROLES = [
     ("Occupational Therapist", "OT", ALL_CLINICAL),
     ("Speech-Language Pathologist", "SLP", NO_CA),
 ]
-ALL_ABBR = ["TX", "FL", "IL", "WA", "CO", "CT", "AL", "NY", "PA", "OH", "CA", "MI", "NJ"]
+ALL_ABBR = ["TX", "FL", "IL", "WA", "CO", "CT", "AL", "NY", "PA", "OH", "CA", "MI", "NJ",
+            "DE"]
 
 # --- Retired URLs -> what replaced them ---------------------------------------
 REDIRECTS: dict[str, str] = {}
@@ -417,7 +434,7 @@ def coverage_page() -> str:
         + "</tr>" for name, lic, states in ROLES)
 
     body = f"""  <section class="hero">
-    <div class="badge">13 states live &middot; updated September 2026</div>
+    <div class="badge">14 states live &middot; updated September 2026</div>
     <h1>What VeriflowAPI actually verifies</h1>
     <p class="sub">Every state we cover, the board each result comes from, how fresh it is,
     and the specific limits of each source. Federal identity and exclusion screening runs
@@ -517,7 +534,7 @@ POST https://api.veriflowapi.com/v1/verify
 """
     return page(
         path="coverage.html",
-        title="License Verification Coverage: 13 States, Board by Board | VeriflowAPI",
+        title="License Verification Coverage: 14 States, Board by Board | VeriflowAPI",
         desc="Every state VeriflowAPI verifies, the board each result comes from, how often "
              "it refreshes, and the honest limits of each source. Plus nationwide NPPES and "
              "OIG screening on every check.",
@@ -525,9 +542,9 @@ POST https://api.veriflowapi.com/v1/verify
         cta_h="Verify a provider in any of these states",
         qas=[
             ("Which states can VeriflowAPI verify licenses in?",
-             "Thirteen states today: Texas, Florida, Illinois, Washington, Colorado, "
+             "Fourteen states today: Texas, Florida, Illinois, Washington, Colorado, "
              "Connecticut, Alabama, New York, Pennsylvania, Ohio, California, Michigan and "
-             "New Jersey. "
+             "New Jersey and Delaware. "
              "Federal NPPES identity and OIG exclusion screening runs in all 50 states on "
              "every check."),
             ("Is this primary-source verification?",
@@ -614,7 +631,7 @@ POST /v1/verify  {{"first_name":"Jane","last_name":"Provider","state":<span clas
     <h2>Coverage that matches a behavioural-health panel</h2>
     <p>Telehealth panels skew towards behavioural health, which is where state coverage
     usually thins out. Psychologists, LCSWs, LPC/LMHCs and LMFTs are verifiable in nine states
-    today, and physicians in thirteen. The <a href="/coverage.html#professions">role matrix</a>
+    today, and physicians in fourteen. The <a href="/coverage.html#professions">role matrix</a>
     shows which state covers which licence, and uncovered states return an explicit
     <code>unsupported_state</code> rather than a guess &mdash; so you know precisely where
     human review is still required.</p>
@@ -625,7 +642,7 @@ POST /v1/verify  {{"first_name":"Jane","last_name":"Provider","state":<span clas
         title="License Verification for Telehealth Platforms | VeriflowAPI",
         desc="Telehealth licensure follows the patient's state. Verify a clinician per state, "
              "catch lapses mid-engagement with signed webhooks, and cover behavioural-health "
-             "roles across 13 states.",
+             "roles across 14 states.",
         body=body,
         cta_h="Verify your panel, state by state",
         qas=[
