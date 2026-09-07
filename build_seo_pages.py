@@ -1161,8 +1161,7 @@ SOURCES = [
     ("NM", "New Mexico",
      "NM Medical Board community on a shared Salesforce tenant "
      "(path inferred, not verified).",
-     "Regulation and Licensing Dept boards on the same tenant; the public search page and Aura "
-     "endpoint return 200.",
+     "Regulation and Licensing Dept boards on the same tenant; the public search page responds.",
      "Live lookup",
      "The old GL Suite host is dead. No free bulk found; formal verifications go through a paid "
      "third party (inferred)."),
