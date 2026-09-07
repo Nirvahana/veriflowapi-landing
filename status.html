@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Service Status | VeriflowAPI</title>
+<meta name="description" content="Live operational status for every VeriflowAPI data source: federal NPPES and OIG screening plus all 11 state licence boards, checked automatically every two hours."/>
+<link rel="canonical" href="https://veriflowapi.com/status.html"/>
+<meta property="og:title" content="Service Status | VeriflowAPI"/>
+<meta property="og:description" content="Live operational status for every VeriflowAPI data source, checked automatically every two hours."/>
+<meta property="og:type" content="website"/>
+<meta property="og:url" content="https://veriflowapi.com/status.html"/>
+<link rel="icon" href="/favicon.svg"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/verify/seo.css"/>
+<style>
+  .banner{border-radius:14px;padding:24px 28px;margin:1.5rem 0 2rem;border:1px solid var(--border);}
+  .banner h2{margin:0;font-size:1.5rem;}
+  .banner p{margin:.35rem 0 0;font-size:.92rem;}
+  .b-ok{background:#eefaf3;border-color:#b7e6cd;}
+  .b-ok h2{color:#0b6b41;}
+  .b-degraded{background:#fef6e9;border-color:#f0d6a8;}
+  .b-degraded h2{color:#9a6206;}
+  .b-down{background:#fdecec;border-color:#f2bcbc;}
+  .b-down h2{color:#a11c1c;}
+  .b-unknown{background:var(--surface-2);}
+  .row{display:flex;align-items:center;gap:.85rem;padding:.8rem .2rem;border-bottom:1px solid var(--border);}
+  .row:last-child{border-bottom:none;}
+  .dot{width:10px;height:10px;border-radius:50%;flex:0 0 10px;}
+  .d-operational{background:var(--success);}
+  .d-degraded{background:var(--warn);}
+  .d-down{background:#dc2626;}
+  .d-unknown{background:var(--ink-muted);}
+  .row .nm{font-weight:600;flex:1 1 auto;}
+  .row .dt{color:var(--ink-muted);font-size:.88rem;text-align:right;flex:0 0 auto;}
+  .pill{font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.03em;
+        padding:.15rem .5rem;border-radius:100px;flex:0 0 auto;}
+  .p-operational{background:#eefaf3;color:#0b6b41;}
+  .p-degraded{background:#fef6e9;color:#9a6206;}
+  .p-down{background:#fdecec;color:#a11c1c;}
+  .p-unknown{background:var(--surface-2);color:var(--ink-muted);}
+  @media(max-width:560px){.row{flex-wrap:wrap;}.row .dt{flex-basis:100%;text-align:left;}}
+</style>
+</head>
+<body>
+<header class="nav"><div class="wrap">
+  <a class="logo" href="/">Veri<span>flow</span>API</a>
+  <a class="cta" href="https://app.veriflowapi.com/signup">Start Free &rarr;</a>
+</div></header>
+
+<main class="wrap">
+  <section class="hero" style="padding-bottom:0;">
+    <div class="badge">Service status</div>
+    <h1>Is VeriflowAPI working?</h1>
+    <p class="sub">Every source we verify against is probed automatically every two hours.
+    This page shows the result of the most recent check &mdash; including when a government
+    source is the thing that is down.</p>
+  </section>
+
+  <div id="banner" class="banner b-unknown">
+    <h2 id="banner-title">Loading status&hellip;</h2>
+    <p id="banner-sub" class="muted">Fetching the latest check.</p>
+  </div>
+
+  <section>
+    <h2>Federal sources</h2>
+    <p class="muted" style="margin-top:-.4em;">Consulted on every verification, in all 50 states.</p>
+    <div id="federal" class="card" style="padding:.4rem 1.2rem;"></div>
+  </section>
+
+  <section>
+    <h2>State licence boards</h2>
+    <p class="muted" style="margin-top:-.4em;">Mirrored sources show when their data was last
+    refreshed; live sources are queried at request time.</p>
+    <div id="states" class="card" style="padding:.4rem 1.2rem;"></div>
+  </section>
+
+  <section>
+    <h2>How to read this page</h2>
+    <div class="grid">
+      <div class="card"><h3><span class="dot d-operational" style="display:inline-block;margin-right:.4rem;"></span>Operational</h3>
+      <p>The source answered normally on the last check. Mirrored sources also show the date of
+      the data we hold.</p></div>
+      <div class="card"><h3><span class="dot d-degraded" style="display:inline-block;margin-right:.4rem;"></span>Degraded</h3>
+      <p>Reachable but not fully healthy &mdash; usually data older than expected, or an
+      intermittent error. A single transient blip shows here rather than as an outage.</p></div>
+      <div class="card"><h3><span class="dot d-down" style="display:inline-block;margin-right:.4rem;"></span>Down</h3>
+      <p>The source failed repeated checks. Verifications for it fall back to the most recent
+      cached result, flagged <code>source_live: false</code>.</p></div>
+    </div>
+    <p>When a source is unavailable we serve the most recent cached data and mark it clearly in
+    the response rather than guessing, and a state we do not cover always returns
+    <code>unsupported_state</code>. See <a href="/coverage.html">coverage</a> for what each
+    source includes.</p>
+  </section>
+
+  <div class="cta-band">
+    <h2>Verify a provider in 11 states</h2>
+    <p class="muted" style="max-width:560px;margin:0 auto 1.2rem;">Start with 100 free
+    verifications. No credit card. Read the
+    <a href="https://docs.veriflowapi.com/introduction">docs</a>.</p>
+    <a class="cta cta-lg" href="https://app.veriflowapi.com/signup">Create your account &rarr;</a>
+  </div>
+</main>
+
+<footer><div class="wrap">
+  &copy; 2026 SecureHealth AI LLC d/b/a Veriflow &middot;
+  <a href="/">Home</a> &middot;
+  <a href="/coverage.html">Coverage</a> &middot;
+  <a href="/status.html">Status</a> &middot;
+  <a href="https://docs.veriflowapi.com/introduction">Docs</a> &middot;
+  <a href="/terms.html">Terms</a> &middot;
+  <a href="/privacy.html">Privacy</a>
+</div></footer>
+
+<script>
+(function () {
+  var API = 'https://api.veriflowapi.com/v1/status';
+  var BANNERS = {
+    operational: ['All systems operational', 'Every source answered normally on the last check.'],
+    degraded:    ['Partial degradation', 'At least one source is reachable but not fully healthy.'],
+    down:        ['Service disruption', 'At least one source failed repeated checks. Cached results are served where available.'],
+    unknown:     ['Status unavailable', 'No completed check to report yet.']
+  };
+
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+
+  function ago(iso) {
+    if (!iso) return 'never';
+    var secs = Math.max(0, Math.floor((Date.now() - new Date(iso).getTime()) / 1000));
+    if (secs < 90) return 'just now';
+    if (secs < 5400) return Math.round(secs / 60) + ' minutes ago';
+    if (secs < 172800) return Math.round(secs / 3600) + ' hours ago';
+    return Math.round(secs / 86400) + ' days ago';
+  }
+
+  function rowHtml(c) {
+    var extra = c.records ? Number(c.records).toLocaleString() + ' records' : '';
+    var detail = esc(c.detail || '');
+    if (extra) detail = detail + ' &middot; ' + extra;
+    return '<div class="row">' +
+      '<span class="dot d-' + esc(c.status) + '"></span>' +
+      '<span class="nm">' + esc(c.name) + '</span>' +
+      '<span class="pill p-' + esc(c.status) + '">' + esc(c.status) + '</span>' +
+      '<span class="dt">' + detail + '</span>' +
+      '</div>';
+  }
+
+  function render(data) {
+    var overall = (data && data.overall) || 'unknown';
+    var b = BANNERS[overall] || BANNERS.unknown;
+    var banner = document.getElementById('banner');
+    banner.className = 'banner b-' + overall;
+    document.getElementById('banner-title').textContent = b[0];
+    document.getElementById('banner-sub').textContent =
+      b[1] + ' Last checked ' + ago(data && data.checked_at) + '.';
+
+    var comps = (data && data.components) || [];
+    var fed = comps.filter(function (c) { return c.kind === 'federal'; });
+    var st = comps.filter(function (c) { return c.kind !== 'federal'; });
+    var order = { down: 0, degraded: 1, operational: 2, unknown: 3 };
+    function bySeverity(a, z) {
+      return (order[a.status] - order[z.status]) || a.name.localeCompare(z.name);
+    }
+    document.getElementById('federal').innerHTML =
+      fed.length ? fed.sort(bySeverity).map(rowHtml).join('')
+                 : '<div class="row"><span class="muted">Awaiting first check.</span></div>';
+    document.getElementById('states').innerHTML =
+      st.length ? st.sort(bySeverity).map(rowHtml).join('')
+                : '<div class="row"><span class="muted">Awaiting first check.</span></div>';
+  }
+
+  function load() {
+    fetch(API, { cache: 'no-store' })
+      .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then(render)
+      .catch(function () {
+        var banner = document.getElementById('banner');
+        banner.className = 'banner b-down';
+        document.getElementById('banner-title').textContent = 'Cannot reach the status service';
+        document.getElementById('banner-sub').textContent =
+          'The status endpoint did not respond. The API itself may be affected.';
+      });
+  }
+
+  load();
+  setInterval(load, 60000);
+})();
+</script>
+</body>
+</html>

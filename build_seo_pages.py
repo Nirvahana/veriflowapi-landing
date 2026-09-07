@@ -291,6 +291,7 @@ __BODY__
   &copy; 2026 SecureHealth AI LLC d/b/a Veriflow &middot;
   <a href="/">Home</a> &middot;
   <a href="/coverage.html">Coverage</a> &middot;
+  <a href="/status.html">Status</a> &middot;
   <a href="__DOCS__/introduction">Docs</a> &middot;
   <a href="/terms.html">Terms</a> &middot;
   <a href="/privacy.html">Privacy</a>
@@ -792,7 +793,7 @@ POST /v1/verify/bulk
 
 
 def write_sitemap(urls: list[str]) -> None:
-    core = ["/", "/terms.html", "/privacy.html"]
+    core = ["/", "/status.html", "/terms.html", "/privacy.html"]
     lines = ['<?xml version="1.0" encoding="UTF-8"?>',
              '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
     for u in core + sorted(urls):
