@@ -104,6 +104,43 @@ POST https://api.veriflowapi.com/v1/verify
 | `expired` | License has passed its expiry date | `false` |
 | `revoked` | License has been permanently revoked | `false` |
 | `not_found` | No matching provider found in sources checked | `false` |
+| `unsupported_state` | We do not yet cover the requested state, so no license lookup was performed | `false` |
+| `source_unavailable` | The state board could not be reached, so licensure is unknown | `false` |
+
+**`not_found` and `source_unavailable` are not the same thing,** and treating them alike is the most common integration mistake. `not_found` is an answer from the board: it holds no matching record. `source_unavailable` is the absence of an answer: the board was unreachable and we will not guess. Route the first to your normal exception workflow and the second to a retry.
+
+### Distinguishing "no record" from "no answer"
+
+Government license sites go down. When a state board is unreachable and we hold
+no usable cached result, VeriflowAPI returns `status: "source_unavailable"` with
+`verified: false`. We deliberately do **not** report `not_found` in that case,
+because "the board has no record of this provider" and "we could not ask the
+board" are opposite conclusions for a credentialing decision.
+
+```json
+{
+  "verified": false,
+  "status": "source_unavailable",
+  "match_confidence": null,
+  "state": "New York",
+  "sources_checked": ["NPPES", "OIG", "NY Office of the Professions"],
+  "source_live": false,
+  "checked_at": "2026-09-07T08:15:00Z"
+}
+```
+
+Recommended handling:
+
+- **Retry** after a short delay rather than treating the provider as unlicensed.
+- **Do not cache** a `source_unavailable` result as a verification outcome.
+- **Route to manual review** if it persists across retries.
+- Check [the status page](https://veriflowapi.com/status.html) to see which
+  sources are currently degraded, and note that federal signals (`oig_excluded`
+  and NPPES identity) in the same response are still valid.
+
+Before returning `source_unavailable`, we first serve the most recent cached
+result for that provider if one exists, flagged with `source_live: false` so you
+can see the data is not fresh.
 
 ## Identity resolution
 
