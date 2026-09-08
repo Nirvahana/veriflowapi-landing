@@ -20,16 +20,16 @@
   <meta property="og:url" content="https://veriflowapi.com" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="VeriflowAPI — Medical License Verification API" />
-  <meta name="twitter:description" content="Federal NPI + OIG screening nationwide, plus deep state-board coverage for 14 states. Tamper-evident signed certificate on every check." />
+  <meta name="twitter:description" content="Federal NPI + OIG screening nationwide, plus deep state-board coverage for 18 states. Tamper-evident signed certificate on every check." />
   <link rel="canonical" href="https://veriflowapi.com/" />
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@graph": [
       {"@type":"Organization","@id":"https://veriflowapi.com/#org","name":"VeriflowAPI","url":"https://veriflowapi.com/","logo":"https://veriflowapi.com/logo/logo-dark.svg","description":"API for verifying US medical and professional licenses against federal and state sources."},
-      {"@type":"SoftwareApplication","name":"VeriflowAPI","applicationCategory":"DeveloperApplication","operatingSystem":"Any (REST API)","url":"https://veriflowapi.com/","description":"One API call for federal NPI + OIG exclusion screening nationwide, plus deep state-board license verification for Texas, Florida, Illinois, Washington, Colorado, Connecticut, Alabama, New York, Pennsylvania, Ohio, California, Michigan, New Jersey and Delaware. Tamper-evident signed certificates, webhook monitoring, fuzzy name matching.","offers":{"@type":"Offer","price":"0","priceCurrency":"USD","description":"Start free with 100 verifications"},"publisher":{"@id":"https://veriflowapi.com/#org"}},
+      {"@type":"SoftwareApplication","name":"VeriflowAPI","applicationCategory":"DeveloperApplication","operatingSystem":"Any (REST API)","url":"https://veriflowapi.com/","description":"One API call for federal NPI + OIG exclusion screening nationwide, plus deep state-board license verification for Texas, Florida, Illinois, Washington, Colorado, Connecticut, Alabama, New York, Pennsylvania, Ohio, California, Michigan, New Jersey, District of Columbia and Delaware. Tamper-evident signed certificates, webhook monitoring, fuzzy name matching.","offers":{"@type":"Offer","price":"0","priceCurrency":"USD","description":"Start free with 100 verifications"},"publisher":{"@id":"https://veriflowapi.com/#org"}},
       {"@type":"FAQPage","mainEntity":[
-        {"@type":"Question","name":"Which states does VeriflowAPI cover?","acceptedAnswer":{"@type":"Answer","text":"Federal NPPES (identity/NPI) and OIG LEIE (exclusions) screening is nationwide. Deep state-level license data is live for Texas, Florida, Illinois, Washington, Colorado, Connecticut, Alabama, New York, Pennsylvania, Ohio, California, Michigan, New Jersey and Delaware; other states return status: unsupported_state."}},
+        {"@type":"Question","name":"Which states does VeriflowAPI cover?","acceptedAnswer":{"@type":"Answer","text":"Federal NPPES (identity/NPI) and OIG LEIE (exclusions) screening is nationwide. Deep state-level license data is live for Texas, Florida, Illinois, Washington, Colorado, Connecticut, Alabama, New York, Pennsylvania, Ohio, California, Michigan, New Jersey, District of Columbia and Delaware; other states return status: unsupported_state."}},
         {"@type":"Question","name":"How fresh is the data?","acceptedAnswer":{"@type":"Answer","text":"NPPES refreshes daily, OIG every 12 hours, and the state license mirrors refresh daily. Each certificate records when the source was read."}},
         {"@type":"Question","name":"Is VeriflowAPI a primary source for verification?","acceptedAnswer":{"@type":"Answer","text":"The Illinois IDFPR bulk lookup is recognized by the Joint Commission and NCQA as an approved primary source. Every verification returns a tamper-evident, SHA-256-signed audit certificate."}},
         {"@type":"Question","name":"Is there a free tier?","acceptedAnswer":{"@type":"Answer","text":"Yes — start free with 100 verifications, no credit card required."}}
@@ -761,7 +761,7 @@
     <div class="badge">Live · 100 Free Verifications</div>
     <h1>Stop Scraping State Boards. <em>Verify Providers in One Call.</em></h1>
     <p class="hero-sub">
-      Federal NPI + OIG exclusion screening nationwide, plus deep state-board coverage across 14 states today — Texas, Florida, Illinois, Washington, Colorado, Connecticut, Alabama, New York, New Jersey, Delaware, Pennsylvania, Ohio, California, and Michigan. Every check returns a tamper-evident, SHA‑256‑signed audit certificate — JSON or PDF.
+      Federal NPI + OIG exclusion screening nationwide, plus deep state-board coverage across 18 states today — Texas, Florida, Illinois, Washington, Colorado, Connecticut, Alabama, New York, New Jersey, Delaware, Pennsylvania, Ohio, California, District of Columbia, and Michigan. Every check returns a tamper-evident, SHA‑256‑signed audit certificate — JSON or PDF.
     </p>
     <div style="display:flex;gap:1rem;margin-bottom:2rem;flex-wrap:wrap;">
       <a href="https://app.veriflowapi.com/signup" style="background:var(--accent);color:#fff;padding:0.75rem 1.5rem;border-radius:7px;font-size:0.9375rem;font-weight:600;text-decoration:none;transition:background 0.2s;" onmouseover="this.style.background='#1238cc'" onmouseout="this.style.background='var(--accent)'">Start Free → 100 verifications</a>
@@ -980,6 +980,30 @@
       <div class="source-name">California DCA</div>
       <div class="source-desc">Monthly mirror of the Department of Consumer Affairs public licensee files — Medical Board, Osteopathic, Psychology, Behavioral Sciences (LCSW/LMFT/LPCC), PT, and OT. License #, type, status, issue and expiry dates.</div>
       <div class="source-status"><span class="status-dot"></span>Live · Updated Monthly · 489k records</div>
+    </div>
+    <div class="source-card">
+      <span class="source-badge badge-state">State &middot; Live</span>
+      <div class="source-name">Massachusetts BORIM</div>
+      <div class="source-desc">Live physician verification with NPI, four categories of disciplinary action and malpractice history. Physicians only.</div>
+      <div class="source-status"><span class="status-dot"></span>Live &middot; 24hr Cache</div>
+    </div>
+    <div class="source-card">
+      <span class="source-badge badge-state">State &middot; Live</span>
+      <div class="source-name">Rhode Island DOH</div>
+      <div class="source-desc">Live verification across all eight professions. License #, type, status, issue and expiry. Discipline derived from status only.</div>
+      <div class="source-status"><span class="status-dot"></span>Live &middot; 24hr Cache</div>
+    </div>
+    <div class="source-card">
+      <span class="source-badge badge-state">State &middot; Live</span>
+      <div class="source-name">DC Health HRLA</div>
+      <div class="source-desc">Live verification across all eight professions, with public board orders attached where they exist.</div>
+      <div class="source-status"><span class="status-dot"></span>Live &middot; 24hr Cache</div>
+    </div>
+    <div class="source-card">
+      <span class="source-badge badge-state">State &middot; Live</span>
+      <div class="source-name">Kansas KSBHA + BSRB</div>
+      <div class="source-desc">Live verification against two boards: physicians, PT and OT; psychologists, social workers, counselors and MFTs. Board actions on both.</div>
+      <div class="source-status"><span class="status-dot"></span>Live &middot; 24hr Cache</div>
     </div>
     <div class="source-card" style="background: var(--surface-2); border-style: dashed;">
       <span class="source-badge" style="background:#f3f4f6;color:#6b7280;">On Roadmap</span>
@@ -1317,7 +1341,7 @@
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem;">
       <a href="/coverage.html" style="display:block; background:#fff; border:1px solid var(--border); border-radius:10px; padding:1.25rem 1.5rem; text-decoration:none;">
         <div style="font-weight:600; color:var(--ink); margin-bottom:.35rem;">State &amp; profession coverage &rarr;</div>
-        <div style="font-size:.875rem; color:var(--ink-muted);">14 states, 8 clinical roles, and what each source does and does not include.</div>
+        <div style="font-size:.875rem; color:var(--ink-muted);">18 states, 8 clinical roles, and what each source does and does not include.</div>
       </a>
       <a href="/for/telehealth.html" style="display:block; background:#fff; border:1px solid var(--border); border-radius:10px; padding:1.25rem 1.5rem; text-decoration:none;">
         <div style="font-weight:600; color:var(--ink); margin-bottom:.35rem;">For telehealth platforms &rarr;</div>

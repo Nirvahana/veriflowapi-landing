@@ -155,6 +155,30 @@ STATES = [
                 "and the portal shows current sanctions such as probation or suspension "
                 "without the order narrative, which LARA issues separately in monthly "
                 "disciplinary reports."),
+    dict(slug="massachusetts", abbr="MA", name="Massachusetts",
+         board="Board of Registration in Medicine (BORIM)", method="Live per-query",
+         refresh="Checked live, cached 24 hours", records="Live lookup",
+         discipline="Yes",
+         detail="Physicians are verified live against the Board of Registration in Medicine's public profile service at the moment you ask. It returns the licence number, status, issue and expiry dates, the NPI, four categories of disciplinary action (in-state board, out-of-state board, healthcare facility, criminal) and malpractice history.",
+         caveat="Massachusetts is the first live state where we can match on NPI, so a request that carries one returns high confidence. The disciplinary flag is raised by any board or facility action, a criminal conviction, or a malpractice record; the categories are kept separately in the raw payload so you can tell them apart. Physicians only: the Department of Public Health boards that license the other professions were not reachable from our infrastructure and are not covered."),
+    dict(slug="rhodeisland", abbr="RI", name="Rhode Island",
+         board="Department of Health (RIDOH)", method="Live per-query",
+         refresh="Checked live, cached 24 hours", records="Live lookup",
+         discipline="Partial",
+         detail="Rhode Island is verified live against the Department of Health's licence lookup at the moment you ask. It covers physicians, psychologists, social workers, mental health counsellors, marriage and family therapists, physical and occupational therapists and speech-language pathologists, returning licence number, type, status, issue and expiry dates.",
+         caveat="The lookup's detail page carries no per-licensee disciplinary record, only a link to the board's published list, so the disciplinary flag is derived from the licence status alone: probation, restriction, suspension, surrender or revocation. A board action against a licence that is otherwise active will not appear. No NPI."),
+    dict(slug="dc", abbr="DC", name="District of Columbia",
+         board="DC Health, Health Regulation and Licensing (HRLA)", method="Live per-query",
+         refresh="Checked live, cached 24 hours", records="Live lookup",
+         discipline="Yes",
+         detail="The District is verified live against DC Health's licence verification at the moment you ask, across all eight professions. Each result carries licence number, type, status, issue and expiry dates, and links to any public board orders.",
+         caveat="DC's search matches both names loosely, so we require an exact surname and confirm the given name before reporting anyone; a nickname resolves only when it is contained in the registered name. The disciplinary flag is raised by a public board order on the record or by a sanction status, and the order documents are kept in the raw payload. No NPI."),
+    dict(slug="kansas", abbr="KS", name="Kansas",
+         board="Board of Healing Arts (KSBHA) and Behavioral Sciences Regulatory Board (BSRB)", method="Live per-query",
+         refresh="Checked live, cached 24 hours", records="Live lookup",
+         discipline="Yes",
+         detail="Kansas is verified live against two boards at the moment you ask: the Board of Healing Arts for physicians, physical and occupational therapists, and the Behavioral Sciences Regulatory Board for psychologists, social workers, professional counsellors and marriage and family therapists. Both publish board actions, which raise the disciplinary flag.",
+         caveat="Kansas physician profiles publish a cancellation date rather than an expiry date, and we surface that as the expiry. Speech-language pathology is licensed by a different department and is not covered. Names are matched by prefix at the source, so we require an exact surname. No NPI."),
     dict(slug="florida", abbr="FL", name="Florida",
          board="Department of Health, Medical Quality Assurance (MQA)",
          method="Daily mirror", refresh="Refreshed daily",
@@ -222,22 +246,22 @@ STATES = [
                 "standing rather than reconstructing a lapsed licence's history."),
 ]
 
-ALL_CLINICAL = ["FL", "WA", "IL", "CO", "CT", "NY", "PA", "OH", "CA", "MI", "NJ", "DE"]
+ALL_CLINICAL = ["FL", "WA", "IL", "CO", "CT", "NY", "PA", "OH", "CA", "MI", "NJ", "DE", "RI", "DC"]
 NO_CA = [s for s in ALL_CLINICAL if s != "CA"]
 ROLES = [
     ("Physician (MD / DO)", "State medical or osteopathic licence",
      ["TX", "FL", "IL", "WA", "CO", "CT", "AL", "NY", "PA", "OH", "CA", "MI", "NJ",
-      "DE"]),
-    ("Psychologist / Neuropsychologist", "Licensed Psychologist", ALL_CLINICAL),
-    ("Licensed Clinical Social Worker", "LCSW", ALL_CLINICAL),
-    ("Professional / Mental Health Counselor", "LPC, LPCC or LMHC", ALL_CLINICAL),
-    ("Marriage and Family Therapist", "LMFT", ALL_CLINICAL),
-    ("Physical Therapist", "PT", ALL_CLINICAL),
-    ("Occupational Therapist", "OT", ALL_CLINICAL),
+      "DE", "MA", "RI", "DC", "KS"]),
+    ("Psychologist / Neuropsychologist", "Licensed Psychologist", ALL_CLINICAL + ["KS"]),
+    ("Licensed Clinical Social Worker", "LCSW", ALL_CLINICAL + ["KS"]),
+    ("Professional / Mental Health Counselor", "LPC, LPCC or LMHC", ALL_CLINICAL + ["KS"]),
+    ("Marriage and Family Therapist", "LMFT", ALL_CLINICAL + ["KS"]),
+    ("Physical Therapist", "PT", ALL_CLINICAL + ["KS"]),
+    ("Occupational Therapist", "OT", ALL_CLINICAL + ["KS"]),
     ("Speech-Language Pathologist", "SLP", NO_CA),
 ]
 ALL_ABBR = ["TX", "FL", "IL", "WA", "CO", "CT", "AL", "NY", "PA", "OH", "CA", "MI", "NJ",
-            "DE"]
+            "DE", "MA", "RI", "DC", "KS"]
 
 # --- Retired URLs -> what replaced them ---------------------------------------
 REDIRECTS: dict[str, str] = {}
@@ -457,7 +481,7 @@ def coverage_page() -> str:
         + "</tr>" for name, lic, states in ROLES)
 
     body = f"""  <section class="hero">
-    <div class="badge">14 states live &middot; updated September 2026</div>
+    <div class="badge">18 states live &middot; updated September 2026</div>
     <h1>What VeriflowAPI actually verifies</h1>
     <p class="sub">Every state we cover, the board each result comes from, how fresh it is,
     and the specific limits of each source. Federal identity and exclusion screening runs
@@ -559,7 +583,7 @@ POST https://api.veriflowapi.com/v1/verify
 """
     return page(
         path="coverage.html",
-        title="License Verification Coverage: 14 States, Board by Board | VeriflowAPI",
+        title="License Verification Coverage: 18 States, Board by Board | VeriflowAPI",
         desc="Every state VeriflowAPI verifies, the board each result comes from, how often "
              "it refreshes, and the honest limits of each source. Plus nationwide NPPES and "
              "OIG screening on every check.",
@@ -567,7 +591,7 @@ POST https://api.veriflowapi.com/v1/verify
         cta_h="Verify a provider in any of these states",
         qas=[
             ("Which states can VeriflowAPI verify licenses in?",
-             "Fourteen states today: Texas, Florida, Illinois, Washington, Colorado, "
+             "Eighteen states today: Texas, Florida, Illinois, Washington, Colorado, "
              "Connecticut, Alabama, New York, Pennsylvania, Ohio, California, Michigan and "
              "New Jersey and Delaware. "
              "Federal NPPES identity and OIG exclusion screening runs in all 50 states on "
@@ -656,7 +680,7 @@ POST /v1/verify  {{"first_name":"Jane","last_name":"Provider","state":<span clas
     <h2>Coverage that matches a behavioural-health panel</h2>
     <p>Telehealth panels skew towards behavioural health, which is where state coverage
     usually thins out. Psychologists, LCSWs, LPC/LMHCs and LMFTs are verifiable in nine states
-    today, and physicians in fourteen. The <a href="/coverage.html#professions">role matrix</a>
+    today, and physicians in eighteen. The <a href="/coverage.html#professions">role matrix</a>
     shows which state covers which licence, and uncovered states return an explicit
     <code>unsupported_state</code> rather than a guess &mdash; so you know precisely where
     human review is still required.</p>
@@ -667,7 +691,7 @@ POST /v1/verify  {{"first_name":"Jane","last_name":"Provider","state":<span clas
         title="License Verification for Telehealth Platforms | VeriflowAPI",
         desc="Telehealth licensure follows the patient's state. Verify a clinician per state, "
              "catch lapses mid-engagement with signed webhooks, and cover behavioural-health "
-             "roles across 14 states.",
+             "roles across 18 states.",
         body=body,
         cta_h="Verify your panel, state by state",
         qas=[

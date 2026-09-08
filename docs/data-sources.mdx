@@ -36,7 +36,7 @@ If `oig_excluded` is `true`, the provider must not be employed or contracted by 
 
 ## State Sources — Live
 
-Deep state license data is available for **fourteen states** today. Texas, New York, Pennsylvania, Ohio, and Michigan are live per-query scrapes; the rest are full mirrors (refreshed daily, or monthly for California). Any other state returns `status: "unsupported_state"` on live keys — we never fabricate data we don't have.
+Deep state license data is available for **eighteen states** today. Texas, New York, Pennsylvania, Ohio, and Michigan are live per-query scrapes; the rest are full mirrors (refreshed daily, or monthly for California). Any other state returns `status: "unsupported_state"` on live keys — we never fabricate data we don't have.
 
 ### Texas Medical Board
 
@@ -163,6 +163,46 @@ Michigan publishes no bulk licensee file, so the portal is queried at verificati
 | Data includes | License number, license type, board, status, issue date, expiry date |
 
 The DCA files carry status and expiry but no disciplinary history, and the Speech-Language Pathology board's public file is empty, so SLP is not yet covered in California. Discipline and SLP will follow via DCA's iServices API.
+
+### Massachusetts (MA)
+
+| Detail | Value |
+|---|---|
+| Access | Live per-query lookup against the Board of Registration in Medicine, 24-hour per-query cache |
+| License types | Physicians (MD/DO) and physician assistants |
+| Data includes | License number, status, issue and expiry dates, NPI, disciplinary actions in four categories, malpractice history |
+
+Massachusetts is the first live state that publishes NPI, so a request carrying an NPI returns `high` match confidence. The disciplinary flag is raised by any board or facility action, criminal conviction, or malpractice record, and the four categories are kept separately in the raw payload. Both names are matched loosely by the board's search, so we require an exact surname before confirming anyone. Physicians only: the boards for the other professions were not reachable from our infrastructure.
+
+### Rhode Island (RI)
+
+| Detail | Value |
+|---|---|
+| Access | Live per-query lookup against the Department of Health licence verification, 24-hour per-query cache |
+| License types | Physicians (MD/DO), psychologists, social workers, mental health counselors, marriage & family therapists, PT, OT, SLP |
+| Data includes | License number, license type, status, issue date, expiry date |
+
+The detail page carries no per-licensee disciplinary record, only a link to the board's published list, so the disciplinary flag is derived from the licence status alone (probation, restriction, suspension, surrender, revocation). A board action against an otherwise active licence will not surface. Names are matched by prefix at the source, so we require an exact surname before confirming anyone. No NPI.
+
+### District of Columbia (DC)
+
+| Detail | Value |
+|---|---|
+| Access | Live per-query lookup against DC Health's licence verification, 24-hour per-query cache |
+| License types | Physicians (MD/DO), psychologists, social workers, professional counselors, marriage & family therapists, PT, OT, SLP and audiology |
+| Data includes | License number, license type, status, issue date, expiry date, public board order documents |
+
+The disciplinary flag is raised by a public board order on the record or by a sanction status, and the order documents are kept in the raw payload. DC's search matches both names loosely, so we require an exact surname and a confirmed given name; a nickname resolves only when it is contained in the registered name. No NPI.
+
+### Kansas (KS)
+
+| Detail | Value |
+|---|---|
+| Access | Live per-query lookups against the Board of Healing Arts and the Behavioral Sciences Regulatory Board, 24-hour per-query cache |
+| License types | Physicians (MD/DO), PT, OT (KSBHA); psychologists, social workers, professional counselors, marriage & family therapists (BSRB) |
+| Data includes | License number, license type, status, issue and expiry dates, board actions |
+
+Both boards publish board actions, which raise the disciplinary flag. Physician profiles publish a cancellation date rather than an expiry date, and we surface that as the expiry. Speech-language pathology is licensed by a different department and is not covered. No NPI.
 
 ## What happens when a source is down
 
