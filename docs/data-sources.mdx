@@ -36,7 +36,7 @@ If `oig_excluded` is `true`, the provider must not be employed or contracted by 
 
 ## State Sources — Live
 
-Deep state license data is available for **twenty-three states** today. Texas, New York, Pennsylvania, Ohio, and Michigan are live per-query scrapes; the rest are full mirrors (refreshed daily, or monthly for California). Any other state returns `status: "unsupported_state"` on live keys — we never fabricate data we don't have.
+Deep state license data is available for **thirty states** today. Texas, New York, Pennsylvania, Ohio, and Michigan are live per-query scrapes; the rest are full mirrors (refreshed daily, or monthly for California). Any other state returns `status: "unsupported_state"` on live keys — we never fabricate data we don't have.
 
 ### Texas Medical Board
 
@@ -253,6 +253,76 @@ Physicians are **not** covered: the medical board's free search is CAPTCHA-gated
 | Data includes | License number, status, expiry date, discipline indicator |
 
 The physician roster lists **current licensees only**: an expired, suspended or revoked physician is absent from it rather than listed with that status, so a Maryland `not_found` is not evidence that someone was never licensed. Probation is reported as `active` with the disciplinary flag raised. The source is monthly, so every certificate carries the as-of date. Physicians and allied health only; the behavioural-health boards are not yet covered. No NPI.
+
+### New Mexico (NM)
+
+| Detail | Value |
+|---|---|
+| Access | Live per-query lookups against the Medical Board and the Regulation and Licensing Department, 24-hour per-query cache |
+| License types | Physicians (MD/DO), psychologists, social workers, counselors, marriage & family therapists, PT, OT, SLP |
+| Data includes | License number, license type, status, term dates, board orders and settlement agreements |
+
+Both boards publish disciplinary records with case numbers, which we return. New Mexico uses revocation and suspension wording for an ordinary end-of-term administrative lapse; we report those as **expired**, not as sanctions. No NPI.
+
+### Louisiana (LA)
+
+| Detail | Value |
+|---|---|
+| Access | Monthly mirror of the medical board's published physician roster, plus a live per-query psychologist lookup |
+| License types | Physicians (MD/DO) and psychologists |
+| Data includes | License number, license type, status; disciplinary action and board order flags for psychologists |
+
+The physician roster is **active licensees only**, so a lapsed, suspended or revoked physician is absent rather than listed with that status: a Louisiana physician `not_found` is not evidence of never being licensed. It carries no disciplinary column. Louisiana's other boards publish no usable lookup, so the remaining six professions are not covered. No NPI.
+
+### Iowa (IA)
+
+| Detail | Value |
+|---|---|
+| Access | Live per-query lookups against the Board of Medicine, the professional licensure boards and the dental boards, 24-hour per-query cache |
+| License types | Physicians (MD/DO), PAs, psychologists, social workers, behavioural science, PT, OT, SLP, audiologists, dentists and more |
+| Data includes | License number, license type, status, issue and expiry dates, disciplinary indicator |
+
+**Nursing, pharmacy and emergency medical services are licensed on separate systems and are not covered**, so an Iowa result speaks only to the professions listed. Iowa records a *relinquished* licence as the ordinary way a physician licence ends and we do not treat it as a sanction. The Board of Medicine caps a name search, so we narrow by given name and status when the cap is hit. No NPI.
+
+### Arkansas (AR)
+
+| Detail | Value |
+|---|---|
+| Access | Live per-query lookups against the State Medical Board, the Psychology Board and the Speech-Language Pathology and Audiology Board |
+| License types | Physicians (MD/DO), physician assistants, occupational therapists, psychologists, speech-language pathologists, audiologists |
+| Data includes | License number, license type, status, board actions where the board publishes them |
+
+Social work and physical therapy are **not covered**: those lookups sit behind a blocked host and an image challenge. Counselling and marriage & family therapy are excluded because that board's register has not been updated since 2023, and publishing it would report long-expired licences as active. The medical and psychology boards publish a disciplinary signal; the speech board's discipline column reads clear even on revoked licensees, so we declare no signal there rather than imply a clean record. No NPI.
+
+### Kentucky (KY)
+
+| Detail | Value |
+|---|---|
+| Access | Live per-query lookups against the Board of Medical Licensure and the state's occupations and professions portal |
+| License types | Physicians (MD/DO), psychologists, professional counselors, marriage & family therapists, OT, SLP |
+| Data includes | License number, license type, status, board action indicator |
+
+Social work and physical therapy are **not covered**: both searches require a challenge we do not attempt. The physician application holds **current credentials only**, so a lapsed Kentucky physician is absent rather than returned as expired. Kentucky marks some licensees *active but not practising* or *not eligible to practise*; we report those as inactive, because the board is saying the holder may not practise. Disciplined physicians can still read as active on the board's own status, so the board-action field is what we use. No NPI.
+
+### West Virginia (WV)
+
+| Detail | Value |
+|---|---|
+| Access | Live per-query lookups against the social work, psychology, counselling and occupational therapy boards |
+| License types | Social workers, psychologists, school psychologists, professional counselors, marriage & family therapists, occupational therapists |
+| Data includes | License number, license type, status, disciplinary action, and licence standing or board orders where published |
+
+**Physicians are not covered**, and not because of any restriction on us: both West Virginia medical board lookups resolve to an address that answers on no port from any resolver we tried, so they are unavailable to everyone. Physical therapy and speech-language pathology sit behind a firewall and a challenge respectively. Where a board publishes no disciplinary signal we say so rather than implying a clean record. Licences marked active but non-practising are reported as inactive. No NPI.
+
+### Oklahoma (OK)
+
+| Detail | Value |
+|---|---|
+| Access | Live per-query lookups against the Board of Examiners of Psychologists and the Speech-Language Pathology and Audiology Board |
+| License types | Psychologists, speech-language pathologists, audiologists (and their assistant grades) |
+| Data includes | License number, license type, status; board case references for psychology |
+
+**Two professions only.** Physicians, physical therapy and occupational therapy sit with the state medical board, whose published policy asks that its search not be harvested; we respect that and do not query it, so those professions are not covered and will not be. Counselling, MFT and social work are behind a firewall. The psychology board publishes real case references, which we return, and publishes no expiry date. The speech board publishes no disciplinary signal and sanctioned licensees leave its register, so we declare no signal rather than a clean record. No NPI.
 
 ## What happens when a source is down
 

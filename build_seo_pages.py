@@ -209,6 +209,48 @@ STATES = [
          discipline="Yes",
          detail="We mirror the Board of Physicians' monthly public rosters: physicians, allied health including physician assistants, and the inactive and emeritus lists. Each record carries licence number, status, expiry and a discipline indicator.",
          caveat="The physician roster lists current licensees only, so a physician whose licence has expired, been suspended or revoked is simply absent from it. Absence therefore returns not_found, which is not the same as never licensed; treat a Maryland not_found as something to check by hand. Probation is reported as active with the disciplinary flag raised. Because the source is monthly, every certificate records the as-of date. Physicians and allied health only; the behavioural-health boards are separate and not yet covered. No NPI."),
+    dict(slug="newmexico", abbr="NM", name="New Mexico",
+         board="Regulation and Licensing Dept. and the Medical Board", method="Live per-query",
+         refresh="Checked live, cached 24 hours", records="Live lookup",
+         discipline="Yes",
+         detail="New Mexico is verified live at the moment you ask, across all eight professions. The Medical Board covers physicians; the Regulation and Licensing Department covers psychology, social work, counselling, marriage and family therapy, physical and occupational therapy and speech-language pathology.",
+         caveat="Both boards publish their own disciplinary records, board orders and settlement agreements with case numbers, which we return. One mapping worth knowing: New Mexico uses revocation and suspension wording for an ordinary administrative lapse at the end of a term. We report those as expired rather than as sanctions, because treating them as discipline would misrepresent several hundred licensees. No NPI."),
+    dict(slug="louisiana", abbr="LA", name="Louisiana",
+         board="Board of Medical Examiners and Board of Examiners of Psychologists", method="Monthly mirror + live",
+         refresh="Physicians monthly; psychologists checked live", records="50,000 physicians",
+         discipline="Partial",
+         detail="Louisiana covers two professions from two sources. Physicians come from the medical board's monthly published roster, about 50,000 licensees. Psychologists are verified live at the moment you ask, and that source publishes disciplinary action and board order flags.",
+         caveat="The physician roster lists active licensees only, so a physician whose licence has lapsed, been suspended or revoked is absent from it rather than listed with that status. A Louisiana physician not_found is therefore not evidence that someone was never licensed. The roster carries no disciplinary column; only the psychologist source does. Louisiana's other boards do not publish a usable lookup, so the remaining six professions are not covered. No NPI."),
+    dict(slug="iowa", abbr="IA", name="Iowa",
+         board="Board of Medicine, Professional Licensure and the dental boards", method="Live per-query",
+         refresh="Checked live, cached 24 hours", records="Live lookup",
+         discipline="Yes",
+         detail="Iowa is verified live across three state portals covering more than twenty boards: the Board of Medicine for physicians, the professional licensure boards for psychology, social work, behavioural science, physical and occupational therapy and speech-language pathology, and the dental boards.",
+         caveat="Nursing, pharmacy and emergency medical services are licensed on separate systems we do not read, so an Iowa result covers the professions listed here and no others. Two things worth knowing: Iowa records a relinquished licence as the ordinary way a physician licence ends, which we do not treat as a sanction, and the Board of Medicine caps a name search, so we narrow by given name and status when that happens. No NPI."),
+    dict(slug="arkansas", abbr="AR", name="Arkansas",
+         board="State Medical Board, Psychology Board and the Speech-Language Pathology Board", method="Live per-query",
+         refresh="Checked live, cached 24 hours", records="Live lookup",
+         discipline="Partial",
+         detail="Arkansas is verified live across three boards: the State Medical Board for physicians and occupational therapists, the Psychology Board, and the Speech-Language Pathology and Audiology Board.",
+         caveat="Social work and physical therapy are not covered: those lookups are behind a blocked host and an image challenge, and we do not work around either. Counselling and marriage and family therapy are deliberately excluded for a different reason. That board's register parses cleanly but has not been updated since 2023, so publishing it would report long-expired licences as active. The medical and psychology boards publish disciplinary signals; the speech board's own discipline column reads clear even on revoked licensees, so we report no signal there rather than a false clean bill. No NPI."),
+    dict(slug="kentucky", abbr="KY", name="Kentucky",
+         board="Board of Medical Licensure and the Occupations and Professions boards", method="Live per-query",
+         refresh="Checked live, cached 24 hours", records="Live lookup",
+         discipline="Yes",
+         detail="Kentucky is verified live across two systems covering six of our eight professions: the Board of Medical Licensure for physicians, and the state's professions portal for psychology, counselling, marriage and family therapy, occupational therapy and speech-language pathology. Both publish disciplinary signals.",
+         caveat="Social work and physical therapy are not covered: both searches require a challenge we do not attempt. The physician application holds current credentials only, so a lapsed Kentucky physician is absent rather than returned as expired, and a physician not_found there is not evidence of never being licensed. Kentucky also marks some licensees active but not practising, or not eligible to practise, and we report those as inactive, because the board is saying the holder may not practise. No NPI."),
+    dict(slug="westvirginia", abbr="WV", name="West Virginia",
+         board="the social work, psychology, counselling and occupational therapy boards", method="Live per-query",
+         refresh="Checked live, cached 24 hours", records="Live lookup",
+         discipline="Yes",
+         detail="West Virginia is verified live across four boards covering five professions: social work, psychology, professional counselling and marriage and family therapy, and occupational therapy. All four publish a disciplinary signal.",
+         caveat="Physicians are not covered, and not because of us: both West Virginia medical board lookups resolve to an address that answers on no port from any resolver we tried, so they are unavailable to everyone. Physical therapy and speech-language pathology are behind a firewall and a challenge respectively. Where a board publishes no disciplinary signal we say so rather than implying a clean record, and licences marked active but non-practising are reported as inactive. No NPI."),
+    dict(slug="oklahoma", abbr="OK", name="Oklahoma",
+         board="Board of Examiners of Psychologists and the Speech-Language Pathology Board", method="Live per-query",
+         refresh="Checked live, cached 24 hours", records="Live lookup",
+         discipline="Partial",
+         detail="Oklahoma covers two professions, verified live: psychologists, and speech-language pathologists and audiologists. This is a deliberately narrow entry and should be read as exactly that.",
+         caveat="Physicians, physical therapy and occupational therapy all sit with the state medical board, whose published policy asks that its search not be harvested. We respect that and do not query it at all, so those professions are not covered and will not be. Counselling, marriage and family therapy and social work are behind a firewall. The psychology board publishes real case references, which we return; the speech board publishes no disciplinary signal at all and sanctioned licensees drop off its register, so we declare no signal rather than a clean record. The psychology board publishes no expiry date. No NPI."),
     dict(slug="florida", abbr="FL", name="Florida",
          board="Department of Health, Medical Quality Assurance (MQA)",
          method="Daily mirror", refresh="Refreshed daily",
@@ -276,22 +318,22 @@ STATES = [
                 "standing rather than reconstructing a lapsed licence's history."),
 ]
 
-ALL_CLINICAL = ["FL", "WA", "IL", "CO", "CT", "NY", "PA", "OH", "CA", "MI", "NJ", "DE", "RI", "DC", "ID"]
+ALL_CLINICAL = ["FL", "WA", "IL", "CO", "CT", "NY", "PA", "OH", "CA", "MI", "NJ", "DE", "RI", "DC", "ID", "NM", "IA"]
 NO_CA = [s for s in ALL_CLINICAL if s != "CA"]
 ROLES = [
     ("Physician (MD / DO)", "State medical or osteopathic licence",
      ["TX", "FL", "IL", "WA", "CO", "CT", "AL", "NY", "PA", "OH", "CA", "MI", "NJ",
-      "DE", "MA", "RI", "DC", "KS", "VT", "ID", "MD"]),
-    ("Psychologist / Neuropsychologist", "Licensed Psychologist", ALL_CLINICAL + ["KS", "WY"]),
-    ("Licensed Clinical Social Worker", "LCSW", ALL_CLINICAL + ["KS", "WY", "MS"]),
-    ("Professional / Mental Health Counselor", "LPC, LPCC or LMHC", ALL_CLINICAL + ["KS", "WY", "MS"]),
-    ("Marriage and Family Therapist", "LMFT", ALL_CLINICAL + ["KS", "WY", "MS"]),
+      "DE", "MA", "RI", "DC", "KS", "VT", "ID", "MD", "NM", "LA", "IA", "AR", "KY"]),
+    ("Psychologist / Neuropsychologist", "Licensed Psychologist", ALL_CLINICAL + ["KS", "WY", "LA", "AR", "KY", "WV", "OK"]),
+    ("Licensed Clinical Social Worker", "LCSW", ALL_CLINICAL + ["KS", "WY", "MS", "WV"]),
+    ("Professional / Mental Health Counselor", "LPC, LPCC or LMHC", ALL_CLINICAL + ["KS", "WY", "MS", "KY", "WV"]),
+    ("Marriage and Family Therapist", "LMFT", ALL_CLINICAL + ["KS", "WY", "MS", "KY", "WV"]),
     ("Physical Therapist", "PT", ALL_CLINICAL + ["KS", "MS"]),
-    ("Occupational Therapist", "OT", ALL_CLINICAL + ["KS", "MS"]),
-    ("Speech-Language Pathologist", "SLP", NO_CA + ["WY", "MS"]),
+    ("Occupational Therapist", "OT", ALL_CLINICAL + ["KS", "MS", "AR", "KY", "WV"]),
+    ("Speech-Language Pathologist", "SLP", NO_CA + ["WY", "MS", "AR", "KY", "OK"]),
 ]
 ALL_ABBR = ["TX", "FL", "IL", "WA", "CO", "CT", "AL", "NY", "PA", "OH", "CA", "MI", "NJ",
-            "DE", "MA", "RI", "DC", "KS", "VT", "WY", "ID", "MS", "MD"]
+            "DE", "MA", "RI", "DC", "KS", "VT", "WY", "ID", "MS", "MD", "NM", "LA", "IA", "AR", "KY", "WV", "OK"]
 
 # --- Retired URLs -> what replaced them ---------------------------------------
 REDIRECTS: dict[str, str] = {}
@@ -511,7 +553,7 @@ def coverage_page() -> str:
         + "</tr>" for name, lic, states in ROLES)
 
     body = f"""  <section class="hero">
-    <div class="badge">23 states live &middot; updated September 2026</div>
+    <div class="badge">30 states live &middot; updated September 2026</div>
     <h1>What VeriflowAPI actually verifies</h1>
     <p class="sub">Every state we cover, the board each result comes from, how fresh it is,
     and the specific limits of each source. Federal identity and exclusion screening runs
@@ -613,7 +655,7 @@ POST https://api.veriflowapi.com/v1/verify
 """
     return page(
         path="coverage.html",
-        title="License Verification Coverage: 23 States, Board by Board | VeriflowAPI",
+        title="License Verification Coverage: 30 States, Board by Board | VeriflowAPI",
         desc="Every state VeriflowAPI verifies, the board each result comes from, how often "
              "it refreshes, and the honest limits of each source. Plus nationwide NPPES and "
              "OIG screening on every check.",
@@ -621,7 +663,7 @@ POST https://api.veriflowapi.com/v1/verify
         cta_h="Verify a provider in any of these states",
         qas=[
             ("Which states can VeriflowAPI verify licenses in?",
-             "Twenty-three states today: Texas, Florida, Illinois, Washington, Colorado, "
+             "Thirty states today: Texas, Florida, Illinois, Washington, Colorado, "
              "Connecticut, Alabama, New York, Pennsylvania, Ohio, California, Michigan and "
              "New Jersey and Delaware. "
              "Federal NPPES identity and OIG exclusion screening runs in all 50 states on "
@@ -710,7 +752,7 @@ POST /v1/verify  {{"first_name":"Jane","last_name":"Provider","state":<span clas
     <h2>Coverage that matches a behavioural-health panel</h2>
     <p>Telehealth panels skew towards behavioural health, which is where state coverage
     usually thins out. Psychologists, LCSWs, LPC/LMHCs and LMFTs are verifiable in nine states
-    today, and physicians in twenty-three. The <a href="/coverage.html#professions">role matrix</a>
+    today, and physicians in thirty. The <a href="/coverage.html#professions">role matrix</a>
     shows which state covers which licence, and uncovered states return an explicit
     <code>unsupported_state</code> rather than a guess &mdash; so you know precisely where
     human review is still required.</p>
@@ -721,7 +763,7 @@ POST /v1/verify  {{"first_name":"Jane","last_name":"Provider","state":<span clas
         title="License Verification for Telehealth Platforms | VeriflowAPI",
         desc="Telehealth licensure follows the patient's state. Verify a clinician per state, "
              "catch lapses mid-engagement with signed webhooks, and cover behavioural-health "
-             "roles across 23 states.",
+             "roles across 30 states.",
         body=body,
         cta_h="Verify your panel, state by state",
         qas=[
