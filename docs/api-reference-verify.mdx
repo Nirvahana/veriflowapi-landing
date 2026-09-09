@@ -28,7 +28,8 @@ POST https://api.veriflowapi.com/v1/verify
   "last_name": "Chen",
   "state": "FL",
   "npi": "1234567890",
-  "dob": "1975-03-15"
+  "dob": "1975-03-15",
+  "profession": "physician"
 }
 ```
 
@@ -41,6 +42,7 @@ POST https://api.veriflowapi.com/v1/verify
 | `state` | string | Yes | Two-letter US state code (e.g. `CA`, `TX`, `NY`). The state where the license was issued. |
 | `npi` | string | No | 10-digit National Provider Identifier. Strongly recommended — significantly improves match accuracy. |
 | `dob` | string | No | Date of birth in ISO 8601 format (`YYYY-MM-DD`). Disambiguates same-name providers and, in particular, clears false OIG exclusion matches on common names. See [OIG exclusion matching](#oig-exclusion-matching). |
+| `profession` | string | No | Restrict the check to one profession, e.g. `physician`, `nurse_practitioner`, `psychologist`. See [Profession](#profession). Recommended wherever you know it: several states license every occupation from one register, so a name alone can match a different profession. |
 
 **Note on `npi` and `dob`:** Both are optional but strongly recommended whenever available. Without them, identity resolution relies on name and state alone, which can produce false positives for common names — including false matches against the OIG exclusion list. Supplying `npi` and/or `dob` disambiguates the provider and clears same-name collisions.
 
@@ -55,6 +57,8 @@ POST https://api.veriflowapi.com/v1/verify
   "match_confidence": "high",
   "name": "Dr. Sarah Chen",
   "license_number": "ME149820",
+  "profession": "physician",
+  "license_type": "Medical Doctor",
   "state": "Florida",
   "expiry_date": "2027-06-30",
   "disciplinary_flags": false,
@@ -82,6 +86,8 @@ POST https://api.veriflowapi.com/v1/verify
 | `match_confidence` | string | Strength of the identity match: `high` (matched by NPI), `medium` (exact name), `low` (name nickname/typo variant), or `null` when not found. Lower values are name-only matches — supply an `npi` for `high`. See [Identity resolution](#identity-resolution). |
 | `name` | string | Provider's full name as it appears in source records. |
 | `license_number` | string | State license number. |
+| `profession` | string | The profession of the licence that matched, in canonical form (`physician`, `nurse_practitioner`, ...), so it is comparable across states. `null` where the state publishes no readable profession — see [Profession](#profession). |
+| `license_type` | string | The licence type in the state's own wording (`Medical Doctor`, `ADV PRACTICE NURSE`, `Advanced Registered Nurse Practitioner License`). Use it to audit the `profession` classification and to see detail the canonical value flattens. |
 | `state` | string | Full state name. |
 | `expiry_date` | string | License expiry date in ISO 8601 format (`YYYY-MM-DD`). |
 | `disciplinary_flags` | boolean | `true` if any disciplinary actions, sanctions, or malpractice findings are on record. |
@@ -141,6 +147,46 @@ Recommended handling:
 Before returning `source_unavailable`, we first serve the most recent cached
 result for that provider if one exists, flagged with `source_live: false` so you
 can see the data is not fresh.
+
+## Profession
+
+Most states run a separate board per profession, but several publish **one register covering every
+licensed occupation** — Illinois and Connecticut among them. In those states a name on its own can
+match an entirely different occupation, so every verification is restricted to healthcare licences
+and, when you ask for one, to the profession you name.
+
+### Values
+
+`physician`, `physician_assistant`, `nurse_practitioner`, `registered_nurse`, `practical_nurse`,
+`nurse_anesthetist`, `nurse_midwife`, `nursing_assistant`, `psychologist`, `social_worker`,
+`counselor`, `marriage_family_therapist`, `physical_therapist`, `occupational_therapist`,
+`speech_language_pathologist`, `audiologist`, `dentist`, `pharmacist`, `optometrist`, `podiatrist`,
+`chiropractor`, `midwife`, `acupuncturist`, `dietitian`, `respiratory_therapist`,
+`athletic_trainer`, `emergency_medical`, `massage_therapist`.
+
+An unrecognised value is rejected with `422`, so a typo fails loudly rather than silently widening
+the search.
+
+### How the filter behaves
+
+Sending `profession` **narrows** a check; it never widens one.
+
+- A licence in the profession you named is returned.
+- A licence confidently in a *different* profession is excluded — this is what stops a nurse's
+  active licence answering a question about a physician.
+- A licence we cannot classify is still returned, ranked after any exact match, with
+  `profession: null` and the state's raw wording in `license_type`. An unmapped vocabulary costs
+  precision, never coverage.
+
+### When `profession` comes back null
+
+`profession` is `null` when the state does not publish a readable profession. Colorado is the
+clearest case: DORA's public dataset ships only a coded prefix (`RN`, `AP`, `APE`) with no
+dictionary, so we return the raw code in `license_type` and leave `profession` empty rather than
+guess. Read `license_type` in that case.
+
+Omitting `profession` is safe. Non-healthcare licences are excluded either way — the filter only
+adds precision *within* healthcare.
 
 ## Identity resolution
 

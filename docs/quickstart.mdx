@@ -22,7 +22,8 @@ curl -X POST https://api.veriflowapi.com/v1/verify \
     "first_name": "Sarah",
     "last_name": "Chen",
     "state": "FL",
-    "npi": "1234567890"
+    "npi": "1234567890",
+    "profession": "physician"
   }'
 ```
 
@@ -36,6 +37,8 @@ You will receive a response like this:
   "status": "active",
   "name": "Dr. Sarah Chen",
   "license_number": "ME149820",
+  "profession": "physician",
+  "license_type": "Medical Doctor",
   "state": "Florida",
   "expiry_date": "2027-06-30",
   "disciplinary_flags": false,
