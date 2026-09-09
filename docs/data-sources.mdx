@@ -36,7 +36,7 @@ If `oig_excluded` is `true`, the provider must not be employed or contracted by 
 
 ## State Sources — Live
 
-Deep state license data is available for **eighteen states** today. Texas, New York, Pennsylvania, Ohio, and Michigan are live per-query scrapes; the rest are full mirrors (refreshed daily, or monthly for California). Any other state returns `status: "unsupported_state"` on live keys — we never fabricate data we don't have.
+Deep state license data is available for **twenty-three states** today. Texas, New York, Pennsylvania, Ohio, and Michigan are live per-query scrapes; the rest are full mirrors (refreshed daily, or monthly for California). Any other state returns `status: "unsupported_state"` on live keys — we never fabricate data we don't have.
 
 ### Texas Medical Board
 
@@ -203,6 +203,56 @@ The disciplinary flag is raised by a public board order on the record or by a sa
 | Data includes | License number, license type, status, issue and expiry dates, board actions |
 
 Both boards publish board actions, which raise the disciplinary flag. Physician profiles publish a cancellation date rather than an expiry date, and we surface that as the expiry. Speech-language pathology is licensed by a different department and is not covered. No NPI.
+
+### Vermont (VT)
+
+| Detail | Value |
+|---|---|
+| Access | Daily mirror of the Board of Medical Practice public roster |
+| License types | Physicians (MD/DO), physician assistants, podiatrists, anesthesiologist assistants |
+| Data includes | License number, license type, status, issue date, expiry date, sanction status |
+
+The roster carries 35 distinct status strings and we map every one explicitly. A licence the board marks inoperable has no practice agreement behind it and is reported as inactive, not active. Sanctions (reprimand, conditions, surrender, suspension, revocation) are encoded in the status and raise the disciplinary flag; the roster's notes column is not a discipline signal. Vermont's psychology, social work, counselling and therapy professions are licensed by a separate office and are not covered. No NPI.
+
+### Wyoming (WY)
+
+| Detail | Value |
+|---|---|
+| Access | Daily mirror of the public rosters of three boards (Mental Health Professions, Psychology, Speech-Language Pathology & Audiology) |
+| License types | Psychologists, social workers, professional counselors, marriage & family therapists, addiction professionals, SLP, audiologists |
+| Data includes | License number, license type, status, issue date, expiry date, discipline indicator |
+
+Physicians are **not** covered: the Board of Medicine's lookup sits behind a web application firewall and we do not work around it. The rosters are hand-maintained spreadsheets, so their layout is validated on every run and the previous day's data is kept if a sheet changes shape. The expired speech-language roster carries no discipline column. No NPI.
+
+### Idaho (ID)
+
+| Detail | Value |
+|---|---|
+| Access | Daily mirror of the Division of Occupational and Professional Licenses bulk licence export |
+| License types | Physicians (MD/DO), psychologists, social workers, counselors, marriage & family therapists, PT, OT, SLP |
+| Data includes | License number, license type, status, issue date, expiry date, discipline indicator |
+
+The division publishes a discipline indicator per licence, which raises the flag for several hundred currently active licensees; suspension and revocation raise it too. Lapsed licences are reported as expired. Residents, interns and provisional licences are labelled as such. No NPI.
+
+### Mississippi (MS)
+
+| Detail | Value |
+|---|---|
+| Access | Weekly mirror of five board registers (counselling; physical therapy; social work and MFT; Department of Health speech, audiology and OT) |
+| License types | Social workers, professional counselors, marriage & family therapists, PT, OT, SLP, audiologists |
+| Data includes | License number, license type, status, expiry date, discipline indicator |
+
+Physicians are **not** covered: the medical board's free search is CAPTCHA-gated and its paid channels forbid resale. The psychology board is excluded because it publishes no licence status at all. Mississippi refreshes weekly rather than daily because no board offers a bulk download and each refresh is thousands of individual requests. No NPI.
+
+### Maryland (MD)
+
+| Detail | Value |
+|---|---|
+| Access | Monthly mirror of the Board of Physicians public rosters (refreshed on the 1st of each month) |
+| License types | Physicians (MD/DO), physician assistants and other allied health professions licensed by the board |
+| Data includes | License number, status, expiry date, discipline indicator |
+
+The physician roster lists **current licensees only**: an expired, suspended or revoked physician is absent from it rather than listed with that status, so a Maryland `not_found` is not evidence that someone was never licensed. Probation is reported as `active` with the disciplinary flag raised. The source is monthly, so every certificate carries the as-of date. Physicians and allied health only; the behavioural-health boards are not yet covered. No NPI.
 
 ## What happens when a source is down
 
