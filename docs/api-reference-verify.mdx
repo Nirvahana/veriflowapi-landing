@@ -59,6 +59,7 @@ POST https://api.veriflowapi.com/v1/verify
   "license_number": "ME149820",
   "profession": "physician",
   "license_type": "Medical Doctor",
+  "professions_covered": ["counselor", "dentist", "marriage_family_therapist", "nurse_practitioner", "occupational_therapist", "pharmacist", "physical_therapist", "physician", "physician_assistant", "psychologist", "registered_nurse", "social_worker", "speech_language_pathologist"],
   "state": "Florida",
   "expiry_date": "2027-06-30",
   "disciplinary_flags": false,
@@ -87,6 +88,7 @@ POST https://api.veriflowapi.com/v1/verify
 | `name` | string | Provider's full name as it appears in source records. |
 | `license_number` | string | State license number. |
 | `profession` | string | The profession of the licence that matched, in canonical form (`physician`, `nurse_practitioner`, ...), so it is comparable across states. `null` where the state publishes no readable profession — see [Profession](#profession). |
+| `professions_covered` | array | Every profession we verify in this state, as canonical values. Present on every response for a supported state, including `not_found`, so you can tell a role we never look up from a clinician who holds no licence. `null` for an unsupported state. See [Profession](#profession). |
 | `license_type` | string | The licence type in the state's own wording (`Medical Doctor`, `ADV PRACTICE NURSE`, `Advanced Registered Nurse Practitioner License`). Use it to audit the `profession` classification and to see detail the canonical value flattens. |
 | `state` | string | Full state name. |
 | `expiry_date` | string | License expiry date in ISO 8601 format (`YYYY-MM-DD`). |
@@ -111,6 +113,7 @@ POST https://api.veriflowapi.com/v1/verify
 | `revoked` | License has been permanently revoked | `false` |
 | `not_found` | No matching provider found in sources checked | `false` |
 | `unsupported_state` | We do not yet cover the requested state, so no license lookup was performed | `false` |
+| `profession_not_covered` | The state is supported but we do not verify the profession you named there. Returned only when you send `profession`, and only where that is confirmed, so it never appears for a caller who omits the field. `verified` is `false`. Federal NPPES and OIG checks still run. |
 | `source_unavailable` | The state board could not be reached, so licensure is unknown | `false` |
 
 **`not_found` and `source_unavailable` are not the same thing,** and treating them alike is the most common integration mistake. `not_found` is an answer from the board: it holds no matching record. `source_unavailable` is the absence of an answer: the board was unreachable and we will not guess. Route the first to your normal exception workflow and the second to a retry.
@@ -174,6 +177,9 @@ Sending `profession` **narrows** a check; it never widens one.
 - A licence in the profession you named is returned.
 - A licence confidently in a *different* profession is excluded — this is what stops a nurse's
   active licence answering a question about a physician.
+- If the state does not verify the profession you named at all, you get `profession_not_covered`
+  instead of `not_found`, before any board is asked. An LCSW in Massachusetts (physicians only)
+  is the canonical case: previously `not_found`, which read as "holds no licence".
 - A licence we cannot classify is still returned, ranked after any exact match, with
   `profession: null` and the state's raw wording in `license_type`. An unmapped vocabulary costs
   precision, never coverage.
@@ -186,7 +192,16 @@ dictionary, so we return the raw code in `license_type` and leave `profession` e
 guess. Read `license_type` in that case.
 
 Omitting `profession` is safe. Non-healthcare licences are excluded either way — the filter only
-adds precision *within* healthcare.
+adds precision *within* healthcare. You will never see `profession_not_covered` without sending
+`profession`; without it we cannot know which role you meant, and a `not_found` is a real lookup
+miss. Read `professions_covered` on that response to tell the two apart.
+
+### Two states where absence is not proof
+
+Colorado publishes only coded licence prefixes with no dictionary, and New York searches every
+profession the state licenses, which we have not fully enumerated. In both, `professions_covered`
+lists what we have confirmed, and a profession outside that list returns `not_found` after a real
+lookup rather than `profession_not_covered`, because we cannot be certain it is uncovered.
 
 ## Identity resolution
 
