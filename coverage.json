@@ -1,0 +1,895 @@
+{
+ "states": [
+  "AL",
+  "AR",
+  "CA",
+  "CO",
+  "CT",
+  "DC",
+  "DE",
+  "FL",
+  "IA",
+  "ID",
+  "IL",
+  "KS",
+  "KY",
+  "LA",
+  "MA",
+  "MD",
+  "MI",
+  "MS",
+  "NJ",
+  "NM",
+  "NY",
+  "OH",
+  "OK",
+  "PA",
+  "RI",
+  "TX",
+  "VT",
+  "WA",
+  "WV",
+  "WY"
+ ],
+ "non_exhaustive": [
+  "CO",
+  "NY"
+ ],
+ "groups": [
+  {
+   "title": "Physicians and advanced practice",
+   "roles": [
+    {
+     "slug": "physician",
+     "name": "Physician (MD / DO)",
+     "credential": "State medical or osteopathic licence",
+     "states": [
+      "AL",
+      "AR",
+      "CA",
+      "CO",
+      "CT",
+      "DC",
+      "DE",
+      "FL",
+      "IA",
+      "ID",
+      "IL",
+      "KS",
+      "KY",
+      "LA",
+      "MA",
+      "MD",
+      "MI",
+      "NJ",
+      "NM",
+      "NY",
+      "OH",
+      "PA",
+      "RI",
+      "TX",
+      "VT",
+      "WA"
+     ]
+    },
+    {
+     "slug": "physician_assistant",
+     "name": "Physician Assistant",
+     "credential": "PA",
+     "states": [
+      "AL",
+      "CA",
+      "CO",
+      "CT",
+      "DE",
+      "FL",
+      "IA",
+      "ID",
+      "IL",
+      "LA",
+      "MD",
+      "NJ",
+      "NY",
+      "TX",
+      "VT",
+      "WA"
+     ]
+    },
+    {
+     "slug": "nurse_practitioner",
+     "name": "Nurse Practitioner",
+     "credential": "APRN / NP",
+     "states": [
+      "AL",
+      "CA",
+      "CT",
+      "FL",
+      "IL",
+      "NJ",
+      "NY",
+      "OH",
+      "WA"
+     ]
+    },
+    {
+     "slug": "naturopathic_physician",
+     "name": "Naturopathic Physician",
+     "credential": "ND",
+     "states": [
+      "CT",
+      "MD",
+      "WA"
+     ]
+    },
+    {
+     "slug": "podiatrist",
+     "name": "Podiatrist",
+     "credential": "DPM",
+     "states": [
+      "CA",
+      "CT",
+      "FL",
+      "IA",
+      "ID",
+      "IL",
+      "LA",
+      "NJ",
+      "NY",
+      "VT",
+      "WA"
+     ]
+    },
+    {
+     "slug": "chiropractor",
+     "name": "Chiropractor",
+     "credential": "DC",
+     "states": [
+      "CT",
+      "FL",
+      "IA",
+      "NJ",
+      "NY",
+      "WA"
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Behavioural health",
+   "roles": [
+    {
+     "slug": "psychologist",
+     "name": "Psychologist / Neuropsychologist",
+     "credential": "Licensed Psychologist",
+     "states": [
+      "AR",
+      "CA",
+      "CO",
+      "CT",
+      "DC",
+      "DE",
+      "FL",
+      "IA",
+      "ID",
+      "IL",
+      "KS",
+      "KY",
+      "LA",
+      "MI",
+      "NJ",
+      "NM",
+      "NY",
+      "OH",
+      "OK",
+      "PA",
+      "RI",
+      "WA",
+      "WV",
+      "WY"
+     ]
+    },
+    {
+     "slug": "social_worker",
+     "name": "Licensed Clinical Social Worker",
+     "credential": "LCSW",
+     "states": [
+      "CA",
+      "CO",
+      "CT",
+      "DC",
+      "DE",
+      "FL",
+      "IA",
+      "ID",
+      "IL",
+      "KS",
+      "MI",
+      "MS",
+      "NJ",
+      "NM",
+      "NY",
+      "OH",
+      "PA",
+      "RI",
+      "WA",
+      "WV",
+      "WY"
+     ]
+    },
+    {
+     "slug": "counselor",
+     "name": "Professional / Mental Health Counselor",
+     "credential": "LPC, LPCC or LMHC",
+     "states": [
+      "CA",
+      "CO",
+      "CT",
+      "DC",
+      "DE",
+      "FL",
+      "IA",
+      "ID",
+      "IL",
+      "KS",
+      "KY",
+      "MI",
+      "MS",
+      "NJ",
+      "NM",
+      "NY",
+      "OH",
+      "PA",
+      "RI",
+      "WA",
+      "WV",
+      "WY"
+     ]
+    },
+    {
+     "slug": "marriage_family_therapist",
+     "name": "Marriage and Family Therapist",
+     "credential": "LMFT",
+     "states": [
+      "CA",
+      "CO",
+      "CT",
+      "DC",
+      "DE",
+      "FL",
+      "IA",
+      "ID",
+      "IL",
+      "KS",
+      "KY",
+      "MI",
+      "MS",
+      "NJ",
+      "NM",
+      "NY",
+      "OH",
+      "PA",
+      "RI",
+      "WA",
+      "WV",
+      "WY"
+     ]
+    },
+    {
+     "slug": "behavior_analyst",
+     "name": "Behavior Analyst",
+     "credential": "BCBA / LBA",
+     "states": [
+      "CT",
+      "FL",
+      "IA",
+      "NJ",
+      "NY",
+      "WA",
+      "WY"
+     ]
+    },
+    {
+     "slug": "art_therapist",
+     "name": "Art Therapist",
+     "credential": "ATR / LCAT",
+     "states": [
+      "CT",
+      "DE",
+      "NJ"
+     ]
+    },
+    {
+     "slug": "music_therapist",
+     "name": "Music Therapist",
+     "credential": "MT-BC",
+     "states": [
+      "CT",
+      "IL",
+      "WA"
+     ]
+    },
+    {
+     "slug": "psychiatric_technician",
+     "name": "Psychiatric Technician",
+     "credential": "PT (psychiatric)",
+     "states": [
+      "CA"
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Nursing",
+   "roles": [
+    {
+     "slug": "registered_nurse",
+     "name": "Registered Nurse",
+     "credential": "RN",
+     "states": [
+      "CA",
+      "CT",
+      "FL",
+      "IL",
+      "MI",
+      "NJ",
+      "NY",
+      "OH",
+      "WA"
+     ]
+    },
+    {
+     "slug": "practical_nurse",
+     "name": "Licensed Practical / Vocational Nurse",
+     "credential": "LPN / LVN",
+     "states": [
+      "CA",
+      "CT",
+      "FL",
+      "MI",
+      "NJ",
+      "NY",
+      "OH",
+      "WA"
+     ]
+    },
+    {
+     "slug": "clinical_nurse_specialist",
+     "name": "Clinical Nurse Specialist",
+     "credential": "CNS",
+     "states": [
+      "CA",
+      "NJ"
+     ]
+    },
+    {
+     "slug": "nurse_anesthetist",
+     "name": "Nurse Anesthetist",
+     "credential": "CRNA",
+     "states": [
+      "CA",
+      "CT",
+      "OH",
+      "WA"
+     ]
+    },
+    {
+     "slug": "nurse_midwife",
+     "name": "Certified Nurse Midwife",
+     "credential": "CNM",
+     "states": [
+      "AL",
+      "CA",
+      "CT",
+      "NJ",
+      "NY",
+      "OH"
+     ]
+    },
+    {
+     "slug": "public_health_nurse",
+     "name": "Public Health Nurse",
+     "credential": "PHN",
+     "states": [
+      "CA"
+     ]
+    },
+    {
+     "slug": "midwife",
+     "name": "Midwife (non-nurse)",
+     "credential": "LM / CPM",
+     "states": [
+      "CA",
+      "DE",
+      "FL",
+      "IL",
+      "LA",
+      "MI",
+      "NJ",
+      "NY",
+      "WA"
+     ]
+    },
+    {
+     "slug": "nursing_assistant",
+     "name": "Nursing Assistant",
+     "credential": "CNA",
+     "states": [
+      "CT",
+      "FL",
+      "WA"
+     ]
+    },
+    {
+     "slug": "home_health_aide",
+     "name": "Home Health Aide",
+     "credential": "HHA",
+     "states": [
+      "CT",
+      "NJ"
+     ]
+    },
+    {
+     "slug": "medication_aide",
+     "name": "Medication Aide",
+     "credential": "CMA",
+     "states": [
+      "CT"
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Rehabilitation and therapy",
+   "roles": [
+    {
+     "slug": "physical_therapist",
+     "name": "Physical Therapist",
+     "credential": "PT",
+     "states": [
+      "CA",
+      "CO",
+      "CT",
+      "DC",
+      "DE",
+      "FL",
+      "IA",
+      "ID",
+      "IL",
+      "KS",
+      "MI",
+      "MS",
+      "NJ",
+      "NM",
+      "NY",
+      "OH",
+      "PA",
+      "RI",
+      "WA"
+     ]
+    },
+    {
+     "slug": "physical_therapist_assistant",
+     "name": "Physical Therapist Assistant",
+     "credential": "PTA",
+     "states": [
+      "CA",
+      "CO",
+      "CT",
+      "DE",
+      "FL",
+      "ID",
+      "IL",
+      "MS",
+      "NJ",
+      "WA"
+     ]
+    },
+    {
+     "slug": "occupational_therapist",
+     "name": "Occupational Therapist",
+     "credential": "OT",
+     "states": [
+      "AR",
+      "CA",
+      "CO",
+      "CT",
+      "DC",
+      "DE",
+      "FL",
+      "IA",
+      "ID",
+      "IL",
+      "KS",
+      "KY",
+      "LA",
+      "MI",
+      "MS",
+      "NJ",
+      "NM",
+      "NY",
+      "OH",
+      "PA",
+      "RI",
+      "WA",
+      "WV"
+     ]
+    },
+    {
+     "slug": "occupational_therapy_assistant",
+     "name": "Occupational Therapy Assistant",
+     "credential": "OTA / COTA",
+     "states": [
+      "CA",
+      "CO",
+      "CT",
+      "DE",
+      "FL",
+      "ID",
+      "IL",
+      "LA",
+      "MS",
+      "NJ",
+      "WA",
+      "WV"
+     ]
+    },
+    {
+     "slug": "speech_language_pathologist",
+     "name": "Speech-Language Pathologist",
+     "credential": "SLP",
+     "states": [
+      "AR",
+      "CO",
+      "CT",
+      "DC",
+      "DE",
+      "FL",
+      "IA",
+      "ID",
+      "IL",
+      "KY",
+      "MI",
+      "MS",
+      "NJ",
+      "NM",
+      "NY",
+      "OH",
+      "OK",
+      "PA",
+      "RI",
+      "WA",
+      "WY"
+     ]
+    },
+    {
+     "slug": "audiologist",
+     "name": "Audiologist",
+     "credential": "AuD",
+     "states": [
+      "AR",
+      "CO",
+      "CT",
+      "DE",
+      "FL",
+      "IA",
+      "ID",
+      "KY",
+      "MS",
+      "NJ",
+      "NY",
+      "OH",
+      "OK",
+      "PA",
+      "WA",
+      "WY"
+     ]
+    },
+    {
+     "slug": "respiratory_therapist",
+     "name": "Respiratory Therapist",
+     "credential": "RT / RRT",
+     "states": [
+      "CA",
+      "CT",
+      "DE",
+      "FL",
+      "IA",
+      "IL",
+      "LA",
+      "MD",
+      "NJ",
+      "NY",
+      "TX",
+      "WA"
+     ]
+    },
+    {
+     "slug": "athletic_trainer",
+     "name": "Athletic Trainer",
+     "credential": "ATC",
+     "states": [
+      "CT",
+      "DE",
+      "FL",
+      "IA",
+      "IL",
+      "LA",
+      "MD",
+      "NJ",
+      "NY",
+      "OH",
+      "WA"
+     ]
+    },
+    {
+     "slug": "exercise_physiologist",
+     "name": "Exercise Physiologist",
+     "credential": "CEP",
+     "states": [
+      "LA"
+     ]
+    },
+    {
+     "slug": "massage_therapist",
+     "name": "Massage Therapist",
+     "credential": "LMT",
+     "states": [
+      "CT",
+      "FL",
+      "IA",
+      "IL",
+      "NJ",
+      "NY",
+      "WA"
+     ]
+    },
+    {
+     "slug": "acupuncturist",
+     "name": "Acupuncturist",
+     "credential": "LAc",
+     "states": [
+      "CT",
+      "DE",
+      "FL",
+      "IA",
+      "IL",
+      "LA",
+      "NJ",
+      "NY",
+      "TX",
+      "WA"
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Dental",
+   "roles": [
+    {
+     "slug": "dentist",
+     "name": "Dentist",
+     "credential": "DDS / DMD",
+     "states": [
+      "CA",
+      "CT",
+      "FL",
+      "IA",
+      "IL",
+      "NJ",
+      "NY",
+      "WA"
+     ]
+    },
+    {
+     "slug": "dental_hygienist",
+     "name": "Dental Hygienist",
+     "credential": "RDH",
+     "states": [
+      "CA",
+      "CT",
+      "FL",
+      "IL",
+      "NJ",
+      "WA"
+     ]
+    },
+    {
+     "slug": "dental_assistant",
+     "name": "Dental Assistant",
+     "credential": "RDA / DA",
+     "states": [
+      "CA",
+      "NJ",
+      "WA"
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Pharmacy, vision and diagnostics",
+   "roles": [
+    {
+     "slug": "pharmacist",
+     "name": "Pharmacist",
+     "credential": "RPh / PharmD",
+     "states": [
+      "CT",
+      "FL",
+      "IL",
+      "NJ",
+      "NY",
+      "WA"
+     ]
+    },
+    {
+     "slug": "pharmacy_technician",
+     "name": "Pharmacy Technician",
+     "credential": "CPhT",
+     "states": [
+      "CT",
+      "FL",
+      "IL",
+      "NJ",
+      "WA"
+     ]
+    },
+    {
+     "slug": "optometrist",
+     "name": "Optometrist",
+     "credential": "OD",
+     "states": [
+      "CA",
+      "CT",
+      "FL",
+      "IA",
+      "IL",
+      "NJ",
+      "NY",
+      "WA"
+     ]
+    },
+    {
+     "slug": "optician",
+     "name": "Optician",
+     "credential": "Licensed Optician",
+     "states": [
+      "CT",
+      "FL",
+      "WA"
+     ]
+    },
+    {
+     "slug": "radiographer",
+     "name": "Radiographer / Rad Tech",
+     "credential": "RT(R)",
+     "states": [
+      "CT",
+      "FL",
+      "LA",
+      "MD",
+      "TX",
+      "WA"
+     ]
+    },
+    {
+     "slug": "clinical_laboratory_personnel",
+     "name": "Clinical Laboratory Personnel",
+     "credential": "MLS / MLT",
+     "states": [
+      "FL",
+      "LA",
+      "NY",
+      "WA"
+     ]
+    },
+    {
+     "slug": "genetic_counselor",
+     "name": "Genetic Counselor",
+     "credential": "LGC / CGC",
+     "states": [
+      "CT",
+      "DE",
+      "FL",
+      "IA",
+      "LA",
+      "MD",
+      "NJ",
+      "NY",
+      "WA"
+     ]
+    },
+    {
+     "slug": "perfusionist",
+     "name": "Perfusionist",
+     "credential": "CCP",
+     "states": [
+      "CT",
+      "IL",
+      "LA",
+      "MD",
+      "NJ",
+      "NY",
+      "TX"
+     ]
+    },
+    {
+     "slug": "hearing_instrument_specialist",
+     "name": "Hearing Instrument Specialist",
+     "credential": "HIS",
+     "states": [
+      "CT",
+      "IA",
+      "ID"
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Public and community health",
+   "roles": [
+    {
+     "slug": "dietitian",
+     "name": "Dietitian / Nutritionist",
+     "credential": "RD / LDN",
+     "states": [
+      "CT",
+      "FL",
+      "IA",
+      "IL",
+      "NJ",
+      "NY",
+      "WA"
+     ]
+    },
+    {
+     "slug": "emergency_medical",
+     "name": "Emergency Medical (EMT / Paramedic)",
+     "credential": "EMT / NRP",
+     "states": [
+      "CT",
+      "DE",
+      "FL",
+      "WA"
+     ]
+    },
+    {
+     "slug": "lactation_consultant",
+     "name": "Lactation Consultant",
+     "credential": "IBCLC",
+     "states": [
+      "CT"
+     ]
+    },
+    {
+     "slug": "community_health_worker",
+     "name": "Community Health Worker",
+     "credential": "CHW",
+     "states": [
+      "CT"
+     ]
+    },
+    {
+     "slug": "nursing_home_administrator",
+     "name": "Nursing Home Administrator",
+     "credential": "NHA",
+     "states": [
+      "CT",
+      "FL",
+      "IA",
+      "IL",
+      "WA"
+     ]
+    },
+    {
+     "slug": "sanitarian",
+     "name": "Sanitarian / Environmental Health",
+     "credential": "RS / REHS",
+     "states": [
+      "CT"
+     ]
+    }
+   ]
+  }
+ ],
+ "profession_count": 53
+}

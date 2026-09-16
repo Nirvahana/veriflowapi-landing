@@ -119,7 +119,7 @@ PALS lists every license a person holds (for example an expired training permit 
 | Detail | Value |
 |---|---|
 | Access | Live per-query search of the eLicense Ohio verification service, 24-hour per-query cache |
-| License types | Physicians (MD/DO), psychologists, social workers, professional counselors, marriage & family therapists, PT, OT, SLP |
+| License types | Physicians (MD/DO), psychologists, social workers, professional counselors, marriage & family therapists, PT, OT, SLP; and the Board of Nursing — RNs, LPNs, nurse practitioners, nurse midwives and nurse anesthetists |
 | Data includes | License number, license type, board, status and sub-status, issue and expiry dates, board-action flag and summary |
 
 Ohio's top-level status is coarse (Active / Inactive / Closed); the informative detail is the sub-status (Expired, Lapsed, Suspended, Retired, ...), which we normalize. eLicense Ohio states that the Joint Commission and NCQA accept its online status as primary-source verification. Address and alias data returned by the state are never stored.
@@ -138,8 +138,8 @@ Delaware publishes its whole licence database as open data, refreshed every morn
 
 | Detail | Value |
 |---|---|
-| Access | Daily mirror of the NJ DCA bulk licence rosters (eight profession downloads) |
-| License types | Physicians (MD/DO) and PAs, psychologists, social workers, professional counselors, marriage & family therapists, PT, OT, speech-language pathologists and audiologists |
+| Access | Daily mirror of the NJ DCA bulk licence rosters (twenty-two profession downloads) |
+| License types | Physicians (MD/DO) and PAs, psychologists, social workers, professional counselors, marriage & family therapists, PT, OT, speech-language pathologists and audiologists; the full nursing register (RN, LPN, advanced practice nurses, home health aides); dentists and dental staff, pharmacists, optometrists, respiratory therapists, chiropractors, acupuncturists, behavior analysts, art therapists, athletic trainers, dietitians, genetic counselors, massage therapists and perfusionists |
 | Data includes | License number, license type, profession, status, issue date, expiry date |
 
 New Jersey publishes a roster download rather than requiring a per-name lookup, so the whole state is mirrored daily. The roster carries status and expiry but **no disciplinary history column**. We report a sanction where the state encodes one in the licence status itself, such as a suspension or a voluntary surrender, but a board action taken against a licence that is otherwise current will not appear. Roughly one row in seven is an application that never became a licence and carries no licence number; those are dropped rather than counted as licensees. New Jersey publishes no NPI. Address and email data in the roster is never stored.
@@ -149,7 +149,7 @@ New Jersey publishes a roster download rather than requiring a per-name lookup, 
 | Detail | Value |
 |---|---|
 | Access | Live per-query search of LARA's public MiPLUS licensee portal, 24-hour per-query cache |
-| License types | Medical doctors, osteopathic physicians, psychologists, master's and bachelor's social workers, professional counselors, marriage & family therapists, PT, OT, SLP |
+| License types | Medical doctors, osteopathic physicians, psychologists, master's and bachelor's social workers, professional counselors, marriage & family therapists, PT, OT, SLP, registered and practical nurses, and midwives |
 | Data includes | License number, license type, status, issue and expiry dates, current board conditions |
 
 Michigan publishes no bulk licensee file, so the portal is queried at verification time. Two limits are worth planning around. Michigan labels a license whose expiry has passed but which is still inside the renewal window as "Active - In Late Renewal"; we report that as **expired**, because the date has passed and practice is not authorized. And LARA publishes no NPI anywhere, so Michigan resolves on name alone. Discipline appears as current conditions such as probation or suspension, without the order narrative, which LARA issues separately in monthly disciplinary reports. Address data returned by the state is never stored.
@@ -159,10 +159,10 @@ Michigan publishes no bulk licensee file, so the portal is queried at verificati
 | Detail | Value |
 |---|---|
 | Access | Monthly mirror of the DCA public licensee files (refreshed on the 1st of each month) |
-| License types | Physicians (MD), osteopathic physicians (DO), psychologists, LCSW / LMFT / LPCC (Board of Behavioral Sciences), PT, OT |
+| License types | Fourteen DCA boards. Physicians (MD), osteopathic physicians (DO), PAs, psychologists, LCSW / LMFT / LPCC (Board of Behavioral Sciences), PT, OT; the full nursing register (RN, LVN, NP, clinical nurse specialists, nurse anesthetists, nurse midwives, public health nurses, psychiatric technicians); dentists, dental hygienists and registered dental assistants; optometrists, podiatrists and respiratory therapists |
 | Data includes | License number, license type, board, status, issue date, expiry date |
 
-The DCA files carry status and expiry but no disciplinary history, and the Speech-Language Pathology board's public file is empty, so SLP is not yet covered in California. Discipline and SLP will follow via DCA's iServices API.
+The DCA files carry status and expiry but no disciplinary history, and the Speech-Language Pathology board's public file is empty, so SLP is not yet covered in California. Discipline and SLP will follow via DCA's iServices API. The Dental Board also issues sedation, anesthesia and oral surgery permits as separate records; those are endorsements a dentist holds on top of a license rather than licenses, so they are never returned as a verification on their own. No street address, email or phone is stored from any DCA file.
 
 ### Massachusetts (MA)
 
@@ -351,7 +351,7 @@ If you have an urgent need for a specific state, email support@veriflowapi.com �
 
 | Profession | Status |
 |---|---|
-| Registered Nurses (NURSYS) | In development |
+| Registered Nurses (NURSYS national) | In development — RNs are already covered in nine states through their own state boards; see the role matrix |
 | Pharmacists (NABP) | In development |
 | Contractors (state by state) | Planned |
 | Bar admission / Attorneys | Planned |

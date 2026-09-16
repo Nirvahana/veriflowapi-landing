@@ -38,6 +38,14 @@ table{width:100%;border-collapse:collapse;margin:1em 0;font-size:.93rem;}
 th,td{text-align:left;padding:.55rem .7rem;border-bottom:1px solid var(--border);}
 th{font-size:.78rem;text-transform:uppercase;letter-spacing:.03em;color:var(--ink-muted);}
 td.y{color:var(--success);font-weight:600;}td.n{color:var(--ink-muted);}
+/* The role matrix is 53 professions x 30 states. It scrolls sideways inside .matrixwrap, so
+   the role column is pinned: a tick is meaningless if you cannot see which row it is on. */
+.matrixwrap{overflow-x:auto;margin:1em 0;}
+.matrixwrap table{min-width:1100px;}
+.matrixwrap td:first-child,.matrixwrap th:first-child{position:sticky;left:0;z-index:1;
+background:var(--surface);min-width:210px;}
+tr.grouphead th{background:var(--surface-2);text-align:left;font-size:.74rem;
+letter-spacing:.06em;color:var(--ink);padding-top:.9rem;position:static;}
 .state{background:#fff;border:1px solid var(--border);border-radius:12px;padding:22px 24px;margin:14px 0;}
 .state h3{margin:0 0 .2em;font-size:1.15rem;font-family:'DM Serif Display',serif;}
 .state .meta{font-size:.82rem;color:var(--ink-muted);margin-bottom:.7em;}

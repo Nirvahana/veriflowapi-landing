@@ -160,12 +160,22 @@ and, when you ask for one, to the profession you name.
 
 ### Values
 
-`physician`, `physician_assistant`, `nurse_practitioner`, `registered_nurse`, `practical_nurse`,
-`nurse_anesthetist`, `nurse_midwife`, `nursing_assistant`, `psychologist`, `social_worker`,
-`counselor`, `marriage_family_therapist`, `physical_therapist`, `occupational_therapist`,
-`speech_language_pathologist`, `audiologist`, `dentist`, `pharmacist`, `optometrist`, `podiatrist`,
-`chiropractor`, `midwife`, `acupuncturist`, `dietitian`, `respiratory_therapist`,
-`athletic_trainer`, `emergency_medical`, `massage_therapist`.
+**Physicians and advanced practice** — `physician`, `physician_assistant`, `nurse_practitioner`, `naturopathic_physician`, `podiatrist`, `chiropractor`
+
+**Behavioural health** — `psychologist`, `social_worker`, `counselor`, `marriage_family_therapist`, `behavior_analyst`, `art_therapist`, `music_therapist`, `psychiatric_technician`
+
+**Nursing** — `registered_nurse`, `practical_nurse`, `clinical_nurse_specialist`, `nurse_anesthetist`, `nurse_midwife`, `public_health_nurse`, `midwife`, `nursing_assistant`, `home_health_aide`, `medication_aide`
+
+**Rehabilitation and therapy** — `physical_therapist`, `physical_therapist_assistant`, `occupational_therapist`, `occupational_therapy_assistant`, `speech_language_pathologist`, `audiologist`, `respiratory_therapist`, `athletic_trainer`, `exercise_physiologist`, `massage_therapist`, `acupuncturist`
+
+**Dental** — `dentist`, `dental_hygienist`, `dental_assistant`
+
+**Pharmacy, vision and diagnostics** — `pharmacist`, `pharmacy_technician`, `optometrist`, `optician`, `radiographer`, `clinical_laboratory_personnel`, `genetic_counselor`, `perfusionist`, `hearing_instrument_specialist`
+
+**Public and community health** — `dietitian`, `emergency_medical`, `lactation_consultant`, `community_health_worker`, `nursing_home_administrator`, `sanitarian`
+
+No state covers all of these — see the [role matrix](https://veriflowapi.com/coverage.html#professions)
+for which state verifies which, or read `professions_covered` on any response.
 
 An unrecognised value is rejected with `422`, so a typo fails loudly rather than silently widening
 the search.
