@@ -100,7 +100,6 @@
      "name": "Nurse Practitioner",
      "credential": "APRN / NP",
      "states": [
-      "AL",
       "CA",
       "CT",
       "FL",
@@ -377,7 +376,6 @@
      "name": "Certified Nurse Midwife",
      "credential": "CNM",
      "states": [
-      "AL",
       "CA",
       "CT",
       "NJ",

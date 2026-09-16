@@ -328,9 +328,9 @@ STATES = [
          board="Board of Medical Examiners (BME)", method="Daily roster",
          refresh="Refreshed daily", records="60,000 licensees", discipline="Yes",
          detail="We take the Alabama Board of Medical Examiners' roster of active licences "
-                "daily. It is primary-source verified and covers MD, DO and CRNP/CNM, with "
-                "the supervising physician recorded where the credential requires one.",
-         caveat="The Alabama roster lists currently active licences, so it confirms present "
+                "daily. It is primary-source verified and covers physicians (MD and DO, including "
+                "limited and retired-volunteer licences) and physician assistants.",
+         caveat="Nurse practitioners and nurse midwives are NOT covered in Alabama. The Board of Medical Examiners roster carries no CRNP or CNM licence type; those are licensed by the Board of Nursing, which we do not read. The roster also lists currently active licences, so it confirms present "
                 "standing rather than reconstructing a lapsed licence's history."),
 ]
 
