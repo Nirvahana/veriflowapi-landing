@@ -4,9 +4,11 @@
 
 ### What professions does VeriflowAPI currently support?
 
-VeriflowAPI screens providers in all 50 US states via NPPES (identity/NPI) and OIG (federal exclusions), with deep state-level license data for **thirty states**: Texas, Florida, Illinois, Washington, Colorado, Connecticut, Alabama, New York, New Jersey, Delaware, Pennsylvania, Ohio, California, Massachusetts, and Michigan.
+VeriflowAPI screens providers in all 50 US states via NPPES (identity/NPI) and OIG (federal exclusions), with deep state-level license data for **thirty states**: Texas, Florida, Illinois, Washington, Colorado, Connecticut, Alabama, New York, New Jersey, Delaware, Pennsylvania, Ohio, California, Massachusetts, Michigan, Rhode Island, the District of Columbia, Kansas, Vermont, Wyoming, Idaho, Mississippi, Maryland, New Mexico, Louisiana, Iowa, Arkansas, Kentucky, West Virginia and Oklahoma.
 
-Nursing/pharmacy expansion and additional states are added based on demand. Email support@veriflowapi.com to request priority support for a specific profession.
+Across those states we verify **53 licensed professions** — physicians and advanced practice, behavioural health, the full nursing register, rehabilitation and therapy, dental, pharmacy, vision and diagnostics, and public and community health. No single state covers all 53; the [role matrix](https://veriflowapi.com/coverage.html#professions) shows which state covers which, and every response carries a `professions_covered` list for the state you asked about.
+
+Additional states and professions are added based on demand. Email support@veriflowapi.com to request priority support for a specific profession.
 
 ### How accurate is VeriflowAPI?
 
@@ -16,7 +18,7 @@ For high-stakes decisions, we recommend using both NPI and DOB in your request t
 
 ### Can VeriflowAPI verify providers in all 50 states?
 
-Yes, for federal NPI and OIG screening (nationwide). For full state-level license status — including expiry date and disciplinary history — we currently support thirty states: Texas, Florida, Illinois, Washington, Colorado, Connecticut, Alabama, New York, New Jersey, Delaware, Pennsylvania, Ohio, California, Massachusetts, and Michigan. Other states return `status: "unsupported_state"`. Additional states are added based on customer demand.
+Yes, for federal NPI and OIG screening (nationwide). For full state-level license status — including expiry date and disciplinary history — we currently support thirty states: Texas, Florida, Illinois, Washington, Colorado, Connecticut, Alabama, New York, New Jersey, Delaware, Pennsylvania, Ohio, California, Massachusetts, Michigan, Rhode Island, the District of Columbia, Kansas, Vermont, Wyoming, Idaho, Mississippi, Maryland, New Mexico, Louisiana, Iowa, Arkansas, Kentucky, West Virginia and Oklahoma. Other states return `status: "unsupported_state"`. Additional states are added based on customer demand.
 
 ### Do you support international license verification?
 
@@ -56,7 +58,7 @@ Always check the `status` and `oig_excluded` fields for the specific reason.
 
 ### Can I use VeriflowAPI for non-medical professions?
 
-Not yet. Medical doctors are the current focus. Nursing, pharmacy, legal, and contractor licenses are in active development.
+No. VeriflowAPI covers healthcare licensing only, and every verification is restricted to healthcare licences deliberately: several states publish one register for every licensed occupation, so without that restriction a name could match a realtor or a liquor licence. Within healthcare the coverage is broad — 53 professions, including the full nursing register, pharmacists and pharmacy technicians, dentistry, optometry and podiatry, not just physicians. Legal and contractor licensing is not offered.
 
 ### What is the difference between `disciplinary_flags` and `oig_excluded`?
 
