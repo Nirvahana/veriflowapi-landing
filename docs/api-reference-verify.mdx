@@ -89,6 +89,7 @@ POST https://api.veriflowapi.com/v1/verify
 | `license_number` | string | State license number. |
 | `profession` | string | The profession of the licence that matched, in canonical form (`physician`, `nurse_practitioner`, ...), so it is comparable across states. `null` where the state publishes no readable profession — see [Profession](#profession). |
 | `professions_covered` | array | Every profession we verify in this state, as canonical values. Present on every response for a supported state, including `not_found`, so you can tell a role we never look up from a clinician who holds no licence. `null` for an unsupported state. See [Profession](#profession). |
+| `profession_confirmed` | boolean | Only meaningful when you send `profession`. `true` means the licence we matched is confirmed to be that profession. `false` means a licence was found but the state's wording does not let us confirm it is the one you named — it is **unconfirmed, not wrong**, and several states publish no readable profession at all. `null` when you sent no `profession`, or nothing was found. Treat `false` as a prompt for human review rather than a rejection. |
 | `license_type` | string | The licence type in the state's own wording (`Medical Doctor`, `ADV PRACTICE NURSE`, `Advanced Registered Nurse Practitioner License`). Use it to audit the `profession` classification and to see detail the canonical value flattens. |
 | `state` | string | Full state name. |
 | `expiry_date` | string | License expiry date in ISO 8601 format (`YYYY-MM-DD`). |
@@ -115,6 +116,14 @@ POST https://api.veriflowapi.com/v1/verify
 | `unsupported_state` | We do not yet cover the requested state, so no license lookup was performed | `false` |
 | `profession_not_covered` | The state is supported but we do not verify the profession you named there. Returned only when you send `profession`, and only where that is confirmed, so it never appears for a caller who omits the field. `verified` is `false`. Federal NPPES and OIG checks still run. |
 | `source_unavailable` | The state board could not be reached, so licensure is unknown | `false` |
+
+<Note>
+`verified` describes the **licence**: found, active, no OIG exclusion. It does not assert that
+the licence is the profession you asked for — read `profession_confirmed` for that. A state
+whose board publishes no readable profession can return `verified: true` with
+`profession_confirmed: false`, which means "this person holds an active licence here, and we
+cannot tell you it is the one you named".
+</Note>
 
 **`not_found` and `source_unavailable` are not the same thing,** and treating them alike is the most common integration mistake. `not_found` is an answer from the board: it holds no matching record. `source_unavailable` is the absence of an answer: the board was unreachable and we will not guess. Route the first to your normal exception workflow and the second to a retry.
 
